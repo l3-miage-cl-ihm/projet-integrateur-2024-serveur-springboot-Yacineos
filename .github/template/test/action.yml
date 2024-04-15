@@ -1,0 +1,8 @@
+name: test
+description: "Run test for application with maven verify"
+runs:
+  using: "composite"
+  steps:
+    - name: Test with Maven verify 🧪
+      shell: bash
+      run: mvn verify

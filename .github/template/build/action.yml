@@ -1,0 +1,8 @@
+name: build
+description: "Build application jar and verify syntax of java"
+runs:
+  using: "composite"
+  steps:
+  - name: Build with Maven
+    shell: bash
+    run: mvn -B package --file pom.xml -Dmaven.test.skip
