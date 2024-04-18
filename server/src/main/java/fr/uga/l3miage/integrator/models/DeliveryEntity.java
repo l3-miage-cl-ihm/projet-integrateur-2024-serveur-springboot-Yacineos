@@ -21,6 +21,7 @@ public class DeliveryEntity {
     private LocalTime actualDeliveryTime;
 
     @OneToMany
+    @JoinColumn(name = "refDelivery", referencedColumnName = "reference")
     private Set<OrderEntity> orders;
 
 }

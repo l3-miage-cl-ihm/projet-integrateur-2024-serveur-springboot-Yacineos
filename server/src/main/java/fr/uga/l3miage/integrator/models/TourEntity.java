@@ -22,5 +22,9 @@ public class TourEntity {
     private Set<EmployeeEntity> deliveryMen;
 
     @OneToMany
+    @JoinColumn(name = "refTour", referencedColumnName = "reference")
     private Set<DeliveryEntity> deliveries;
+
+    @ManyToOne
+    private TruckEntity truck;
 }

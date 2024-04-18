@@ -5,6 +5,7 @@ import fr.uga.l3miage.integrator.enums.CustomerState;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class CustomerEntity {
@@ -18,6 +19,7 @@ public class CustomerEntity {
     private Address address;
 
     private CustomerState state;
+
 
 
 }

@@ -23,6 +23,7 @@ public class DayEntity {
     private EmployeeEntity planner;
 
     @OneToMany
+    @JoinColumn(name = "refDay", referencedColumnName = "reference")
     private Set<TourEntity> tours;
 
 }

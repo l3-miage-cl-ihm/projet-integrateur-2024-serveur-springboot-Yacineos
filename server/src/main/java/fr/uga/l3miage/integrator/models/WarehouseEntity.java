@@ -19,12 +19,15 @@ public class WarehouseEntity {
     private Address address;
 
      @OneToMany
+     @JoinColumn(name = "warehouseName", referencedColumnName = "name")
     private Set<DayEntity> days;
 
      @OneToMany
+     @JoinColumn(name = "warehouseName", referencedColumnName = "name")
     private Set<TruckEntity> trucks;
 
      @OneToMany
+     @JoinColumn(name = "warehouseName", referencedColumnName = "name")
     private Set<EmployeeEntity> employees;
 
 
