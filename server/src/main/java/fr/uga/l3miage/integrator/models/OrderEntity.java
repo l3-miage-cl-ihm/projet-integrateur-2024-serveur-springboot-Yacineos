@@ -2,12 +2,12 @@ package fr.uga.l3miage.integrator.models;
 
 import fr.uga.l3miage.integrator.enums.OrderState;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import javax.sound.sampled.Line;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class OrderEntity {
@@ -26,6 +26,10 @@ public class OrderEntity {
 
     @ManyToOne
     private CustomerEntity customer;
+
+    @OneToMany(mappedBy = "order")
+    private Set<LineEntity> lines ;
+
 
 
 

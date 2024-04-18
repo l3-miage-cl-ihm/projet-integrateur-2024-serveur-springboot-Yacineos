@@ -17,4 +17,7 @@ public class TourPlannerResponseDTO {
     @Schema(description ="Total amount of distance to cover for the Tour")
     private Double distanceToCover;
 
+    @Schema(description ="tour reference")
+    private String refTour;
+
 }
