@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -16,7 +17,7 @@ public class OrderEntity {
 
     private OrderState state;
 
-    private Date creationDate;
+    private LocalDate creationDate;
     @Column(nullable = true)
     private Integer rate;
 

@@ -4,6 +4,7 @@ package fr.uga.l3miage.integrator.models;
 import fr.uga.l3miage.integrator.enums.DayState;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ public class DayEntity {
     @Enumerated(EnumType.STRING)
     private DayState state;
 
-    private Date date;
+    private LocalDate date;
 
     @ManyToOne
     private EmployeeEntity planner;

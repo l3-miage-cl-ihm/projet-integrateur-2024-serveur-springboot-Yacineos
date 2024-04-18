@@ -7,6 +7,7 @@ import fr.uga.l3miage.integrator.responses.SetUpBundleResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Controller
@@ -14,7 +15,10 @@ import java.util.Date;
 public class PlannerControllers implements PlannerEndpoints {
     @Override
     public DayResponseDTO getDay(Date date) {
-        return null;
+
+        DayResponseDTO mockResponse= new DayResponseDTO();
+        mockResponse.setDate(new LocalDate.now());
+        return  mockResponse;
     }
 
     @Override
