@@ -10,10 +10,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @RestController
@@ -32,8 +34,8 @@ public interface PlannerEndpoints {
     @ApiResponse(responseCode= "200", description = "Day found  ")
     @ApiResponse(responseCode= "404", description = "Day not found with given date",content = @Content(schema = @Schema(implementation = NotFoundErrorResponse.class),mediaType = MediaType.APPLICATION_JSON_VALUE))
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/")
-    DayResponseDTO getDay(@RequestParam Date date);
+    @GetMapping("")
+    DayResponseDTO getDay(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date);
 
 
 

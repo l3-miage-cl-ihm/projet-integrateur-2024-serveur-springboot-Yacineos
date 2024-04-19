@@ -44,9 +44,9 @@ public class DeliverymanControllers implements DeliverymanEndpoints {
 
         //delivery 2
         DeliveryDMResponseDTO d2= new DeliveryDMResponseDTO();
-        d1.setCustomer("Ahmed ZAINAB");
-        d1.setDeliveryId("I028G-A2");
-        d1.setCustomerAddress("9 chemin des vouillants, Fontaine");
+        d2.setCustomer("Ahmed ZAINAB");
+        d2.setDeliveryId("I028G-A2");
+        d2.setCustomerAddress("9 chemin des vouillants, Fontaine");
         Set<String> orders2 = new HashSet<>();
         orders2.add("c002");
         orders2.add("c273");

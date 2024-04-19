@@ -15,7 +15,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class PlannerControllers implements PlannerEndpoints {
     @Override
-    public DayResponseDTO getDay(Date date) {
+    public DayResponseDTO getDay(LocalDate date) {
 
         DayResponseDTO mockedDayResponse= new DayResponseDTO();
         mockedDayResponse.setDate(LocalDate.now());
