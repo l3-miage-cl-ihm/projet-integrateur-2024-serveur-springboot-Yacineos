@@ -18,10 +18,10 @@ public class TourComponent {
 
     private final DayRepository dayRepository;
 
-    public TourEntity getDeliveryTourOfTheDay(String email) throws DayNotFoundException, TourNotFoundException {
+    public TourEntity getTourOfTheDay(String email) throws DayNotFoundException, TourNotFoundException {
         Optional<DayEntity> today= dayRepository.findByDate(LocalDate.now());  //get the current day
         if(today.isPresent()){
-            Optional<TourEntity> tour =today.get().getTours().stream().filter(tourEntity -> tourEntity.getDeliveryMen().stream().anyMatch(deliverymen-> deliverymen.getEmail().equals(email))).findFirst();
+            Optional<TourEntity> tour =today.get().getTours().stream().filter(tourEntity -> tourEntity.getDeliverymen().stream().anyMatch(deliverymen-> deliverymen.getEmail().equals(email))).findFirst();
             if(tour.isPresent()){
                 return tour.get();
             }else {

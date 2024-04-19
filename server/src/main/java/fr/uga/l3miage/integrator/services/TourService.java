@@ -20,7 +20,7 @@ public class TourService {
     public TourDMResponseDTO getDeliveryTourOfTheDay(String email){
 
        try{
-           TourEntity tour = tourComponent.getDeliveryTourOfTheDay(email);
+           TourEntity tour = tourComponent.getTourOfTheDay(email);
            return tourDMMapper.toResponse(tour);
 
        }catch( DayNotFoundException | TourNotFoundException e){

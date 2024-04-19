@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -32,4 +31,7 @@ public class EmployeeEntity {
     private String mobilePhone;
 
     private Job job;
+
+    @ManyToOne
+    private WarehouseEntity warehouse;
 }
