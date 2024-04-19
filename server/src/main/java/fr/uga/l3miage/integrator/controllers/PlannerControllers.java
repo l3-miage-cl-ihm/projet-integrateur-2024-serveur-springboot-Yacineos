@@ -60,7 +60,7 @@ public class PlannerControllers implements PlannerEndpoints {
 
         //tour2
         TourPlannerResponseDTO tour2 = new TourPlannerResponseDTO();
-        tour1.setRefTour("t028G-B");
+        tour2.setRefTour("t028G-B");
         tour2.setTruck("XT-483-AE");
         tour2.setDistanceToCover(20.0);
 
