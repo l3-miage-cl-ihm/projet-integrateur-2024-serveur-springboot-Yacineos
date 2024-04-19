@@ -16,9 +16,6 @@ import java.util.Set;
 public class DeliverymanControllers implements DeliverymanEndpoints {
     @Override
     public TourDMResponseDTO getTour(String email) {
-
-
-
         //tour 1
         TourDMResponseDTO mockedTourResponse=new TourDMResponseDTO();
         mockedTourResponse.setRefTour("t028G-A");
@@ -53,14 +50,10 @@ public class DeliverymanControllers implements DeliverymanEndpoints {
         orders2.add("c289");
         d2.setOrders(orders2);
 
-
         deliveries.add(d1);
         deliveries.add(d2);
 
         mockedTourResponse.setDeliveries(deliveries);
-
-
-
 
         return  mockedTourResponse;
 
