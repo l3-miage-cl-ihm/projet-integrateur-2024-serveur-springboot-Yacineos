@@ -6,6 +6,7 @@ import fr.uga.l3miage.integrator.models.DayEntity;
 import fr.uga.l3miage.integrator.models.TourEntity;
 import fr.uga.l3miage.integrator.repositories.DayRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,7 @@ public class TourComponent {
 
     public TourEntity getTourOfTheDay(String email) throws DayNotFoundException, TourNotFoundException {
         Optional<DayEntity> today= dayRepository.findByDate(LocalDate.now());  //get the current day
+
         if(today.isPresent()){
             Optional<TourEntity> tour =today.get().getTours().stream().filter(tourEntity -> tourEntity.getDeliverymen().stream().anyMatch(deliverymen-> deliverymen.getEmail().equals(email))).findFirst();
             if(tour.isPresent()){
