@@ -9,6 +9,7 @@ import fr.uga.l3miage.integrator.models.*;
 import fr.uga.l3miage.integrator.repositories.*;
 import fr.uga.l3miage.integrator.responses.TourDMResponseDTO;
 import fr.uga.l3miage.integrator.services.TourService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
@@ -54,7 +56,19 @@ public class DeliverymanControllerTest {
     @SpyBean
     private TourComponent tourComponent;
 
+@AfterEach
+void clear(){
+    employeeRepository.findAll().forEach(employee -> {employee.setWarehouse(null); employeeRepository.save(employee);} );
+    warehouseRepository.deleteAll();
+    dayRepository.deleteAll();
+    tourRepository.deleteAll();
+    deliveryRepository.deleteAll();
+    orderRepository.deleteAll();
+    truckRepository.deleteAll();
+    employeeRepository.deleteAll();
+    customerRepository.deleteAll();
 
+}
 
     @Test
     void getTourOK() throws TourNotFoundException, DayNotFoundException {
@@ -102,6 +116,7 @@ public class DeliverymanControllerTest {
         tours.add(tour);
         day.setTours(tours);
         dayRepository.save(day);
+
 
         //when
         TourDMResponseDTO expectedResponse = tourService.getDeliveryTourOfTheDay(man2.getEmail());
