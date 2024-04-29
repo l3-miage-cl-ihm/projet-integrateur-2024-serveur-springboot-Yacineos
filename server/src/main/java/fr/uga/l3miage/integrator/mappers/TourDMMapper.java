@@ -30,7 +30,7 @@ public interface TourDMMapper {
 
     @Named("extractWarehouseNameFromDeliveryMan")
     default  String extractWarehouseNameFromDeliveryMan(Set<EmployeeEntity> deliverymen){
-        //deliverymen are necessarily required for a tour
+        //deliverymen are necessarily required for a tour.
         return deliverymen.stream().findFirst().get().getWarehouse().getName();
     }
 
