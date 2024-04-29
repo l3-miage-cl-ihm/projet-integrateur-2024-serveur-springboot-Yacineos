@@ -125,7 +125,7 @@ public class PlannerControllers implements PlannerEndpoints {
         trucks.add("YT-485-FD");
         trucks.add("BH-009-AZ");
         trucks.add("MQ-430-LK");
-        mockedSetUpBundleResponse.setTruck(trucks);
+        mockedSetUpBundleResponse.setTrucks(trucks);
 
         Set<String> deliverymen= new HashSet<>();
         deliverymen.add("TRS");
