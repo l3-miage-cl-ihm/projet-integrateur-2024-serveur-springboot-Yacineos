@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 @Data
 public class PlanDayErrorResponse {
-    @Schema(description = "end point call", example = "/api/v1.0/")
+    @Schema(description = "end point call", example = "/api/v2.0/")
     private final String uri;
     @Schema(description = "error message", example = "Day cannot be planned ! ")
     private final String errorMessage;

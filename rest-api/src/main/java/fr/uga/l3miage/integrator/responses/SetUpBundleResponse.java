@@ -16,5 +16,5 @@ public class SetUpBundleResponse {
     private Set<String> deliverymen;
 
     @Schema(description = "Trucks ids")
-    private Set<String> truck;
+    private Set<String> trucks;
 }

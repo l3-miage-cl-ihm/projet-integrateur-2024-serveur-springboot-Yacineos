@@ -1,15 +1,47 @@
 package fr.uga.l3miage.integrator.components;
 
+import fr.uga.l3miage.integrator.mappers.DayPlannerMapper;
 import fr.uga.l3miage.integrator.models.DayEntity;
+import fr.uga.l3miage.integrator.models.DeliveryEntity;
+import fr.uga.l3miage.integrator.models.TourEntity;
+import fr.uga.l3miage.integrator.repositories.DayRepository;
+import fr.uga.l3miage.integrator.repositories.DeliveryRepository;
+import fr.uga.l3miage.integrator.repositories.TourRepository;
+import fr.uga.l3miage.integrator.requests.DayCreationRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.Optional;
+import java.util.Set;
 
 @Component
+@RequiredArgsConstructor
 public class DayComponent {
-
+    private final DayPlannerMapper dayPlannerMapper;
+    private final DayRepository dayRepository;
+    private final TourRepository tourRepository;
+    private final DeliveryRepository deliveryRepository;
     public DayEntity getDay(LocalDate date) {
         return null;
+    }
+
+    public void planDay (DayEntity day){
+        Set<TourEntity> tours = day.getTours();
+        tours.forEach(tour -> {
+            //save tour deliveries
+            deliveryRepository.saveAll(tour.getDeliveries());
+            //save day tours
+            tourRepository.save(tour);
+        });
+
+        //save day
+        dayRepository.save(day);
+    }
+
+    public boolean isDayAlreadyPlanned(LocalDate date){
+        Optional<DayEntity> dayEntity= dayRepository.findByDate(date);
+        return dayEntity.isPresent();
     }
 }
