@@ -2,11 +2,13 @@ package fr.uga.l3miage.integrator.responses;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Set;
 
 @Data
+
 @Schema(description = "Tour representation fot deliveryman")
 public class TourDMResponseDTO {
     @Schema(description = "Deliveries list ")
