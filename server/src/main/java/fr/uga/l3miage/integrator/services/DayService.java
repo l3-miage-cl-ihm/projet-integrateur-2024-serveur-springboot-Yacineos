@@ -16,15 +16,18 @@ import java.util.Date;
 @Service
 @RequiredArgsConstructor
 public class DayService {
+
     private final DayComponent dayComponent;
     private final DayPlannerMapper dayMapper;
     void planDay(DayCreationRequest dayCreationRequest){
+
 
     }
     public SetUpBundleResponse getSetUpBundle(){
         return null ;
     }
     public DayResponseDTO getDay(LocalDate date){
+
 
             DayEntity day = dayComponent.getDay(date);
             return dayMapper.toResponse(day);
