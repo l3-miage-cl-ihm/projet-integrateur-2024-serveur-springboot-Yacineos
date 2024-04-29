@@ -6,6 +6,7 @@ import fr.uga.l3miage.integrator.requests.DayCreationRequest;
 import fr.uga.l3miage.integrator.responses.DayResponseDTO;
 import fr.uga.l3miage.integrator.responses.TourDMResponseDTO;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(uses = {TourPlannerMapper.class})

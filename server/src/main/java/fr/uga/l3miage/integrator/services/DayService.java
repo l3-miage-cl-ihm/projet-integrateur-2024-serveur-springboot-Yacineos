@@ -1,6 +1,8 @@
 package fr.uga.l3miage.integrator.services;
 
 import fr.uga.l3miage.integrator.components.DayComponent;
+import fr.uga.l3miage.integrator.exceptions.rest.EntityNotFoundRestException;
+import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
 import fr.uga.l3miage.integrator.mappers.DayPlannerMapper;
 import fr.uga.l3miage.integrator.models.DayEntity;
 import fr.uga.l3miage.integrator.repositories.DayRepository;
@@ -25,9 +27,11 @@ public class DayService {
         return null ;
     }
     public DayResponseDTO getDay(LocalDate date){
-
-            DayEntity day = dayComponent.getDay(date);
-            return dayMapper.toResponse(day);
-
+            try {
+                DayEntity day = dayComponent.getDay(date);
+                return dayMapper.toResponse(day);
+            }catch (DayNotFoundException e){
+                throw new EntityNotFoundRestException(e.getMessage());
+            }
     }
 }
