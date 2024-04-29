@@ -16,15 +16,17 @@ import java.util.Set;
 public class PlannerControllers implements PlannerEndpoints {
     @Override
     public DayResponseDTO getDay(LocalDate date) {
+        //call the service
         return  null;
     }
-
     @Override
     public void planDay(DayCreationRequest dayCreationRequest) {
+        //call the service
     }
 
     @Override
     public SetUpBundleResponse getSetUpBundle() {
+        //call the service
         return null;
     }
 
