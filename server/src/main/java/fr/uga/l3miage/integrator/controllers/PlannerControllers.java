@@ -3,6 +3,7 @@ package fr.uga.l3miage.integrator.controllers;
 import fr.uga.l3miage.integrator.endpoints.PlannerEndpoints;
 import fr.uga.l3miage.integrator.requests.DayCreationRequest;
 import fr.uga.l3miage.integrator.responses.*;
+import fr.uga.l3miage.integrator.services.DayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 
@@ -14,6 +15,7 @@ import java.util.Set;
 @Controller
 @RequiredArgsConstructor
 public class PlannerControllers implements PlannerEndpoints {
+    private final DayService dayService;
     @Override
     public DayResponseDTO getDay(LocalDate date) {
         //call the service
@@ -21,7 +23,7 @@ public class PlannerControllers implements PlannerEndpoints {
     }
     @Override
     public void planDay(DayCreationRequest dayCreationRequest) {
-        //call the service
+        dayService.planDay(dayCreationRequest);
     }
 
     @Override

@@ -6,18 +6,19 @@ import fr.uga.l3miage.integrator.responses.SetUpBundleResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
 public class DayService {
-    void planDay(DayCreationRequest dayCreationRequest){
+    public void planDay(DayCreationRequest dayCreationRequest){
 
     }
-    SetUpBundleResponse getSetUpBundle(){
+    public SetUpBundleResponse getSetUpBundle(){
         return null ;
     }
-    DayResponseDTO getDay(Date date){
+    public DayResponseDTO getDay(LocalDate date){
         return null ;
     }
 }
