@@ -15,11 +15,13 @@ import java.util.Set;
 @Controller
 @RequiredArgsConstructor
 public class PlannerControllers implements PlannerEndpoints {
-    private final DayService dayService;
+
+    private final   DayService dayService;
+
     @Override
     public DayResponseDTO getDay(LocalDate date) {
         //call the service
-        return  null;
+        return  dayService.getDay(date);
     }
     @Override
     public void planDay(DayCreationRequest dayCreationRequest) {
