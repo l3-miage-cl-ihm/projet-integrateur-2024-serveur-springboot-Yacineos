@@ -17,6 +17,6 @@ public interface DayPlannerMapper
 
     DayResponseDTO  toResponse(DayEntity dayEntity);
 
-    DayEntity  toEntity(DayCreationRequest daycreationRequest);
+    //DayEntity  toEntity(DayCreationRequest daycreationRequest);
 
 }
