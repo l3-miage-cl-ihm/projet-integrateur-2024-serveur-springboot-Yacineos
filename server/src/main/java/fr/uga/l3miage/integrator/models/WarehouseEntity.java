@@ -1,7 +1,7 @@
 package fr.uga.l3miage.integrator.models;
 
 
-import fr.uga.l3miage.integrator.dataTypes.Address;
+import fr.uga.l3miage.integrator.datatypes.Address;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

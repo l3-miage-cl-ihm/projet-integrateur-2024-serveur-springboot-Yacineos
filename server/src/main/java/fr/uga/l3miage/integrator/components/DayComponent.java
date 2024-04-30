@@ -19,7 +19,6 @@ import java.util.Set;
 @Component
 @RequiredArgsConstructor
 public class DayComponent {
-    private final DayPlannerMapper dayPlannerMapper;
     private final DayRepository dayRepository;
     private final TourRepository tourRepository;
     private final DeliveryRepository deliveryRepository;
@@ -28,15 +27,6 @@ public class DayComponent {
     }
 
     public void planDay (DayEntity day){
-        Set<TourEntity> tours = day.getTours();
-        tours.forEach(tour -> {
-            //save tour deliveries
-            deliveryRepository.saveAll(tour.getDeliveries());
-            //save day tours
-            tourRepository.save(tour);
-        });
-
-        //save day
         dayRepository.save(day);
     }
 
@@ -44,4 +34,5 @@ public class DayComponent {
         Optional<DayEntity> dayEntity= dayRepository.findByDate(date);
         return dayEntity.isPresent();
     }
+
 }

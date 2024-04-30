@@ -26,8 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@AutoConfigureTestDatabase
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+ @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class TourServiceTest {
 
     @Autowired

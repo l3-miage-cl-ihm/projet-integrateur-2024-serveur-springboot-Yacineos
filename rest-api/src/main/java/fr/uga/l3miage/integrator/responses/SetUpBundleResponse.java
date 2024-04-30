@@ -1,6 +1,6 @@
 package fr.uga.l3miage.integrator.responses;
 
-import fr.uga.l3miage.integrator.dataTypes.MultipleOrder;
+import fr.uga.l3miage.integrator.responses.datatypes.MultipleOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -10,7 +10,7 @@ import java.util.Set;
 @Schema(description = "Set up Bundle representation")
 public class SetUpBundleResponse {
     @Schema(description = "list of Orders ids with the same addresse list ")
-    private MultipleOrder multipleOrders;
+    private Set<MultipleOrder> multipleOrders;
 
     @Schema(description = "Deliverymen ids list")
     private Set<String> deliverymen;

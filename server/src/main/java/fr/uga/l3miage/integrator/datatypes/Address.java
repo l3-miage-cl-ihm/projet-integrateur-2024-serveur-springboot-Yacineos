@@ -1,4 +1,4 @@
-package fr.uga.l3miage.integrator.dataTypes;
+package fr.uga.l3miage.integrator.datatypes;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
