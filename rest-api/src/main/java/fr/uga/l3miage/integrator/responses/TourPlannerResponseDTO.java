@@ -11,7 +11,7 @@ public class TourPlannerResponseDTO {
     @Schema(description = "Deliveries list ")
     private Set<DeliveryPlannerResponseDTO> deliveries ;
     @Schema(description = "list of deliveryMan id")
-    private Set<String> deliveryMen;
+    private Set<String> deliverymen;
     @Schema(description = "Truck id")
     private String truck;
     @Schema(description ="Total amount of distance to cover for the Tour")

@@ -1,14 +1,11 @@
 package fr.uga.l3miage.integrator.services;
 
 import fr.uga.l3miage.integrator.components.DayComponent;
-import fr.uga.l3miage.integrator.components.TourComponent;
 import fr.uga.l3miage.integrator.exceptions.rest.EntityNotFoundRestException;
 import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
-import fr.uga.l3miage.integrator.exceptions.technical.TourNotFoundException;
 import fr.uga.l3miage.integrator.mappers.*;
 import fr.uga.l3miage.integrator.models.*;
 import fr.uga.l3miage.integrator.responses.DayResponseDTO;
-import fr.uga.l3miage.integrator.responses.TourDMResponseDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -23,7 +20,6 @@ import java.util.Set;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @AutoConfigureTestDatabase
@@ -76,8 +72,8 @@ public class DayServiceTest {
             OrderEntity order21=OrderEntity.builder().reference("c21").build();
             OrderEntity order22=OrderEntity.builder().reference("c22").build();
             Set<OrderEntity> orders2 = new HashSet<>();
-            orders2.add(order11);
-            orders2.add(order12);
+            orders2.add(order21);
+            orders2.add(order22);
         DeliveryEntity del2=DeliveryEntity.builder().reference("T238G-A2").build();
         del2.setOrders(orders2);
         Set<DeliveryEntity> deliveries1=new HashSet<>();
@@ -110,8 +106,8 @@ public class DayServiceTest {
         OrderEntity order41=OrderEntity.builder().reference("c41").build();
         OrderEntity order42=OrderEntity.builder().reference("c42").build();
         Set<OrderEntity> orders4 = new HashSet<>();
-        orders4.add(order11);
-        orders4.add(order12);
+        orders4.add(order41);
+        orders4.add(order42);
         DeliveryEntity del4=DeliveryEntity.builder().reference("T238G-B2").build();
         del4.setOrders(orders4);
         Set<DeliveryEntity> deliveries2=new HashSet<>();
