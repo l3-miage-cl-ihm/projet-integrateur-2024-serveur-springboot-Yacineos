@@ -49,4 +49,6 @@ public class TourComponent {
         char letter = (char) ('A' + tourIndex);
         return "t" + dayNumber + "G-" + letter;
     }
+
+
 }

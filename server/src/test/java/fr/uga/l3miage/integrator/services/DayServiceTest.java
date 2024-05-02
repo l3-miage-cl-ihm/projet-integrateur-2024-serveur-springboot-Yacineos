@@ -7,13 +7,12 @@ import fr.uga.l3miage.integrator.datatypes.Address;
 import fr.uga.l3miage.integrator.enums.CustomerState;
 import fr.uga.l3miage.integrator.enums.Job;
 import fr.uga.l3miage.integrator.enums.OrderState;
-import fr.uga.l3miage.integrator.exceptions.rest.DayCreationRestException;
 import fr.uga.l3miage.integrator.exceptions.technical.InvalidInputValueException;
 import fr.uga.l3miage.integrator.mappers.DayPlannerMapper;
-import fr.uga.l3miage.integrator.mappers.DeliveryDMMapper;
 import fr.uga.l3miage.integrator.mappers.DeliveryPlannerMapper;
 import fr.uga.l3miage.integrator.mappers.TourPlannerMapper;
 import fr.uga.l3miage.integrator.models.*;
+import fr.uga.l3miage.integrator.repositories.DeliveryRepository;
 import fr.uga.l3miage.integrator.repositories.EmployeeRepository;
 import fr.uga.l3miage.integrator.repositories.OrderRepository;
 import fr.uga.l3miage.integrator.repositories.TruckRepository;
@@ -21,7 +20,7 @@ import fr.uga.l3miage.integrator.requests.DayCreationRequest;
 import fr.uga.l3miage.integrator.requests.DeliveryCreationRequest;
 import fr.uga.l3miage.integrator.requests.TourCreationRequest;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -37,7 +36,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-
 public class DayServiceTest {
     @Autowired
     private DayService dayService;
@@ -49,7 +47,11 @@ public class DayServiceTest {
     @MockBean
     private TruckRepository truckRepository;
     @MockBean
+    private DeliveryComponent deliveryComponent;
+    @MockBean
     private EmployeeRepository employeeRepository;
+    @MockBean
+    private TourComponent tourComponent;
     @SpyBean
     private DayPlannerMapper dayPlannerMapper;
     @SpyBean
@@ -147,23 +149,30 @@ public class DayServiceTest {
                 .tours(tourCreationRequestSet)
                 .build();
 
-
-         dayComponent.planDay(dayPlannerMapper.toEntity(dayCreationRequest));
-         dayService.planDay(dayCreationRequest);
-
-
         //when
+
         when(dayComponent.isDayAlreadyPlanned(any(LocalDate.class))).thenReturn(false);
+        when(tourComponent.generateTourReference(any(LocalDate.class),any(Integer.class))).thenReturn("t123G-A");
+        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),0)).thenReturn("c001");
+        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),1)).thenReturn("c002");
+        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),2)).thenReturn("c003");
         when(truckRepository.findById(truck.getImmatriculation())).thenReturn(Optional.of(truck));
+        when(employeeRepository.findById(deliveryman1.getTrigram())).thenReturn(Optional.of(deliveryman1));
+        when(employeeRepository.findById(deliveryman2.getTrigram())).thenReturn(Optional.of(deliveryman2));
         when(orderRepository.findById(o1.getReference())).thenReturn(Optional.of(o1));
         when(orderRepository.findById(o2.getReference())).thenReturn(Optional.of(o2));
         when(orderRepository.findById(o3.getReference())).thenReturn(Optional.of(o3));
-        when(employeeRepository.findById(deliveryman1.getTrigram())).thenReturn(Optional.of(deliveryman1));
-        when(employeeRepository.findById(deliveryman2.getTrigram())).thenReturn(Optional.of(deliveryman2));
+        Mockito.doNothing().when(deliveryComponent).saveDelivery(any(DeliveryEntity.class));
+        Mockito.doNothing().when(tourComponent).saveTour(any(TourEntity.class));
+
+
+        dayService.planDay(dayCreationRequest);
+
+
 
         //then
         verify(dayComponent,times(1)).planDay(any(DayEntity.class));
-        verify(dayPlannerMapper,times(1)).toEntity(dayCreationRequest);
+        verify(dayPlannerMapper,times(1)).toEntity(any(DayCreationRequest.class));
         verify(tourPlannerMapper,times(1)).toEntity(any(TourCreationRequest.class),anyString());
         verify(deliveryPlannerMapper,times(2)).toEntity(any(DeliveryCreationRequest.class),anyString());
         verify(employeeRepository,times(2)).findById(anyString());

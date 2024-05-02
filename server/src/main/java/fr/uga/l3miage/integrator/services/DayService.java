@@ -11,6 +11,7 @@ import fr.uga.l3miage.integrator.models.DayEntity;
 import fr.uga.l3miage.integrator.models.DeliveryEntity;
 import fr.uga.l3miage.integrator.models.TourEntity;
 import fr.uga.l3miage.integrator.requests.DayCreationRequest;
+import fr.uga.l3miage.integrator.requests.DeliveryCreationRequest;
 import fr.uga.l3miage.integrator.requests.TourCreationRequest;
 import fr.uga.l3miage.integrator.responses.DayResponseDTO;
 import fr.uga.l3miage.integrator.responses.SetUpBundleResponse;
@@ -56,20 +57,23 @@ public class DayService {
             Set<TourEntity> dayTours = new HashSet<>();
             for(TourCreationRequest tourCreationRequest : dayCreationRequest.getTours() ) {
                 try {
+
                     TourEntity tourEntity = tourPlannerMapper.toEntity(tourCreationRequest,tourComponent.generateTourReference(dayCreationRequest.getDate(),tourIndex.get()));
+                    LocalDate date=dayCreationRequest.getDate();
+                    String refTour=tourComponent.generateTourReference(dayCreationRequest.getDate(),tourIndex.get());
 
                     //add deliveries to tour
                     AtomicInteger deliveryIndex= new AtomicInteger(0);
                     Set<DeliveryEntity> tourDeliveries= new HashSet<>();
-                    tourCreationRequest.getDeliveries().forEach(deliveryCreationRequest -> {
+                    for(DeliveryCreationRequest deliveryCreationRequest: tourCreationRequest.getDeliveries() ) {
                         DeliveryEntity deliveryEntity = deliveryPlannerMapper.toEntity(deliveryCreationRequest,deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),deliveryIndex.get()));
                         //save delivery and add it to tourDeliveries
                         deliveryComponent.saveDelivery(deliveryEntity);
                         tourDeliveries.add(deliveryEntity);
                         deliveryIndex.getAndIncrement();
-                    });
+                    };
 
-
+                    //tourEntity.setLetter( Character.toString(tourComponent.generateTourReference(dayCreationRequest.getDate(),tourIndex.get() ).charAt(tourComponent.generateTourReference(dayCreationRequest.getDate(),tourIndex.get());
                     tourEntity.setDeliveries(tourDeliveries);
                     //save tour and add it to dayTours
                     tourComponent.saveTour(tourEntity);
