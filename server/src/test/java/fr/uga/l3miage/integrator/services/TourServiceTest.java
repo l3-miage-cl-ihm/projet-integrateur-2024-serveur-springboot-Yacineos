@@ -35,8 +35,6 @@ public class TourServiceTest {
     private TourComponent tourComponent;
     @SpyBean
     private TourDMMapper tourDMMapper;
-    @SpyBean
-    private DeliveryDMMapper deliveryDMMapper;
 
 
     @Test

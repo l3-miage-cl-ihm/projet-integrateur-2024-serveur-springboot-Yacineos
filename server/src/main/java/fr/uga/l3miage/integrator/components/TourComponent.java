@@ -47,6 +47,6 @@ public class TourComponent {
     public String generateTourReference(LocalDate date, int tourIndex) {
         String dayNumber = String.format("%03d", date.getDayOfYear());
         char letter = (char) ('A' + tourIndex);
-        return "t" + dayNumber + "-G" + letter;
+        return "t" + dayNumber + "G-" + letter;
     }
 }

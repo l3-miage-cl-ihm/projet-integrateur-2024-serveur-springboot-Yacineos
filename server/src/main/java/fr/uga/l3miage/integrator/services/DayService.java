@@ -54,7 +54,7 @@ public class DayService {
              //add tours to day
             AtomicInteger tourIndex= new AtomicInteger(0);
             Set<TourEntity> dayTours = new HashSet<>();
-            dayCreationRequest.getTours().forEach(tourCreationRequest -> {
+            for(TourCreationRequest tourCreationRequest : dayCreationRequest.getTours() ) {
                 try {
                     TourEntity tourEntity = tourPlannerMapper.toEntity(tourCreationRequest,tourComponent.generateTourReference(dayCreationRequest.getDate(),tourIndex.get()));
 
@@ -80,7 +80,7 @@ public class DayService {
                     throw new DayCreationRestException(e.getMessage());
                 }
 
-            });
+            };
 
             //add tours into day and save it.
             dayEntity.setTours(dayTours);
