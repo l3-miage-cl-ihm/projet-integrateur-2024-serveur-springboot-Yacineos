@@ -11,7 +11,6 @@ import org.mapstruct.Mapping;
 public interface DeliveryPlannerMapper {
 
     //DeliveryPlannerResponseDTO toResponse(DeliveryEntity deliveryEntity);
-
     @Mapping(target = "reference",ignore = true)
     @Mapping(target = "state",ignore = true)
     @Mapping(target = "actualAssemblyTime",ignore = true)

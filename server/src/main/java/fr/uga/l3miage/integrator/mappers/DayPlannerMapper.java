@@ -10,10 +10,7 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 @DecoratedWith(DayPlannerMapperDecorator.class)
 public interface DayPlannerMapper {
-    DayPlannerMapper INSTANCE = Mappers.getMapper(DayPlannerMapper.class);
-
     //DayResponseDTO  toResponse(DayEntity dayEntity);
-
     @Mapping(target = "reference",ignore = true)
     @Mapping(target = "state",ignore = true)
     @Mapping(target = "planner",ignore = true)

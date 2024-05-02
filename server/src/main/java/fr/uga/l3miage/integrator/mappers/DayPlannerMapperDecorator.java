@@ -1,12 +1,10 @@
 package fr.uga.l3miage.integrator.mappers;
-
 import fr.uga.l3miage.integrator.datatypes.Address;
 import fr.uga.l3miage.integrator.enums.DayState;
 import fr.uga.l3miage.integrator.enums.Job;
+import fr.uga.l3miage.integrator.mappers.utils.DayPlannerMapperUtils;
+import fr.uga.l3miage.integrator.mappers.utils.TourDMMapperUtils;
 import fr.uga.l3miage.integrator.models.*;
-import fr.uga.l3miage.integrator.repositories.EmployeeRepository;
-import fr.uga.l3miage.integrator.repositories.OrderRepository;
-import fr.uga.l3miage.integrator.repositories.TruckRepository;
 import fr.uga.l3miage.integrator.requests.DayCreationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,25 +18,15 @@ public abstract class DayPlannerMapperDecorator implements DayPlannerMapper {
     @Autowired
     @Qualifier("delegate")
     private DayPlannerMapper delegate;
-    @Autowired
-    private TourPlannerMapper tourMapper;
-    @Autowired
-    private DeliveryPlannerMapper deliveryMapper;
 
     @Autowired
-    private TruckRepository truckRepository;
-    @Autowired
-    private OrderRepository orderRepository;
-    @Autowired
-    private EmployeeRepository employeeRepository;
-
-
+    private DayPlannerMapperUtils dayPlannerMapperUtils;
 
     @Override
     public DayEntity toEntity(DayCreationRequest dayCreationRequest) {
         //setting day fields
         DayEntity dayEntity = delegate.toEntity(dayCreationRequest);
-        dayEntity.setReference(generateDayReference(dayCreationRequest.getDate()));
+        dayEntity.setReference(dayPlannerMapperUtils.generateDayReference(dayCreationRequest.getDate()));
         dayEntity.setState(DayState.PLANNED);
 
         WarehouseEntity grenis =WarehouseEntity.builder().days(Set.of(dayEntity)).photo("grenis.png").name("Grenis").letter("G")

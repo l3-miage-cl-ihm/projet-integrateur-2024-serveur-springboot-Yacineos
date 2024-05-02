@@ -1,7 +1,22 @@
 package fr.uga.l3miage.integrator.mappers;
 
+import fr.uga.l3miage.integrator.enums.TourState;
+import fr.uga.l3miage.integrator.exceptions.rest.DayCreationRestException;
+import fr.uga.l3miage.integrator.exceptions.technical.InvalidInputValueException;
+import fr.uga.l3miage.integrator.models.EmployeeEntity;
+import fr.uga.l3miage.integrator.models.TourEntity;
+import fr.uga.l3miage.integrator.models.TruckEntity;
+import fr.uga.l3miage.integrator.repositories.EmployeeRepository;
+import fr.uga.l3miage.integrator.repositories.TruckRepository;
+import fr.uga.l3miage.integrator.requests.TourCreationRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+import java.util.HashSet;
+import java.util.Set;
+
 public abstract class TourPlannerMapperDecorator implements TourPlannerMapper {
-/*
+
     @Autowired
     @Qualifier("delegate")
     private TourPlannerMapper delegate;
@@ -36,5 +51,5 @@ public abstract class TourPlannerMapperDecorator implements TourPlannerMapper {
 
         tourEntity.setDeliverymen(deliverymen);
         return tourEntity;
-    }*/
+    }
 }

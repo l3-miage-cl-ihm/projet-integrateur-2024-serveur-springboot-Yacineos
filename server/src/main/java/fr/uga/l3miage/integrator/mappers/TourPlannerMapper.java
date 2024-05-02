@@ -6,14 +6,10 @@ import fr.uga.l3miage.integrator.requests.TourCreationRequest;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 @Mapper
 @DecoratedWith(TourPlannerMapperDecorator.class)
 public interface TourPlannerMapper {
-
-    TourPlannerMapper INSTANCE = Mappers.getMapper(TourPlannerMapper.class);
-
 
     //TourPlannerResponseDTO toResponse(TourEntity tourEntity);
 
@@ -25,7 +21,5 @@ public interface TourPlannerMapper {
     @Mapping(target = "actualAssemblyTime", ignore=true)
     @Mapping(target = "truck", ignore=true)
     TourEntity  toEntity(TourCreationRequest tourCreationRequest,String tourRef) throws InvalidInputValueException;
-
-
 
 }

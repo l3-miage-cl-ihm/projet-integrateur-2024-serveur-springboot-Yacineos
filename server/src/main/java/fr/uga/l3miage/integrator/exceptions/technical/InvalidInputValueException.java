@@ -7,6 +7,7 @@ import lombok.Getter;
 public class InvalidInputValueException extends  Exception{
 
     public InvalidInputValueException(String message){
+
         super(message);
     }
 }
