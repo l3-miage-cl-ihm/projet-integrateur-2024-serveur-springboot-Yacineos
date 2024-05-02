@@ -55,9 +55,10 @@ public class DayComponentTest {
                 .planner(planner)
                 .build();
 
-        dayComponent.planDay(dayEntity);
-        //when
         when(dayRepository.save(any(DayEntity.class))).thenReturn(dayEntity);
+
+        //when
+        dayComponent.planDay(dayEntity);
         //then
         verify(dayRepository, times(1)).save(any(DayEntity.class));
 

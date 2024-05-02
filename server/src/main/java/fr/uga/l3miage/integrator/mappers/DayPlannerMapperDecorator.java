@@ -29,6 +29,11 @@ public abstract class DayPlannerMapperDecorator implements DayPlannerMapper {
         dayEntity.setReference(dayPlannerMapperUtils.generateDayReference(dayCreationRequest.getDate()));
         dayEntity.setState(DayState.PLANNED);
 
+
+        //After setting up the main to feed the db, register the planner and the warehouse from the main. So I have just to find them with
+        // their respective repositories in the db and add the planned to the dayEntity. Because if we want to plan another day, according to this current implementation
+        //the mapper creates the same planner and this should throw an exception because he is already exist. That's why I need to feed the db first from the main of the
+        //spring boot application with the data with the planner and the warehouse.
         WarehouseEntity grenis =WarehouseEntity.builder().days(Set.of(dayEntity)).photo("grenis.png").name("Grenis").letter("G")
                 .address(new Address("21 rue des cafards","65001","San antonio")).trucks(Set.of()).build();
 
