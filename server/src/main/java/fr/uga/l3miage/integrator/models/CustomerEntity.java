@@ -1,6 +1,6 @@
 package fr.uga.l3miage.integrator.models;
 
-import fr.uga.l3miage.integrator.dataTypes.Address;
+import fr.uga.l3miage.integrator.datatypes.Address;
 import fr.uga.l3miage.integrator.enums.CustomerState;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +10,6 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 @Entity
 @Getter

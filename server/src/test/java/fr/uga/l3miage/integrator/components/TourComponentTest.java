@@ -2,11 +2,13 @@ package fr.uga.l3miage.integrator.components;
 
 
 
+import fr.uga.l3miage.integrator.enums.TourState;
 import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
 import fr.uga.l3miage.integrator.exceptions.technical.TourNotFoundException;
 import fr.uga.l3miage.integrator.models.DayEntity;
 import fr.uga.l3miage.integrator.models.EmployeeEntity;
 import fr.uga.l3miage.integrator.models.TourEntity;
+import fr.uga.l3miage.integrator.models.TruckEntity;
 import fr.uga.l3miage.integrator.repositories.DayRepository;
 import fr.uga.l3miage.integrator.repositories.TourRepository;
 import org.junit.jupiter.api.Test;
@@ -23,17 +25,18 @@ import java.util.Set;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-@AutoConfigureTestDatabase
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class TourComponentTest {
 
     @MockBean
     private DayRepository dayRepository;
-
     @Autowired
     private TourComponent tourComponent;
+    @MockBean
+    private TourRepository tourRepository;
 
 
 
@@ -127,6 +130,43 @@ public class TourComponentTest {
         assertThat(response.getDeliverymen().stream().anyMatch(man-> man.getEmail().equals("axel@gmail.com"))).isEqualTo(true);
 
 
+    }
+
+    @Test
+    void saveTour(){
+        //given
+        TruckEntity truck = TruckEntity.builder()
+                .immatriculation("ZT-876-VG")
+                .build();
+        TourEntity tourEntity=TourEntity.builder()
+                .reference("t123G-A")
+                .letter("A")
+                .state(TourState.PLANNED)
+                .deliveries(Set.of())
+                .deliverymen(Set.of())
+                .truck(truck)
+                .distanceToCover(34)
+                .build();
+
+        tourComponent.saveTour(tourEntity);
+
+        //when
+        when(tourRepository.save(any(TourEntity.class))).thenReturn(tourEntity);
+        //then
+        verify(tourRepository, times(1)).save(any(TourEntity.class));
+
+
+
+    }
+
+    @Test
+    void generateTourReference(){
+        //given : first tour of today
+        LocalDate date=LocalDate.of(2024,5,2);
+        String expectedTourRef="t123G-A";
+        String repsonse=tourComponent.generateTourReference(date,0);
+        //then
+        assertThat(repsonse).isEqualTo(expectedTourRef);
     }
 
 

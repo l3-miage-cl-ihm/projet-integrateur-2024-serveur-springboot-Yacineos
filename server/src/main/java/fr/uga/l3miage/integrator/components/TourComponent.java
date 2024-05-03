@@ -5,6 +5,7 @@ import fr.uga.l3miage.integrator.exceptions.technical.TourNotFoundException;
 import fr.uga.l3miage.integrator.models.DayEntity;
 import fr.uga.l3miage.integrator.models.TourEntity;
 import fr.uga.l3miage.integrator.repositories.DayRepository;
+import fr.uga.l3miage.integrator.repositories.TourRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,20 +19,30 @@ import java.util.Optional;
 public class TourComponent {
 
     private final DayRepository dayRepository;
-
+    private final TourRepository tourRepository;
     public TourEntity getTourOfTheDay(String email) throws DayNotFoundException, TourNotFoundException {
-        Optional<DayEntity> today= dayRepository.findByDate(LocalDate.now());  //get the current day
+        DayEntity today= dayRepository.findByDate(LocalDate.now()).orElseThrow(()-> new DayNotFoundException("No day was planned for today : "+ LocalDate.now()));  //get the current day
 
-        if(today.isPresent()){
-            Optional<TourEntity> tour =today.get().getTours().stream().filter(tourEntity -> tourEntity.getDeliverymen().stream().anyMatch(deliverymen-> deliverymen.getEmail().equals(email))).findFirst();
-            if(tour.isPresent()){
-                return tour.get();
-            }else {
-                throw new TourNotFoundException("No tour was found for <"+email+">");
-            }
-        }else {
-            throw  new DayNotFoundException("No day was planned for today : "+ LocalDate.now());
-        }
-
+        return today
+                .getTours()
+                .stream()
+                .filter(tourEntity -> tourEntity.getDeliverymen()
+                                .stream()
+                                .anyMatch(deliverymen-> deliverymen.getEmail().equals(email))
+                )
+                .findFirst()
+                .orElseThrow(()-> new TourNotFoundException("No tour was found for <"+email+">"));
     }
+
+
+    public void saveTour(TourEntity tour ){
+        tourRepository.save(tour);
+    }
+    public String generateTourReference(LocalDate date, int tourIndex) {
+        String dayNumber = String.format("%03d", date.getDayOfYear());
+        char letter = (char) ('A' + tourIndex);
+        return "t" + dayNumber + "G-" + letter;
+    }
+
+
 }
