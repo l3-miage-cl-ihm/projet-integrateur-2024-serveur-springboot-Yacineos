@@ -1,5 +1,5 @@
 package fr.uga.l3miage.integrator.mappers;
-
+import fr.uga.l3miage.integrator.responses.DayResponseDTO;
 import fr.uga.l3miage.integrator.models.DayEntity;
 import fr.uga.l3miage.integrator.requests.DayCreationRequest;
 import org.mapstruct.DecoratedWith;
