@@ -21,7 +21,7 @@ public interface DeliveryPlannerMapper {
     DeliveryPlannerResponseDTO toResponse(DeliveryEntity deliveryEntity);
 
   
-    @Named("getOrdersIDs")
+    @Named("getOrdersIDs") //;
     default Set<String> getOrdersIDs(Set<OrderEntity> orders) {
         return   orders.stream().map(OrderEntity::getReference).collect(Collectors.toSet());
     }
