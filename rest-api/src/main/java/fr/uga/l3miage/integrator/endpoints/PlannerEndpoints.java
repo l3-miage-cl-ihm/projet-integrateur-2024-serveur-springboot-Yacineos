@@ -35,7 +35,7 @@ public interface PlannerEndpoints {
     @ApiResponse(responseCode= "404", description = "Day not found with given date",content = @Content(schema = @Schema(implementation = NotFoundErrorResponse.class),mediaType = MediaType.APPLICATION_JSON_VALUE))
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/day")
-    DayResponseDTO getDay(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date);
+    DayResponseDTO getDay(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) ;
 
 
 

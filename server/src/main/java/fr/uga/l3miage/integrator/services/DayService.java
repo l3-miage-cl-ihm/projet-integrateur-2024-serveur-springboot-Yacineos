@@ -4,7 +4,9 @@ import fr.uga.l3miage.integrator.components.DayComponent;
 import fr.uga.l3miage.integrator.components.DeliveryComponent;
 import fr.uga.l3miage.integrator.components.TourComponent;
 import fr.uga.l3miage.integrator.exceptions.rest.DayCreationRestException;
+import fr.uga.l3miage.integrator.exceptions.rest.EntityNotFoundRestException;
 import fr.uga.l3miage.integrator.exceptions.technical.DayAlreadyPlannedException;
+import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
 import fr.uga.l3miage.integrator.exceptions.technical.InvalidInputValueException;
 import fr.uga.l3miage.integrator.mappers.*;
 import fr.uga.l3miage.integrator.models.DayEntity;
@@ -98,11 +100,13 @@ public class DayService {
     public SetUpBundleResponse getSetUpBundle(){
         return null ;
     }
-    public DayResponseDTO getDay(LocalDate date){
-
-
+    public DayResponseDTO getDay(LocalDate date)  {
+        try {
             DayEntity day = dayComponent.getDay(date);
-            return null ;//dayMapper.toResponse(day);
+            return dayPlannerMapper.toResponse(day);
+        }catch (DayNotFoundException e){
+            throw new EntityNotFoundRestException(e.getMessage());
+        }
 
     }
 }
