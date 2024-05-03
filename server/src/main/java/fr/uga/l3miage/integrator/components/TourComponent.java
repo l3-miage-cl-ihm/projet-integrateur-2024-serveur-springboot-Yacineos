@@ -20,7 +20,6 @@ public class TourComponent {
 
     private final DayRepository dayRepository;
     private final TourRepository tourRepository;
-
     public TourEntity getTourOfTheDay(String email) throws DayNotFoundException, TourNotFoundException {
         DayEntity today= dayRepository.findByDate(LocalDate.now()).orElseThrow(()-> new DayNotFoundException("No day was planned for today : "+ LocalDate.now()));  //get the current day
 
@@ -33,17 +32,12 @@ public class TourComponent {
                 )
                 .findFirst()
                 .orElseThrow(()-> new TourNotFoundException("No tour was found for <"+email+">"));
-
-
-
     }
 
 
     public void saveTour(TourEntity tour ){
         tourRepository.save(tour);
     }
-
-
     public String generateTourReference(LocalDate date, int tourIndex) {
         String dayNumber = String.format("%03d", date.getDayOfYear());
         char letter = (char) ('A' + tourIndex);

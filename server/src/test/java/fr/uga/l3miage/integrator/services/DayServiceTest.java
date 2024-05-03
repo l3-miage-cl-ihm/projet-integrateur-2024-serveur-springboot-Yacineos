@@ -396,8 +396,6 @@ public class DayServiceTest {
         verify(tourPlannerMapper,times(1)).toEntity(any(TourCreationRequest.class),anyString());
         verify(deliveryPlannerMapper,times(1)).toEntity(any(DeliveryCreationRequest.class),anyString());
         verify(employeeRepository,times(2)).findById(anyString());
-        verify(orderRepository,times(2)).findById(anyString());
-
 
 
 

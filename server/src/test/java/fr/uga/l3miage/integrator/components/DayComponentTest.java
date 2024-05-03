@@ -29,6 +29,7 @@ public class DayComponentTest {
     @Test
     void planDayOK(){
         //given
+        LocalDate date = LocalDate.of(2024,4,15);
         WarehouseEntity warehouse= WarehouseEntity.builder()
                 .name("Grenis")
                 .letter("G")
@@ -49,7 +50,7 @@ public class DayComponentTest {
 
         DayEntity dayEntity= DayEntity.builder()
                 .reference("J124G")
-                .date(LocalDate.now())
+                .date(date)
                 .state(DayState.PLANNED)
                 .tours(Set.of())
                 .planner(planner)
@@ -67,6 +68,7 @@ public class DayComponentTest {
     @Test
     void isDayAlreadyPlannedTrue(){
         //given
+        LocalDate date = LocalDate.of(2024,4,15);
         WarehouseEntity warehouse= WarehouseEntity.builder()
                 .name("Grenis")
                 .letter("G")
@@ -87,7 +89,7 @@ public class DayComponentTest {
 
         DayEntity dayEntity= DayEntity.builder()
                 .reference("J124G")
-                .date(LocalDate.now())
+                .date(date)
                 .state(DayState.PLANNED)
                 .tours(Set.of())
                 .planner(planner)
@@ -96,7 +98,7 @@ public class DayComponentTest {
         //when
         when(dayRepository.findByDate(any(LocalDate.class))).thenReturn(Optional.of(dayEntity));
 
-        boolean response=dayComponent.isDayAlreadyPlanned(LocalDate.now());
+        boolean response=dayComponent.isDayAlreadyPlanned(date);
 
         //then
         assertThat(response).isEqualTo(true);
@@ -105,9 +107,11 @@ public class DayComponentTest {
 
     @Test
     void  isDayAlreadyPlannedFalse(){
+        //given
+        LocalDate date = LocalDate.of(2024,4,15);
         //when
         when(dayRepository.findByDate(any(LocalDate.class))).thenReturn(Optional.empty());
-        boolean response=dayComponent.isDayAlreadyPlanned(LocalDate.now());
+        boolean response=dayComponent.isDayAlreadyPlanned(date);
         //then
         assertThat(response).isEqualTo(false);
     }

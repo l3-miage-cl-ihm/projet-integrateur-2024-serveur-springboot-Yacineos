@@ -18,17 +18,14 @@ public abstract class DayPlannerMapperDecorator implements DayPlannerMapper {
     @Autowired
     @Qualifier("delegate")
     private DayPlannerMapper delegate;
-
     @Autowired
     private DayPlannerMapperUtils dayPlannerMapperUtils;
-
     @Override
     public DayEntity toEntity(DayCreationRequest dayCreationRequest) {
         //setting day fields
         DayEntity dayEntity = delegate.toEntity(dayCreationRequest);
         dayEntity.setReference(dayPlannerMapperUtils.generateDayReference(dayCreationRequest.getDate()));
         dayEntity.setState(DayState.PLANNED);
-
 
         //After setting up the main to feed the db, register the planner and the warehouse from the main. So I have just to find them with
         // their respective repositories in the db and add the planned to the dayEntity. Because if we want to plan another day, according to this current implementation
@@ -44,9 +41,6 @@ public abstract class DayPlannerMapperDecorator implements DayPlannerMapper {
 
         return dayEntity;
     }
-
-
-
 
     private String generateDayReference(LocalDate date) {
         String dayNumber = String.format("%03d", date.getDayOfYear());

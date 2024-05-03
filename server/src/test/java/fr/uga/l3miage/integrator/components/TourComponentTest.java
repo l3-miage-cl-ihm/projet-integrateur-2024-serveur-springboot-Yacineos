@@ -162,8 +162,9 @@ public class TourComponentTest {
     @Test
     void generateTourReference(){
         //given : first tour of today
+        LocalDate date=LocalDate.of(2024,5,2);
         String expectedTourRef="t123G-A";
-        String repsonse=tourComponent.generateTourReference(LocalDate.now(),0);
+        String repsonse=tourComponent.generateTourReference(date,0);
         //then
         assertThat(repsonse).isEqualTo(expectedTourRef);
     }

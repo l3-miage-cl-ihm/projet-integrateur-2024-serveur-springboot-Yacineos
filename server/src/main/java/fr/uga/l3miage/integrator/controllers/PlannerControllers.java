@@ -17,7 +17,6 @@ import java.util.Set;
 public class PlannerControllers implements PlannerEndpoints {
 
     private final   DayService dayService;
-
     @Override
     public DayResponseDTO getDay(LocalDate date) {
         //call the service
@@ -27,7 +26,6 @@ public class PlannerControllers implements PlannerEndpoints {
     public void planDay(DayCreationRequest dayCreationRequest) {
         dayService.planDay(dayCreationRequest);
     }
-
     @Override
     public SetUpBundleResponse getSetUpBundle() {
         //call the service
