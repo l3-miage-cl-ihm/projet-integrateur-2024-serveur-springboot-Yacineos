@@ -1,7 +1,9 @@
 package fr.uga.l3miage.integrator.services;
 
 import fr.uga.l3miage.integrator.components.TourComponent;
+import fr.uga.l3miage.integrator.exceptions.rest.DayNotFoundRestException;
 import fr.uga.l3miage.integrator.exceptions.rest.EntityNotFoundRestException;
+import fr.uga.l3miage.integrator.exceptions.rest.TourNotFoundRestException;
 import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
 import fr.uga.l3miage.integrator.exceptions.technical.TourNotFoundException;
 import fr.uga.l3miage.integrator.mappers.TourDMMapper;
@@ -23,9 +25,11 @@ public class TourService {
            TourEntity tour = tourComponent.getTourOfTheDay(email);
            return tourDMMapper.toResponse(tour);
 
-       }catch( DayNotFoundException | TourNotFoundException e){
-           throw new EntityNotFoundRestException(e.getMessage());
+       }catch( DayNotFoundException e){
+           throw new DayNotFoundRestException(e.getMessage());
 
+       }catch (TourNotFoundException e){
+           throw new TourNotFoundRestException(e.getMessage());
        }
 
     }
