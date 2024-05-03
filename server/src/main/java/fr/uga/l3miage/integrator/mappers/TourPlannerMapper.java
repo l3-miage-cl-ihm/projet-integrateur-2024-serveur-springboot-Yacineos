@@ -2,16 +2,27 @@ package fr.uga.l3miage.integrator.mappers;
 
 import fr.uga.l3miage.integrator.exceptions.technical.InvalidInputValueException;
 import fr.uga.l3miage.integrator.models.TourEntity;
+import fr.uga.l3miage.integrator.models.TruckEntity;
 import fr.uga.l3miage.integrator.requests.TourCreationRequest;
+import fr.uga.l3miage.integrator.responses.TourPlannerResponseDTO;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
-@Mapper
+@Mapper(uses = {DeliveryPlannerMapper.class})
 @DecoratedWith(TourPlannerMapperDecorator.class)
 public interface TourPlannerMapper {
 
-    //TourPlannerResponseDTO toResponse(TourEntity tourEntity);
+
+    @Mapping(source = "truck",target = "truck",qualifiedByName = "getTruckID")
+    @Mapping(source = "reference", target = "refTour")
+    TourPlannerResponseDTO toResponse(TourEntity tourEntity);
+
+    @Named("getTruckID")
+    default String getTruckID (TruckEntity truckEntity){
+        return truckEntity.getImmatriculation();
+    }
 
     @Mapping(target = "deliverymen", ignore=true)
     @Mapping(target = "deliveries", ignore=true)
@@ -21,5 +32,7 @@ public interface TourPlannerMapper {
     @Mapping(target = "actualAssemblyTime", ignore=true)
     @Mapping(target = "truck", ignore=true)
     TourEntity  toEntity(TourCreationRequest tourCreationRequest,String tourRef) throws InvalidInputValueException;
+
+
 
 }

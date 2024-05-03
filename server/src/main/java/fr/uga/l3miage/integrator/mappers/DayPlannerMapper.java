@@ -2,12 +2,12 @@ package fr.uga.l3miage.integrator.mappers;
 
 import fr.uga.l3miage.integrator.models.DayEntity;
 import fr.uga.l3miage.integrator.requests.DayCreationRequest;
+import fr.uga.l3miage.integrator.responses.DayResponseDTO;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
-
-@Mapper
+@Mapper(uses = {TourPlannerMapper.class})
 @DecoratedWith(DayPlannerMapperDecorator.class)
 public interface DayPlannerMapper {
     //DayResponseDTO  toResponse(DayEntity dayEntity);
@@ -16,5 +16,7 @@ public interface DayPlannerMapper {
     @Mapping(target = "planner",ignore = true)
     @Mapping(target = "tours", ignore=true)
     DayEntity  toEntity(DayCreationRequest dayCreationRequest);
+
+    DayResponseDTO toResponse(DayEntity dayEntity);
 
 }

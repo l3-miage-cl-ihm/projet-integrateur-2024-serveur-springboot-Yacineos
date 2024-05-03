@@ -1,5 +1,6 @@
 package fr.uga.l3miage.integrator.components;
 
+import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
 import fr.uga.l3miage.integrator.mappers.DayPlannerMapper;
 import fr.uga.l3miage.integrator.models.DayEntity;
 import fr.uga.l3miage.integrator.models.DeliveryEntity;
@@ -22,9 +23,16 @@ public class DayComponent {
     private final DayRepository dayRepository;
     private final TourRepository tourRepository;
     private final DeliveryRepository deliveryRepository;
-    public DayEntity getDay(LocalDate date) {
-        return null;
+    public DayEntity getDay(LocalDate date) throws DayNotFoundException {
+        Optional<DayEntity> day=dayRepository.findByDate(date);
+        if(day.isPresent()) {
+            return day.get();
+        }else{
+            throw new DayNotFoundException("No day found for the "+date.toString());
+        }
     }
+
+
 
     public void planDay (DayEntity day){
         dayRepository.save(day);
