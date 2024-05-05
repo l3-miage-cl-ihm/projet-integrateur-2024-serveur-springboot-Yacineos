@@ -14,8 +14,8 @@ public interface DayPlannerMapper
     DayPlannerMapper INSTANCE = Mappers.getMapper(DayPlannerMapper.class);
 
 
-    DayResponseDTO  toResponse(DayEntity dayEntity);
+    //DayResponseDTO  toResponse(DayEntity dayEntity);
 
-    DayEntity  toEntity(DayCreationRequest daycreationRequest);
+    //DayEntity  toEntity(DayCreationRequest daycreationRequest);
 
 }

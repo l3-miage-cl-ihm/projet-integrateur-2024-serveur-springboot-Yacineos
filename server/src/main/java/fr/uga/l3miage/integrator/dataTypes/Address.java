@@ -18,4 +18,8 @@ public class Address {
     private String address;
     private String postalCode;
     private String city;
+    @Override
+    public String toString(){
+        return getAddress()+"|"+getPostalCode()+"|"+getCity();
+    }
 }

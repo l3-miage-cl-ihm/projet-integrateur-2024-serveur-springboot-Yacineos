@@ -15,8 +15,8 @@ public interface TourPlannerMapper {
     TourPlannerMapper INSTANCE = Mappers.getMapper(TourPlannerMapper.class);
 
 
-    TourPlannerResponseDTO toResponse(TourEntity tourEntity);
+    //TourPlannerResponseDTO toResponse(TourEntity tourEntity);
 
-    TourEntity  toEntity(TourCreationRequest tourCreationRequest);
+    //TourEntity  toEntity(TourCreationRequest tourCreationRequest);
 
 }

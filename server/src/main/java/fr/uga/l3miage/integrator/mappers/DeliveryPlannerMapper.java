@@ -14,8 +14,8 @@ public interface DeliveryPlannerMapper {
     DeliveryPlannerMapper INSTANCE = Mappers.getMapper(DeliveryPlannerMapper.class);
 
 
-    DeliveryPlannerResponseDTO toResponse(DeliveryEntity deliveryEntity);
+   // DeliveryPlannerResponseDTO toResponse(DeliveryEntity deliveryEntity);
 
-    DeliveryEntity  toEntity(DeliveryCreationRequest deliveryCreationRequest);
+    //DeliveryEntity  toEntity(DeliveryCreationRequest deliveryCreationRequest);
 
 }

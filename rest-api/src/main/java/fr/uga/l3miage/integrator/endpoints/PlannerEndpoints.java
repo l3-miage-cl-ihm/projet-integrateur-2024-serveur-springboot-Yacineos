@@ -20,7 +20,7 @@ import java.util.Date;
 
 @RestController
 @Tag(name = "Planner endpoints")
-@RequestMapping("/api/v1.0/day")
+@RequestMapping("/api/v2.0/planner/day")
 public interface PlannerEndpoints {
 
     @Operation(description = "Get set up bundle (orders, deliverymen,trucks) ")
