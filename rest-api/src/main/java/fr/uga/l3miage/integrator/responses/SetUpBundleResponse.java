@@ -10,7 +10,7 @@ import java.util.Set;
 @Schema(description = "Set up Bundle representation")
 public class SetUpBundleResponse {
     @Schema(description = "Set of MultipleOrder containing a Set of orders ids with the same address ")
-    private Set<MultipleOrder> multipleOrders;
+    private Set<String> multipleOrders;
 
     @Schema(description = "Deliverymen ids list")
     private Set<String> deliverymen;

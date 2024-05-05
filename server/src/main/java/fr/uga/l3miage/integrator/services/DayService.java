@@ -41,14 +41,17 @@ public class DayService {
 
 
         Set<MultipleOrder> multipleOrder = orderComponent.createMultipleOrders();
+        Set<String> multipleOrderSet = new HashSet<>();
+        for (MultipleOrder multipleOrder1 : multipleOrder){
+            multipleOrderSet.add(multipleOrder1.toString());
+        }
 
         Set<String> immatriculationTrucks = truckComponent.getAllTrucksImmatriculation();
 
         Set<String> idLivreurs = employeeComponent.getAllDeliveryMenID();
 
 
-        setUpBundleResponse.setMultipleOrders(multipleOrder);
-
+        setUpBundleResponse.setMultipleOrders(multipleOrderSet);
         setUpBundleResponse.setDeliverymen(idLivreurs);
         setUpBundleResponse.setTruck(immatriculationTrucks);
         return setUpBundleResponse ;

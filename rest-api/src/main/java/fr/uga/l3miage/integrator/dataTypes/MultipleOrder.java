@@ -19,4 +19,21 @@ import javax.persistence.Embeddable;
 public class MultipleOrder {
     private Set<String> orders;
     private String address;
+
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("|[");
+        if (orders != null && !orders.isEmpty()) {
+            for (String order : orders) {
+                stringBuilder.append(order);
+                stringBuilder.append(",");
+            }
+            stringBuilder.setLength(stringBuilder.length() - 2); // Retirer la dernière virgule et l'espace
+        }
+        stringBuilder.append("],");
+        stringBuilder.append(address);
+        stringBuilder.append("|");
+        return stringBuilder.toString();
+    }
+    
 }

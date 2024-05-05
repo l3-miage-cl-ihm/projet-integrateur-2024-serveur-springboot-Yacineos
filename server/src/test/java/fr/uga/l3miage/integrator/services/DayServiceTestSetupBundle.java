@@ -117,7 +117,6 @@ public class DayServiceTestSetupBundle {
         assertThat(response.getDeliverymen().size()).isEqualTo(3);
         assertThat(response.getMultipleOrders().size()).isEqualTo(2);
         assertThat(response.getTruck().size()).isEqualTo(2);
-        assertThat(response.getMultipleOrders().stream().findFirst().get().getAddress()).isEqualTo(a1.toString());
 
     }
 }
