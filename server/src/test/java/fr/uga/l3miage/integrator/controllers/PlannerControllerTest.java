@@ -86,12 +86,12 @@ public class PlannerControllerTest {
 
         final Map<String, Object> urlParams = new HashMap<>();
 
-        //IMPORTANT: do not forget the planner because as decided before, he is one to manage the warehouse and it is created in the DayPlannerMapper
-        WarehouseEntity grenis =WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
-                .address(new Address("21 rue des cafards","65001","San antonio")).trucks(Set.of()).build();
+        //IMPORTANT: do not forget the planner because as decided before, he is one to manage the warehouse and it is loaded in the DayPlannerMapper
+        WarehouseEntity grenis = WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
+                .address(new Address("21 rue des cafards", "65001", "San antonio")).trucks(Set.of()).build();
         warehouseRepository.save(grenis);
-        EmployeeEntity planner = EmployeeEntity.builder().email("christian.paul@grenis.com").job(Job.PLANNER).photo("chris.png")
-                .lastName("Paul").firstName("Christian").mobilePhone("0765437876").trigram("CPL").warehouse(grenis).build();
+        EmployeeEntity planner = EmployeeEntity.builder().email("claudiatessiere@grenis.com").job(Job.PLANNER).photo("chris.png")
+                .lastName("TESSIERE").firstName("claudia").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
         employeeRepository.save(planner);
 
         Set<TourCreationRequest> tourCreationRequestSet= new HashSet<>();
@@ -201,20 +201,11 @@ public class PlannerControllerTest {
 
 
     @Test  //simulating day plannification without any tour
-    void planDay_NotOK_BecauseOfMissedInpuuts(){
+    void planDay_NotOK_BecauseOfMissedInputs(){
             //given
             final HttpHeaders headers = new HttpHeaders();
 
             final Map<String, Object> urlParams = new HashMap<>();
-
-            //IMPORTANT: do not forget the planner because as decided before, he is one to manage the warehouse and it is created in the DayPlannerMapper
-            WarehouseEntity grenis =WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
-                    .address(new Address("21 rue des cafards","65001","San antonio")).trucks(Set.of()).build();
-            warehouseRepository.save(grenis);
-            EmployeeEntity planner = EmployeeEntity.builder().email("christian.paul@grenis.com").job(Job.PLANNER).photo("chris.png")
-                    .lastName("Paul").firstName("Christian").mobilePhone("0765437876").trigram("CPL").warehouse(grenis).build();
-            employeeRepository.save(planner);
-
 
             DayCreationRequest dayCreationRequest= DayCreationRequest.builder()
                     .date(LocalDate.now())
@@ -241,12 +232,12 @@ public class PlannerControllerTest {
 
         final Map<String, Object> urlParams = new HashMap<>();
 
-        //IMPORTANT: do not forget the planner because as decided before, he is one to manage the warehouse and it is created in the DayPlannerMapper
+        //IMPORTANT: do not forget the planner because as decided before, he is one to manage the warehouse and it is loaded in the DayPlannerMapper
         WarehouseEntity grenis = WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
                 .address(new Address("21 rue des cafards", "65001", "San antonio")).trucks(Set.of()).build();
         warehouseRepository.save(grenis);
-        EmployeeEntity planner = EmployeeEntity.builder().email("christian.paul@grenis.com").job(Job.PLANNER).photo("chris.png")
-                .lastName("Paul").firstName("Christian").mobilePhone("0765437876").trigram("CPL").warehouse(grenis).build();
+        EmployeeEntity planner = EmployeeEntity.builder().email("claudiatessiere@grenis.com").job(Job.PLANNER).photo("chris.png")
+                .lastName("TESSIERE").firstName("claudia").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
         employeeRepository.save(planner);
 
         Set<TourCreationRequest> tourCreationRequestSet = new HashSet<>();
@@ -355,7 +346,7 @@ public class PlannerControllerTest {
                 .address(new Address("21 rue des cafards", "65001", "San antonio")).trucks(Set.of()).build();
         warehouseRepository.save(grenis);
         EmployeeEntity planner = EmployeeEntity.builder().email("christian.paul@grenis.com").job(Job.PLANNER).photo("chris.png")
-                .lastName("Paul").firstName("Christian").mobilePhone("0765437876").trigram("CPL").warehouse(grenis).build();
+                .lastName("Paul").firstName("Christian").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
         employeeRepository.save(planner);
 
         Set<TourCreationRequest> tourCreationRequestSet = new HashSet<>();
@@ -431,7 +422,7 @@ public class PlannerControllerTest {
 
         DeliveryCreationRequest d2 = DeliveryCreationRequest.builder()
                 .distanceToCover(12)
-                .orders(Set.of("c170")) //no existing order with given reference c170
+                .orders(Set.of("c900")) //no existing order with given reference c170
                 .build();
         deliveryCreationRequestSet.add(d1);
         deliveryCreationRequestSet.add(d2);
@@ -450,7 +441,6 @@ public class PlannerControllerTest {
 
 
         //when
-        //dayService.planDay(dayCreationRequest);  //Here dayService returns nothing but the call can help to verify others repositories, components or mappers apparences.
         ResponseEntity<Void> response = testRestTemplate.exchange("/api/v2.0/planner/day/plan", HttpMethod.POST, new HttpEntity<>(dayCreationRequest, headers), Void.class, urlParams);
 
         //then

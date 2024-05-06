@@ -7,15 +7,18 @@ import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+
 @Mapper(uses = {TourPlannerMapper.class})
 @DecoratedWith(DayPlannerMapperDecorator.class)
 public interface DayPlannerMapper {
+    DayPlannerMapper INSTANCE = Mappers.getMapper(DayPlannerMapper.class);
     //DayResponseDTO  toResponse(DayEntity dayEntity);
     @Mapping(target = "reference",ignore = true)
     @Mapping(target = "state",ignore = true)
     @Mapping(target = "planner",ignore = true)
     @Mapping(target = "tours", ignore=true)
     DayEntity  toEntity(DayCreationRequest dayCreationRequest);
+
 
     DayResponseDTO toResponse(DayEntity dayEntity);
 

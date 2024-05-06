@@ -13,10 +13,7 @@ import fr.uga.l3miage.integrator.mappers.DayPlannerMapper;
 import fr.uga.l3miage.integrator.mappers.DeliveryPlannerMapper;
 import fr.uga.l3miage.integrator.mappers.TourPlannerMapper;
 import fr.uga.l3miage.integrator.models.*;
-import fr.uga.l3miage.integrator.repositories.DeliveryRepository;
-import fr.uga.l3miage.integrator.repositories.EmployeeRepository;
-import fr.uga.l3miage.integrator.repositories.OrderRepository;
-import fr.uga.l3miage.integrator.repositories.TruckRepository;
+import fr.uga.l3miage.integrator.repositories.*;
 import fr.uga.l3miage.integrator.requests.DayCreationRequest;
 import fr.uga.l3miage.integrator.requests.DeliveryCreationRequest;
 import fr.uga.l3miage.integrator.requests.TourCreationRequest;
@@ -55,6 +52,8 @@ public class DayServiceTest {
     @MockBean
     private TruckRepository truckRepository;
     @MockBean
+    private WarehouseRepository warehouseRepository;
+    @MockBean
     private DeliveryComponent deliveryComponent;
     @MockBean
     private EmployeeRepository employeeRepository;
@@ -77,9 +76,19 @@ public class DayServiceTest {
     @Test
     void planDayOK() throws  InvalidInputValueException {
 
+
         //given
         Set<TourCreationRequest> tourCreationRequestSet= new HashSet<>();
         TruckEntity truck= TruckEntity.builder().immatriculation("AY-124-GF").build();
+        //IMPORTANT: do not forget the planner because as decided before, he is one to manage the warehouse and it is loaded in the DayPlannerMapper
+        WarehouseEntity grenis = WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
+                .address(new Address("21 rue des cafards", "65001", "San antonio")).trucks(Set.of()).build();
+        warehouseRepository.save(grenis);
+        EmployeeEntity planner = EmployeeEntity.builder()
+                .trigram("STR")
+                .email("claudiatessiere@grenis.com").job(Job.PLANNER).photo("claudia.png")
+                .lastName("TESSIERE").firstName("claudia").mobilePhone("07654377876").warehouse(grenis).build();
+        employeeRepository.save(planner);
 
         EmployeeEntity deliveryman1= EmployeeEntity.builder()
                 .email("samy@gmail.com")
@@ -174,6 +183,7 @@ public class DayServiceTest {
         when(truckRepository.findById(truck.getImmatriculation())).thenReturn(Optional.of(truck));
         when(employeeRepository.findById(deliveryman1.getTrigram())).thenReturn(Optional.of(deliveryman1));
         when(employeeRepository.findById(deliveryman2.getTrigram())).thenReturn(Optional.of(deliveryman2));
+        when(employeeRepository.findById(planner.getTrigram())).thenReturn(Optional.of(planner));
         when(orderRepository.findById(o1.getReference())).thenReturn(Optional.of(o1));
         when(orderRepository.findById(o2.getReference())).thenReturn(Optional.of(o2));
         when(orderRepository.findById(o3.getReference())).thenReturn(Optional.of(o3));
@@ -190,7 +200,7 @@ public class DayServiceTest {
         verify(dayPlannerMapper,times(1)).toEntity(any(DayCreationRequest.class));
         verify(tourPlannerMapper,times(1)).toEntity(any(TourCreationRequest.class),anyString());
         verify(deliveryPlannerMapper,times(2)).toEntity(any(DeliveryCreationRequest.class),anyString());
-        verify(employeeRepository,times(2)).findById(anyString());
+        verify(employeeRepository,times(3)).findById(anyString());
         verify(orderRepository,times(3)).findById(anyString());
 
 
@@ -308,6 +318,13 @@ public class DayServiceTest {
         //given
         Set<TourCreationRequest> tourCreationRequestSet= new HashSet<>();
         TruckEntity truck= TruckEntity.builder().immatriculation("AY-124-GF").build();
+        //IMPORTANT: do not forget the planner because as decided before, he is one to manage the warehouse and it is loaded in the DayPlannerMapper
+        WarehouseEntity grenis = WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
+                .address(new Address("21 rue des cafards", "65001", "San antonio")).trucks(Set.of()).build();
+        warehouseRepository.save(grenis);
+        EmployeeEntity planner = EmployeeEntity.builder().email("claudiatessiere@grenis.com").job(Job.PLANNER).photo("chris.png")
+                .lastName("TESSIERE").firstName("claudia").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
+        employeeRepository.save(planner);
 
         EmployeeEntity deliveryman1= EmployeeEntity.builder()
                 .email("samy@gmail.com")
@@ -362,7 +379,7 @@ public class DayServiceTest {
         Set<DeliveryCreationRequest> deliveryCreationRequestSet=new HashSet<>();
         DeliveryCreationRequest d1= DeliveryCreationRequest.builder()
                 .distanceToCover(12)
-                .orders(Set.of(o1.getReference(),"c123"))  //the order "c123" doesn't exist so it should throw an exception
+                .orders(Set.of(o1.getReference(),"c1023"))  //the order "c123" doesn't exist so it should throw an exception
                 .build();
 
         DeliveryCreationRequest d2= DeliveryCreationRequest.builder()
@@ -395,8 +412,9 @@ public class DayServiceTest {
         when(truckRepository.findById(truck.getImmatriculation())).thenReturn(Optional.of(truck));
         when(employeeRepository.findById(deliveryman1.getTrigram())).thenReturn(Optional.of(deliveryman1));
         when(employeeRepository.findById(deliveryman2.getTrigram())).thenReturn(Optional.of(deliveryman2));
+        when(employeeRepository.findById(planner.getTrigram())).thenReturn(Optional.of(planner));
         when(orderRepository.findById(o1.getReference())).thenReturn(Optional.of(o1));
-        when(orderRepository.findById("c123")).thenReturn(Optional.empty());  //OrderEntity not found
+        when(orderRepository.findById("c1023")).thenReturn(Optional.empty());  //OrderEntity not found
         when(orderRepository.findById(o3.getReference())).thenReturn(Optional.of(o3));
         Mockito.doNothing().when(deliveryComponent).saveDelivery(any(DeliveryEntity.class));
         Mockito.doNothing().when(tourComponent).saveTour(any(TourEntity.class));
@@ -408,7 +426,7 @@ public class DayServiceTest {
         verify(dayPlannerMapper,times(1)).toEntity(any(DayCreationRequest.class));
         verify(tourPlannerMapper,times(1)).toEntity(any(TourCreationRequest.class),anyString());
         verify(deliveryPlannerMapper,times(1)).toEntity(any(DeliveryCreationRequest.class),anyString());
-        verify(employeeRepository,times(2)).findById(anyString());
+        verify(employeeRepository,times(3)).findById(anyString());
 
 
 

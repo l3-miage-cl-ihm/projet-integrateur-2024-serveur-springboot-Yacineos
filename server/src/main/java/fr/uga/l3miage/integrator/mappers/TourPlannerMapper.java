@@ -14,7 +14,6 @@ import org.mapstruct.Named;
 @DecoratedWith(TourPlannerMapperDecorator.class)
 public interface TourPlannerMapper {
 
-
     @Mapping(source = "truck",target = "truck",qualifiedByName = "getTruckID")
     @Mapping(source = "reference", target = "refTour")
     TourPlannerResponseDTO toResponse(TourEntity tourEntity);
