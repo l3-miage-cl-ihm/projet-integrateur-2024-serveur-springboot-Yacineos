@@ -21,7 +21,6 @@ import java.util.Date;
 @RestController
 @Tag(name = "Planner endpoints")
 @RequestMapping("/api/v2.0/planner")
->>>>>>> 13eac51ed8b0b816f4957327e3cb6268891b6fce
 public interface PlannerEndpoints {
 
     @Operation(description = "Get set up bundle (orders, deliverymen,trucks) ")
