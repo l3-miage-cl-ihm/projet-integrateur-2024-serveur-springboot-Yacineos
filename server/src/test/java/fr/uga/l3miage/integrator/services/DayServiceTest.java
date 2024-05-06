@@ -1,8 +1,6 @@
 package fr.uga.l3miage.integrator.services;
 
-import fr.uga.l3miage.integrator.components.DayComponent;
-import fr.uga.l3miage.integrator.components.DeliveryComponent;
-import fr.uga.l3miage.integrator.components.TourComponent;
+import fr.uga.l3miage.integrator.components.*;
 import fr.uga.l3miage.integrator.datatypes.Address;
 import fr.uga.l3miage.integrator.enums.CustomerState;
 import fr.uga.l3miage.integrator.enums.Job;
@@ -20,9 +18,12 @@ import fr.uga.l3miage.integrator.requests.DayCreationRequest;
 import fr.uga.l3miage.integrator.requests.DeliveryCreationRequest;
 import fr.uga.l3miage.integrator.requests.TourCreationRequest;
 import fr.uga.l3miage.integrator.responses.DayResponseDTO;
+import fr.uga.l3miage.integrator.responses.SetUpBundleResponse;
+import fr.uga.l3miage.integrator.responses.datatypes.MultipleOrder;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -37,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
+
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class DayServiceTest {
@@ -57,12 +59,19 @@ public class DayServiceTest {
     private EmployeeRepository employeeRepository;
     @MockBean
     private TourComponent tourComponent;
+    @MockBean
+    private EmployeeComponent employeeComponent;
+    @MockBean
+    private OrderComponent orderComponent;
+    @MockBean
+    private TruckComponent truckComponent;
     @SpyBean
     private DayPlannerMapper dayPlannerMapper;
     @SpyBean
     private TourPlannerMapper tourPlannerMapper;
     @SpyBean
     private DeliveryPlannerMapper deliveryPlannerMapper;
+
 
     @Test
     void planDayOK() throws  InvalidInputValueException {
@@ -640,6 +649,86 @@ public class DayServiceTest {
         verify(deliveryPlannerMapper,times(8)).toResponse(any());
         verify(dayComponent,times(1)).getDay(LocalDate.of(2024,4,29));
 
+
+    }
+    @Test
+    void getSetUpBundle(){
+
+        Address a1 = new Address("21 rue de la paix","38000","Grenoble");
+        Address a2 = new Address("21 rue de la joie","38000","Grenoble");
+        CustomerEntity c1 = CustomerEntity.builder()
+                .address(a1)
+                .build();
+        CustomerEntity c2 = CustomerEntity.builder()
+                .address(a2)
+                .build();
+        OrderEntity o1 = OrderEntity.builder()
+                .reference("c01")
+                .creationDate(LocalDate.of(2020, 1, 7))
+                .state(OrderState.OPENED)
+                .customer(c1)
+                .build();
+        OrderEntity o2 = OrderEntity.builder()
+                .reference("c02")
+                .creationDate(LocalDate.of(2023, 1, 9))
+                .customer(c1)
+                .state(OrderState.OPENED)
+                .build();
+        OrderEntity o3 = OrderEntity.builder()
+                .reference("c03")
+                .creationDate(LocalDate.of(2024, 1, 8))
+                .customer(c2)
+                .state(OrderState.OPENED)
+                .build();
+
+
+        EmployeeEntity e1 = EmployeeEntity.builder()
+                .job(Job.DELIVERYMAN)
+                .trigram("abc")
+                .build();
+        EmployeeEntity e2 = EmployeeEntity.builder()
+                .job(Job.DELIVERYMAN)
+                .trigram("def")
+                .build();
+        EmployeeEntity e3 = EmployeeEntity.builder()
+                .job(Job.DELIVERYMAN)
+                .trigram("ghi")
+                .build();
+
+        TruckEntity t1 = TruckEntity.builder()
+                .immatriculation("ABC")
+                .build();
+        TruckEntity t2 = TruckEntity.builder()
+                .immatriculation("DEF")
+                .build();
+
+        Set<String> ref = new HashSet<>();
+        ref.add(o1.getReference());
+        ref.add(o2.getReference());
+        MultipleOrder m1 = new MultipleOrder(ref,a1.toString());
+        MultipleOrder m2 = new MultipleOrder(Set.of(o3.getReference()),a2.toString());
+        Set<MultipleOrder> m3 = new HashSet<>();
+        m3.add(m1);
+        m3.add(m2);
+
+        Set<String> truckImmatriculations = new HashSet<>();
+        truckImmatriculations.add(t1.getImmatriculation());
+        truckImmatriculations.add(t2.getImmatriculation());
+
+        Set<String> employeeIds = new HashSet<>();
+        employeeIds.add(e1.getTrigram());
+        employeeIds.add(e2.getTrigram());
+        employeeIds.add(e3.getTrigram());
+
+        when(employeeComponent.getAllDeliveryMenID()).thenReturn(employeeIds);
+        when(truckComponent.getAllTrucksImmatriculation()).thenReturn(truckImmatriculations);
+        when(orderComponent.createMultipleOrders()).thenReturn(m3);
+        SetUpBundleResponse response = dayService.getSetUpBundle();
+
+        assertThat(response.getDeliverymen().size()).isEqualTo(3);
+        assertThat(response.getMultipleOrders().size()).isEqualTo(2);
+        assertThat(response.getTrucks().size()).isEqualTo(2);
+        assertThat(response.getMultipleOrders().stream().findFirst().get()).isEqualTo("[[c02,c01],21 rue de la paix, Grenoble]");
 
     }
 
