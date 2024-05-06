@@ -1,0 +1,5 @@
+nom,lettre,photo,adresse,code postal,ville,latitude,longitude,camions,employes
+Grenis,G,image.png,31 rue Pierre Mendes France,38320,Eybens,45.14852,5.7369725,"AB-123-CD,XY-456-ZT,FG-789-LM","STR,EBD,SWL,MPK,CMJ,MKR,EET"
+Bronis,B,image.png,5 Rue Maryse Bastié,69500,Bron,45.7269343,4.9214152,"BC-987-PQ,JK-654-NV,DE-321-RS","MJO,AAA,WKT,CJE,MPT,PMT,MNL"
+Albis,A,image.png,141 rue Louis Armand,73270,Albertville,45.6571967,6.3691967,"LM-963-YZ,OP-741-TU,BR-261-ER","KMR,RNI"
+Valis,V,image.png,131 Avenue des Auréats,26000,Valence,44.8941946,4.8840194,"MN-852-QR,UV-852-WX,ZZ-656-UV",ABM
