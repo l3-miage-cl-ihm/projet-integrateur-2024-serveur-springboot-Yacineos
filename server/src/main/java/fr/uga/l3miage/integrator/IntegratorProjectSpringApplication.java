@@ -65,7 +65,6 @@ public class IntegratorProjectSpringApplication {
                     String  [] row =line.split(",");
                     TruckEntity truck = TruckEntity.builder().immatriculation(row[0]).build();
                     truckRepository.save(truck);
-                    //System.out.println(" truck "+i+ ": ****** "+truckRepository.findById(truck.getImmatriculation()).get().getImmatriculation());
                     i++;
             }
 
@@ -101,7 +100,6 @@ public class IntegratorProjectSpringApplication {
                         .build();
 
                 warehouseRepository.save(warehouse);
-                //System.out.println(" warehouse "+i+ ": ****** "+warehouseRepository.findById(warehouse.getName()).get().getName());
                 i++;
             }
 
@@ -157,7 +155,7 @@ public class IntegratorProjectSpringApplication {
         int i=1;
         try{
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
-            line=reader.readLine(); //skip the header (column names)
+            reader.readLine(); //skip the header (column names)
             while ((line = reader.readLine()) !=null){
                 String  [] row=line.split(",");
                 String email=row[0];
@@ -176,7 +174,6 @@ public class IntegratorProjectSpringApplication {
                         .state(CustomerState.REGISTERED) //default
                         .build();
                 customerRepository.save(customer);
-                //System.out.println(" customer "+i+ ": ****** "+customerRepository.findById(customer.getEmail()).get().getEmail());
                 i++;
             }
 
@@ -192,7 +189,7 @@ public class IntegratorProjectSpringApplication {
         int i=1;
         try{
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
-            line=reader.readLine(); //skip the header (column names)
+            reader.readLine(); //skip the header (column names)
             while ((line = reader.readLine()) !=null){
                 String  [] row=line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)"); // Split CSV line while ignoring commas inside quotes;
                 String ref=row[0];
@@ -222,7 +219,6 @@ public class IntegratorProjectSpringApplication {
                         .lines(Set.of())
                         .build();
                 orderRepository.save(order);
-                System.out.println(" order "+i+ ": ****** "+orderRepository.findById(order.getReference()).get().getReference() +"State : "+orderRepository.findById(order.getReference()).get().getState() );
                 i++;
             }
 
