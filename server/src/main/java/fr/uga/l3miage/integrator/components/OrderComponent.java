@@ -16,31 +16,28 @@ import java.util.*;
 @RequiredArgsConstructor
 public class OrderComponent {
     private final OrderRepository orderRepository;
-
     public Set<MultipleOrder> createMultipleOrders() {
         Set<OrderEntity> allOrders = orderRepository.findOrderEntitiesByStateOrderByCreationDateAsc(OrderState.OPENED);
-        List<OrderEntity> ordersList = new ArrayList<>(allOrders);
-        Set<MultipleOrder> multipleOrders = new HashSet<>();
-
-        if (!ordersList.isEmpty()) {
-            Map<String, Set<String>> addressToOrdersMap = new HashMap<>();
-
-            for (OrderEntity order : ordersList) {
-                String address = order.getCustomer().getAddress().toString();
-                String reference = order.getReference();
-
-                addressToOrdersMap.computeIfAbsent(address, k -> new HashSet<>()).add(reference);
-            }
-
-            for (Map.Entry<String, Set<String>> entry : addressToOrdersMap.entrySet()) {
-                MultipleOrder multipleOrder = new MultipleOrder();
-                multipleOrder.setAddress(entry.getKey());
-                multipleOrder.setOrders(entry.getValue());
+        Set<MultipleOrder> multipleOrders =  new LinkedHashSet<>();
+        String address = allOrders.stream().findFirst().get().getCustomer().getAddress().toString();
+        Set<String> reference = new LinkedHashSet<>();
+        reference.add(allOrders.stream().findFirst().get().getReference());
+        MultipleOrder multipleOrder = new MultipleOrder(reference,address);
+        for(OrderEntity orderEntity: allOrders){
+            if(multipleOrder.getAddress().equals(orderEntity.getCustomer().getAddress().toString())){
+                reference.add(orderEntity.getReference());
+                multipleOrder.setOrders(reference);
+            }else{
                 multipleOrders.add(multipleOrder);
+                address = orderEntity.getCustomer().getAddress().toString();
+                reference = new LinkedHashSet<>();
+                reference.add(orderEntity.getReference());
+                multipleOrder = new MultipleOrder(reference,address);
             }
         }
-
+        multipleOrders.add(multipleOrder);
         return multipleOrders;
     }
 
-}
+
+    }

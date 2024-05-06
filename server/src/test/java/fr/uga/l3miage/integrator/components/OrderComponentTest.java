@@ -15,10 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.when;
@@ -41,11 +38,18 @@ public class OrderComponentTest {
 
         Address a1 = new Address("21 rue de la paix","38000","Grenoble");
         Address a2 = new Address("21 rue de la joie","38000","Grenoble");
+        Address a3 = new Address("ça commence à bien faire","38000","Paris");
         CustomerEntity c1 = CustomerEntity.builder()
+                .email("ezfzfzef")
                 .address(a1)
                 .build();
         CustomerEntity c2 = CustomerEntity.builder()
+                .email("zefgzeoi^fze")
                 .address(a2)
+                .build();
+        CustomerEntity c3 = CustomerEntity.builder()
+                .email("azdadadfcc")
+                .address(a3)
                 .build();
         OrderEntity o1 = OrderEntity.builder()
                 .reference("c01")
@@ -67,21 +71,26 @@ public class OrderComponentTest {
                 .build();
         OrderEntity o4 = OrderEntity.builder()
                 .reference("c04")
-                .creationDate(LocalDate.of(2019, 1, 8))
-                .state(OrderState.DELIVERED)
-                .customer(c2)
+                .creationDate(LocalDate.of(2024, 2, 8))
+                .state(OrderState.OPENED)
+                .customer(c3)
                 .build();
 
 
-        Set<OrderEntity> orderEntities = new HashSet<>();
+        Set<OrderEntity> orderEntities = new LinkedHashSet<>();;
         orderEntities.add(o1);
-        orderEntities.add(o3);
         orderEntities.add(o2);
+        orderEntities.add(o3);
+        orderEntities.add(o4);
 
-        when(orderRepository.findOrderEntitiesByStateOrderByCreationDateAsc(OrderState.OPENED)).thenReturn(Set.of(o1,o3,o2));
+        when(orderRepository.findById(o1.getReference())).thenReturn(Optional.of(o1));
+        when(orderRepository.findById(o2.getReference())).thenReturn(Optional.of(o2));
+        when(orderRepository.findById(o3.getReference())).thenReturn(Optional.of(o3));
+        when(orderRepository.findById(o3.getReference())).thenReturn(Optional.of(o4));
+        when(orderRepository.findOrderEntitiesByStateOrderByCreationDateAsc(OrderState.OPENED)).thenReturn(orderEntities);
         Set<MultipleOrder> multipleOrderSet = orderComponent.createMultipleOrders();
 
-        assertThat(multipleOrderSet.size()).isEqualTo(2);
+        assertThat(multipleOrderSet.size()).isEqualTo(3);
         assertThat(multipleOrderSet.stream().findFirst().get().getAddress()).isEqualTo(a1.toString());
     }
 }
