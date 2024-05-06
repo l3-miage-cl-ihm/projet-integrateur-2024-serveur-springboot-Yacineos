@@ -31,6 +31,8 @@ public class DayPlannerMapperTest {
 
     @Autowired
     private  DayPlannerMapper dayPlannerMapper;
+    @MockBean
+    private EmployeeRepository employeeRepository;
 
     @Autowired
     private DayPlannerMapperUtils dayPlannerMapperUtils;
@@ -47,8 +49,10 @@ public class DayPlannerMapperTest {
                 .address(new Address("21 rue des cafards","65001","San antonio")).trucks(Set.of()).build();
 
         EmployeeEntity planner = EmployeeEntity.builder().email("claudiatessier@gmail.com").job(Job.PLANNER).photo("chris.png")
-                .lastName("TESSIERE").firstName("claudia").mobilePhone("0765437876").trigram("CPL").warehouse(grenis).build();
+                .lastName("TESSIERE").firstName("claudia").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
 
+        //when
+        when(employeeRepository.findById(planner.getTrigram())).thenReturn(Optional.of(planner));
         DayEntity expectedResponse= DayEntity.builder().reference(dayPlannerMapperUtils.generateDayReference(LocalDate.now())).state(DayState.PLANNED).date(now).planner(planner).tours(Set.of()).build();
         DayEntity dayEntityResponse=dayPlannerMapper.toEntity(dayCreationRequest);
 

@@ -221,7 +221,7 @@ public class IntegratorProjectSpringApplication {
                         .lines(Set.of())
                         .build();
                 orderRepository.save(order);
-                //System.out.println(" order "+i+ ": ****** "+orderRepository.findById(order.getReference()).get().getReference() +"State : "+orderRepository.findById(order.getReference()).get().getState() );
+                System.out.println(" order "+i+ ": ****** "+orderRepository.findById(order.getReference()).get().getReference() +"State : "+orderRepository.findById(order.getReference()).get().getState() );
                 i++;
             }
 
@@ -232,15 +232,13 @@ public class IntegratorProjectSpringApplication {
 
     @PostConstruct
     public void init() throws IOException {
-        saveTrucksFromCsv("serveur-springboot/server/src/main/java/fr/uga/l3miage/integrator/utils/data/trucks.csv");
-        saveWarehousesFromCsv("serveur-springboot/server/src/main/java/fr/uga/l3miage/integrator/utils/data/warehouses.csv");
-        saveEmployeesFromCsv("serveur-springboot/server/src/main/java/fr/uga/l3miage/integrator/utils/data/employees.csv");
-        saveCustomersFromCsv("serveur-springboot/server/src/main/java/fr/uga/l3miage/integrator/utils/data/customers.csv");
-        saveOrdersFromCsv("serveur-springboot/server/src/main/java/fr/uga/l3miage/integrator/utils/data/orders.csv");
+        String dirPath = System.getProperty("user.dir"); // in the spring-boot-server root (the project)
 
-
-
-
+        saveTrucksFromCsv(dirPath+"/src/main/java/fr/uga/l3miage/integrator/utils/data/trucks.csv");
+        saveWarehousesFromCsv(dirPath+"/src/main/java/fr/uga/l3miage/integrator/utils/data/warehouses.csv");
+        saveEmployeesFromCsv(dirPath+"/src/main/java/fr/uga/l3miage/integrator/utils/data/employees.csv");
+        saveCustomersFromCsv(dirPath+"/src/main/java/fr/uga/l3miage/integrator/utils/data/customers.csv");
+        saveOrdersFromCsv(dirPath+"/src/main/java/fr/uga/l3miage/integrator/utils/data/orders.csv");
 
     }
 
