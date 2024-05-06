@@ -22,7 +22,7 @@ public class MultipleOrder {
 
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("|[");
+        stringBuilder.append("[[");
         if (orders != null && !orders.isEmpty()) {
             for (String order : orders) {
                 stringBuilder.append(order);
@@ -32,7 +32,7 @@ public class MultipleOrder {
         }
         stringBuilder.append("],");
         stringBuilder.append(address);
-        stringBuilder.append("|");
+        stringBuilder.append("]");
         return stringBuilder.toString();
     }
     

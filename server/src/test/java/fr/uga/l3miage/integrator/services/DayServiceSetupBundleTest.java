@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 
 @AutoConfigureTestDatabase
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-public class DayServiceTestSetupBundle {
+public class DayServiceSetupBundleTest {
 
     @Autowired
     private DayService dayService;
@@ -117,6 +117,7 @@ public class DayServiceTestSetupBundle {
         assertThat(response.getDeliverymen().size()).isEqualTo(3);
         assertThat(response.getMultipleOrders().size()).isEqualTo(2);
         assertThat(response.getTruck().size()).isEqualTo(2);
+        assertThat(response.getMultipleOrders().stream().findFirst().get()).isEqualTo("[[c01,c0],21 rue de la paix, Grenoble]");
 
     }
 }

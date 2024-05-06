@@ -16,40 +16,6 @@ import java.util.stream.Collectors;
 public class OrderComponent {
     private final OrderRepository orderRepository;
 
-
-
-//    public Set<MultipleOrder> createMultipleOrders() {
-//        Set<OrderEntity> allOrders = orderRepository.findOrderEntitiesByStateOrderByCreationDateAsc(OrderState.OPENED);
-//        Set<OrderEntity> orders=allOrders.stream().limit(30).collect(Collectors.toSet());
-//        List<OrderEntity> ordersList = new ArrayList<>(orders);
-//        Set<MultipleOrder> m1 = new HashSet<>();
-//        if (!orders.isEmpty()) {
-//            MultipleOrder multipleOrder = new MultipleOrder();
-//            Set<String> orderEntities = new HashSet<>();
-//            multipleOrder.setAddress(ordersList.get(0).getCustomer().getAddress().toString());
-//            multipleOrder.setOrders(Set.of(ordersList.get(0).getReference()));
-//            orderEntities.add(ordersList.get(0).getReference());
-//
-//            for (int i = 1; i < ordersList.size(); i++) {
-//                if (multipleOrder.getAddress().equals(ordersList.get(i).getCustomer().getAddress().toString())) {
-//                    orderEntities.add(ordersList.get(i).getReference());
-//                    multipleOrder.setOrders(new HashSet<>(orderEntities));
-//                } else {
-//                    m1.add(new MultipleOrder(new HashSet<>(orderEntities), multipleOrder.getAddress()));
-//                    multipleOrder = new MultipleOrder(); // Créer un nouveau MultipleOrder
-//                    multipleOrder.setAddress(ordersList.get(i).getCustomer().getAddress().toString());
-//                    orderEntities = new HashSet<>();
-//                    orderEntities.add(ordersList.get(i).getReference());
-//                    multipleOrder.setOrders(new HashSet<>(orderEntities));
-//                }
-//            }
-//            m1.add(new MultipleOrder(new HashSet<>(orderEntities), multipleOrder.getAddress()));
-//        }
-//
-//
-//        return m1;
-//    }
-
     public Set<MultipleOrder> createMultipleOrders() {
         Set<OrderEntity> allOrders = orderRepository.findOrderEntitiesByStateOrderByCreationDateAsc(OrderState.OPENED);
         List<OrderEntity> ordersList = new ArrayList<>(allOrders);

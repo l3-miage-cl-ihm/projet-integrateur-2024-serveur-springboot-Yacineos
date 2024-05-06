@@ -55,15 +55,7 @@ public class PlannerControllerGetSetUpBundleTest {
 
     @Autowired
     private CustomerRepository customerRepository;
-
-    @SpyBean
-    private EmployeeComponent employeeComponent;
-
-    @SpyBean
-    private TruckComponent truckComponent;
-
-    @SpyBean
-    private OrderComponent orderComponent;
+    
 
     @AfterEach
     void clear(){

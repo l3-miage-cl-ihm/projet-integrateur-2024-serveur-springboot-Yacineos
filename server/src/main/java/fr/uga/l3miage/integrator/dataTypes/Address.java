@@ -20,6 +20,6 @@ public class Address {
     private String city;
     @Override
     public String toString(){
-        return getAddress()+"|"+getPostalCode()+"|"+getCity();
+        return getAddress()+", "+getCity();
     }
 }
