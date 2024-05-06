@@ -23,7 +23,7 @@ public class DayRepositoryTest {
     void findByDate(){
         //Given
         LocalDate now=LocalDate.now();
-        DayEntity day1= DayEntity.builder().date(now).reference("J034G").tours(Set.of()).build();
+        DayEntity day1= DayEntity.builder().date(now).reference("J124G").tours(Set.of()).build();
         DayEntity day2= DayEntity.builder().date(now.plusDays(23)).reference("J057G").tours(Set.of()).build();
         dayRepository.save(day1);
         dayRepository.save(day2);

@@ -1,5 +1,6 @@
 package fr.uga.l3miage.integrator.responses;
 
+import fr.uga.l3miage.integrator.dataTypes.MultipleOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -15,5 +16,5 @@ public class SetUpBundleResponse {
     private Set<String> deliverymen;
 
     @Schema(description = "Trucks ids")
-    private Set<String> truck;
+    private Set<String> trucks;
 }

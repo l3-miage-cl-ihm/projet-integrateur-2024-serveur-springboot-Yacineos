@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -19,5 +20,7 @@ import javax.persistence.Id;
 public class TruckEntity {
     @Id
     private String immatriculation;
+
+
 
 }

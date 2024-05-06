@@ -1,6 +1,7 @@
 package fr.uga.l3miage.integrator.controllers;
 
 import fr.uga.l3miage.integrator.endpoints.PlannerEndpoints;
+import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
 import fr.uga.l3miage.integrator.requests.DayCreationRequest;
 import fr.uga.l3miage.integrator.responses.*;
 import fr.uga.l3miage.integrator.services.DayService;
@@ -17,9 +18,8 @@ import java.util.Set;
 public class PlannerControllers implements PlannerEndpoints {
 
     private final   DayService dayService;
-
     @Override
-    public DayResponseDTO getDay(LocalDate date) {
+    public DayResponseDTO getDay(LocalDate date)  {
         //call the service
        // return  dayService.getDay(date);
     return null;
@@ -30,7 +30,6 @@ public class PlannerControllers implements PlannerEndpoints {
     public void planDay(DayCreationRequest dayCreationRequest) {
         dayService.planDay(dayCreationRequest);
     }
-
     @Override
     public SetUpBundleResponse getSetUpBundle() {
         //call the service

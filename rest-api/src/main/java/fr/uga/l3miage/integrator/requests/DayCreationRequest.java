@@ -1,6 +1,7 @@
 package fr.uga.l3miage.integrator.requests;
 
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,7 +11,10 @@ import java.util.Set;
 
 @Data
 @Builder
+@Schema(description = "Day planification")
 public class DayCreationRequest {
-    private LocalDate date;
-    private Set<TourCreationRequest> tours;
+    @Schema(description = "Date of the day we want plan ", example = "2024-04-30")
+    private final LocalDate date;
+    @Schema(description = "Day tour list ")
+    private final Set<TourCreationRequest> tours;
 }
