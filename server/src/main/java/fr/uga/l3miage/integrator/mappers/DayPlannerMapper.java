@@ -19,6 +19,7 @@ public interface DayPlannerMapper {
     @Mapping(target = "tours", ignore=true)
     DayEntity  toEntity(DayCreationRequest dayCreationRequest);
 
+
     DayResponseDTO toResponse(DayEntity dayEntity);
 
 }
