@@ -1,7 +1,5 @@
 package fr.uga.l3miage.integrator;
 
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
 import fr.uga.l3miage.integrator.datatypes.Address;
 import fr.uga.l3miage.integrator.enums.CustomerState;
 import fr.uga.l3miage.integrator.enums.Job;
@@ -9,23 +7,16 @@ import fr.uga.l3miage.integrator.enums.OrderState;
 import fr.uga.l3miage.integrator.models.*;
 import fr.uga.l3miage.integrator.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import javax.swing.text.Style;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -38,18 +29,24 @@ import java.util.Set;
 @SpringBootApplication
 public class IntegratorProjectSpringApplication {
 
+    private final TruckRepository truckRepository;
+
+    private final OrderRepository orderRepository;
+
+    private final EmployeeRepository employeeRepository;
+    private final WarehouseRepository warehouseRepository;
+    private final CustomerRepository customerRepository;
+    private final ProductRepository productRepository;
     @Autowired
-    private TruckRepository truckRepository;
-    @Autowired
-    private OrderRepository orderRepository;
-    @Autowired
-    private EmployeeRepository employeeRepository;
-    @Autowired
-    private WarehouseRepository warehouseRepository;
-    @Autowired
-    private CustomerRepository customerRepository;
-    @Autowired
-    private ProductRepository productRepository;
+    public IntegratorProjectSpringApplication(TruckRepository truckRepository,OrderRepository orderRepository,EmployeeRepository employeeRepository,WarehouseRepository warehouseRepository,CustomerRepository customerRepository,ProductRepository productRepository) {
+        this.truckRepository = truckRepository;
+        this.orderRepository=orderRepository;
+        this.employeeRepository=employeeRepository;
+        this.productRepository=productRepository;
+        this.warehouseRepository=warehouseRepository;
+        this.customerRepository=customerRepository;
+    }
+
 
     public static void main(String[] args) {
         SpringApplication.run(IntegratorProjectSpringApplication.class,args);
@@ -57,18 +54,18 @@ public class IntegratorProjectSpringApplication {
     }
 
 
-    @Transactional
+
     public void saveTrucksFromCsv(String filePath) throws IOException {
         String line="";
         int i=1;
         try{
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
-            line=reader.readLine(); //skip the header (column names)
+            reader.readLine(); //skip the header (column names)
             while ((line = reader.readLine()) !=null){
                     String  [] row =line.split(",");
                     TruckEntity truck = TruckEntity.builder().immatriculation(row[0]).build();
                     truckRepository.save(truck);
-                    System.out.println(" truck "+i+ ": ****** "+truckRepository.findById(truck.getImmatriculation()).get().getImmatriculation());
+                    //System.out.println(" truck "+i+ ": ****** "+truckRepository.findById(truck.getImmatriculation()).get().getImmatriculation());
                     i++;
             }
 
@@ -78,13 +75,13 @@ public class IntegratorProjectSpringApplication {
         }
     }
 
-    @Transactional
-    public void saveWarehousesFromCsv(String filePath) throws IOException {
+
+    public void saveWarehousesFromCsv(String filePath)  {
         String line="";
         int i=1;
         try{
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
-            line=reader.readLine(); //skip the header (column names)
+            reader.readLine(); //skip the header (column names)
             while ((line = reader.readLine()) !=null){
                 String  [] row=line.split(",");
                 String name=row[0];
@@ -104,7 +101,7 @@ public class IntegratorProjectSpringApplication {
                         .build();
 
                 warehouseRepository.save(warehouse);
-                System.out.println(" warehouse "+i+ ": ****** "+warehouseRepository.findById(warehouse.getName()).get().getName());
+                //System.out.println(" warehouse "+i+ ": ****** "+warehouseRepository.findById(warehouse.getName()).get().getName());
                 i++;
             }
 
@@ -114,7 +111,6 @@ public class IntegratorProjectSpringApplication {
         }
     }
 
-    @Transactional
     public void saveEmployeesFromCsv(String filePath) throws IOException {
         String line="";
         int i=1;
@@ -145,7 +141,7 @@ public class IntegratorProjectSpringApplication {
                         .mobilePhone(mobilePhone)
                         .build();
                 employeeRepository.save(employee);
-                System.out.println(" employee "+i+ ": ****** "+employeeRepository.findById(employee.getTrigram()).get().getTrigram() + " -  Job :"+employeeRepository.findById(employee.getTrigram()).get().getJob());
+                //System.out.println(" employee "+i+ ": ****** "+employeeRepository.findById(employee.getTrigram()).get().getTrigram() + " -  Job :"+employeeRepository.findById(employee.getTrigram()).get().getJob());
                 i++;
             }
 
@@ -155,7 +151,6 @@ public class IntegratorProjectSpringApplication {
         }
     }
 
-    @Transactional
     public void saveCustomersFromCsv(String filePath) throws IOException {
         String line="";
         int i=1;
@@ -180,7 +175,7 @@ public class IntegratorProjectSpringApplication {
                         .state(CustomerState.REGISTERED) //default
                         .build();
                 customerRepository.save(customer);
-                System.out.println(" customer "+i+ ": ****** "+customerRepository.findById(customer.getEmail()).get().getEmail());
+                //System.out.println(" customer "+i+ ": ****** "+customerRepository.findById(customer.getEmail()).get().getEmail());
                 i++;
             }
 
@@ -190,7 +185,7 @@ public class IntegratorProjectSpringApplication {
         }
     }
 
-    @Transactional
+
     public void saveOrdersFromCsv(String filePath) throws IOException {
         String line="";
         int i=1;
@@ -226,7 +221,7 @@ public class IntegratorProjectSpringApplication {
                         .lines(Set.of())
                         .build();
                 orderRepository.save(order);
-                System.out.println(" order "+i+ ": ****** "+orderRepository.findById(order.getReference()).get().getReference() +"State : "+orderRepository.findById(order.getReference()).get().getState() );
+                //System.out.println(" order "+i+ ": ****** "+orderRepository.findById(order.getReference()).get().getReference() +"State : "+orderRepository.findById(order.getReference()).get().getState() );
                 i++;
             }
 
