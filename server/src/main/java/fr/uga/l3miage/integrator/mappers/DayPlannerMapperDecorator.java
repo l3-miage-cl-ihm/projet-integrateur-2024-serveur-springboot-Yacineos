@@ -5,6 +5,7 @@ import fr.uga.l3miage.integrator.enums.Job;
 import fr.uga.l3miage.integrator.mappers.utils.DayPlannerMapperUtils;
 import fr.uga.l3miage.integrator.mappers.utils.TourDMMapperUtils;
 import fr.uga.l3miage.integrator.models.*;
+import fr.uga.l3miage.integrator.repositories.EmployeeRepository;
 import fr.uga.l3miage.integrator.requests.DayCreationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,22 +21,15 @@ public abstract class DayPlannerMapperDecorator implements DayPlannerMapper {
     private DayPlannerMapper delegate;
     @Autowired
     private DayPlannerMapperUtils dayPlannerMapperUtils;
+    @Autowired
+    private EmployeeRepository employeeRepository;
     @Override
     public DayEntity toEntity(DayCreationRequest dayCreationRequest) {
         //setting day fields
         DayEntity dayEntity = delegate.toEntity(dayCreationRequest);
         dayEntity.setReference(dayPlannerMapperUtils.generateDayReference(dayCreationRequest.getDate()));
         dayEntity.setState(DayState.PLANNED);
-
-        //After setting up the main to feed the db, register the planner and the warehouse from the main. So I have just to find them with
-        // their respective repositories in the db and add the planned to the dayEntity. Because if we want to plan another day, according to this current implementation
-        //the mapper creates the same planner and this should throw an exception because he is already exist. That's why I need to feed the db first from the main of the
-        //spring boot application with the data with the planner and the warehouse.
-        WarehouseEntity grenis =WarehouseEntity.builder().days(Set.of(dayEntity)).photo("grenis.png").name("Grenis").letter("G")
-                .address(new Address("21 rue des cafards","65001","San antonio")).trucks(Set.of()).build();
-
-        EmployeeEntity planner = EmployeeEntity.builder().email("christian.paul@grenis.com").job(Job.PLANNER).photo("chris.png")
-                .lastName("Paul").firstName("Christian").mobilePhone("0765437876").trigram("CPL").warehouse(grenis).build();
+        EmployeeEntity planner =employeeRepository.findById("STR").get() ; //We supposed to work with only one warehouse which is "GRENIS".
 
         dayEntity.setPlanner(planner);
 
