@@ -39,7 +39,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@AutoConfigureTestDatabase
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class DayServiceTest {
     @Autowired

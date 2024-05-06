@@ -571,7 +571,7 @@ public class PlannerControllerTest {
         final HttpHeaders headers = new HttpHeaders();
 
         final Map<String, Object> urlParams = new HashMap<>();
-        urlParams.put("date", LocalDate.of(2024,4,29).toString());
+        urlParams.put("date", "2024-04-29");
 
         NotFoundErrorResponse expectedResponse = NotFoundErrorResponse.builder().uri("/api/v2.0/planner/day").errorMessage("No day found for the "+LocalDate.of(2024,4,29)).build();
 

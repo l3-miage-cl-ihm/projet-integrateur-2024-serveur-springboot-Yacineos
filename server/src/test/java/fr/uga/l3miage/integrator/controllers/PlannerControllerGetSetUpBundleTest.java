@@ -133,7 +133,7 @@ public class PlannerControllerGetSetUpBundleTest {
         truckRepository.save(t2);
 
         SetUpBundleResponse expectedResponse = dayService.getSetUpBundle();
-        ResponseEntity<SetUpBundleResponse> response = testRestTemplate.exchange("/api/v2.0/planner/day/bundle", HttpMethod.GET, new HttpEntity<>(null, headers), SetUpBundleResponse.class);
+        ResponseEntity<SetUpBundleResponse> response = testRestTemplate.exchange("/api/v2.0/planner/bundle", HttpMethod.GET, new HttpEntity<>(null, headers), SetUpBundleResponse.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(expectedResponse);

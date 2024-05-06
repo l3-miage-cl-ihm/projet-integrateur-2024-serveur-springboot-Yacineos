@@ -21,8 +21,8 @@ public class PlannerControllers implements PlannerEndpoints {
     @Override
     public DayResponseDTO getDay(LocalDate date)  {
         //call the service
-       // return  dayService.getDay(date);
-    return null;
+        return  dayService.getDay(date);
+
     }
 
 

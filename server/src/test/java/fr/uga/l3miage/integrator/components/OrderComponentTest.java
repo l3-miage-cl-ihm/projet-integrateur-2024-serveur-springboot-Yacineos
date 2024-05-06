@@ -24,7 +24,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-@AutoConfigureTestDatabase
+
 public class OrderComponentTest {
 
     @Autowired
@@ -78,7 +78,7 @@ public class OrderComponentTest {
         orderEntities.add(o3);
         orderEntities.add(o2);
 
-        when(orderRepository.findOrderEntitiesByStateOrderByCreationDateAsc(OrderState.OPENED)).thenReturn(orderEntities);
+        when(orderRepository.findOrderEntitiesByStateOrderByCreationDateAsc(OrderState.OPENED)).thenReturn(Set.of(o1,o3,o2));
         Set<MultipleOrder> multipleOrderSet = orderComponent.createMultipleOrders();
 
         assertThat(multipleOrderSet.size()).isEqualTo(2);
