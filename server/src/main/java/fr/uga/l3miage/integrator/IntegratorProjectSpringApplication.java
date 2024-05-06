@@ -235,12 +235,11 @@ public class IntegratorProjectSpringApplication {
     public void init() throws IOException {
         String dirPath = System.getProperty("user.dir"); // in the spring-boot-server root (the project)
 
-        saveTrucksFromCsv(dirPath+"/src/main/java/fr/uga/l3miage/integrator/utils/data/trucks.csv");
-        saveWarehousesFromCsv(dirPath+"/src/main/java/fr/uga/l3miage/integrator/utils/data/warehouses.csv");
-        saveEmployeesFromCsv(dirPath+"/src/main/java/fr/uga/l3miage/integrator/utils/data/employees.csv");
-        saveCustomersFromCsv(dirPath+"/src/main/java/fr/uga/l3miage/integrator/utils/data/customers.csv");
-        saveOrdersFromCsv(dirPath+"/src/main/java/fr/uga/l3miage/integrator/utils/data/orders.csv");
-
+        saveTrucksFromCsv(dirPath+"/server/src/main/java/fr/uga/l3miage/integrator/utils/data/trucks.csv");
+        saveWarehousesFromCsv(dirPath+"/server/src/main/java/fr/uga/l3miage/integrator/utils/data/warehouses.csv");
+        saveEmployeesFromCsv(dirPath+"/server/src/main/java/fr/uga/l3miage/integrator/utils/data/employees.csv");
+        saveCustomersFromCsv(dirPath+"/server/src/main/java/fr/uga/l3miage/integrator/utils/data/customers.csv");
+        saveOrdersFromCsv(dirPath+"/server/src/main/java/fr/uga/l3miage/integrator/utils/data/orders.csv");
     }
 
 
