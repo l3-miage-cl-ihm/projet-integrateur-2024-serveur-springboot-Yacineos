@@ -232,11 +232,11 @@ public class IntegratorProjectSpringApplication {
 
     @PostConstruct
     public void init() throws IOException {
-        saveTrucksFromCsv("/serveur-springboot/server/src/main/java/fr/uga/l3miage/integrator/utils/data/trucks.csv");
-        saveWarehousesFromCsv("/serveur-springboot/server/src/main/java/fr/uga/l3miage/integrator/utils/data/warehouses.csv");
-        saveEmployeesFromCsv("/serveur-springboot/server/src/main/java/fr/uga/l3miage/integrator/utils/data/employees.csv");
-        saveCustomersFromCsv("/serveur-springboot/server/src/main/java/fr/uga/l3miage/integrator/utils/data/customers.csv");
-        saveOrdersFromCsv("/serveur-springboot/server/src/main/java/fr/uga/l3miage/integrator/utils/data/orders.csv");
+        saveTrucksFromCsv("serveur-springboot/server/src/main/java/fr/uga/l3miage/integrator/utils/data/trucks.csv");
+        saveWarehousesFromCsv("serveur-springboot/server/src/main/java/fr/uga/l3miage/integrator/utils/data/warehouses.csv");
+        saveEmployeesFromCsv("serveur-springboot/server/src/main/java/fr/uga/l3miage/integrator/utils/data/employees.csv");
+        saveCustomersFromCsv("serveur-springboot/server/src/main/java/fr/uga/l3miage/integrator/utils/data/customers.csv");
+        saveOrdersFromCsv("serveur-springboot/server/src/main/java/fr/uga/l3miage/integrator/utils/data/orders.csv");
 
 
 
