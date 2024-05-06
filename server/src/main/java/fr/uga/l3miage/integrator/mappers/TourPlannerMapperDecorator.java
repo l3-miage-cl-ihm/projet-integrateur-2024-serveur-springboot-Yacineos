@@ -52,4 +52,5 @@ public abstract class TourPlannerMapperDecorator implements TourPlannerMapper {
         tourEntity.setDeliverymen(deliverymen);
         return tourEntity;
     }
+
 }
