@@ -1,9 +1,10 @@
 package fr.uga.l3miage.integrator.components;
 
-import fr.uga.l3miage.integrator.dataTypes.MultipleOrder;
+
 import fr.uga.l3miage.integrator.enums.OrderState;
 import fr.uga.l3miage.integrator.models.OrderEntity;
 import fr.uga.l3miage.integrator.repositories.OrderRepository;
+import fr.uga.l3miage.integrator.responses.datatypes.MultipleOrder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

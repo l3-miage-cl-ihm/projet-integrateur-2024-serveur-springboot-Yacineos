@@ -1,6 +1,6 @@
 package fr.uga.l3miage.integrator.repositories;
 
-import fr.uga.l3miage.integrator.dataTypes.Address;
+
 import fr.uga.l3miage.integrator.enums.OrderState;
 import fr.uga.l3miage.integrator.models.OrderEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

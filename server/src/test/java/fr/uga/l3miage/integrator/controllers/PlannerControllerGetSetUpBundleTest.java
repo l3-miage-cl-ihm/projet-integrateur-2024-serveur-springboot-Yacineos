@@ -3,7 +3,8 @@ package fr.uga.l3miage.integrator.controllers;
 import fr.uga.l3miage.integrator.components.EmployeeComponent;
 import fr.uga.l3miage.integrator.components.OrderComponent;
 import fr.uga.l3miage.integrator.components.TruckComponent;
-import fr.uga.l3miage.integrator.dataTypes.Address;
+
+import fr.uga.l3miage.integrator.datatypes.Address;
 import fr.uga.l3miage.integrator.enums.Job;
 import fr.uga.l3miage.integrator.enums.OrderState;
 import fr.uga.l3miage.integrator.models.CustomerEntity;

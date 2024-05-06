@@ -4,7 +4,6 @@ import fr.uga.l3miage.integrator.components.DayComponent;
 import fr.uga.l3miage.integrator.components.EmployeeComponent;
 import fr.uga.l3miage.integrator.components.OrderComponent;
 import fr.uga.l3miage.integrator.components.TruckComponent;
-import fr.uga.l3miage.integrator.dataTypes.MultipleOrder;
 import fr.uga.l3miage.integrator.components.DeliveryComponent;
 import fr.uga.l3miage.integrator.components.TourComponent;
 import fr.uga.l3miage.integrator.exceptions.rest.DayCreationRestException;
@@ -21,6 +20,7 @@ import fr.uga.l3miage.integrator.requests.DeliveryCreationRequest;
 import fr.uga.l3miage.integrator.requests.TourCreationRequest;
 import fr.uga.l3miage.integrator.responses.DayResponseDTO;
 import fr.uga.l3miage.integrator.responses.SetUpBundleResponse;
+import fr.uga.l3miage.integrator.responses.datatypes.MultipleOrder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,6 +42,9 @@ public class DayService {
     private final DayPlannerMapper dayPlannerMapper;
     private  final TourPlannerMapper tourPlannerMapper;
     private final  DeliveryPlannerMapper deliveryPlannerMapper;
+    private final TruckComponent truckComponent;
+    private final EmployeeComponent employeeComponent;
+    private final OrderComponent orderComponent;
     public void planDay(DayCreationRequest dayCreationRequest){
         try {
             //check wether the day is not already planned
@@ -121,7 +125,7 @@ public class DayService {
 
         setUpBundleResponse.setMultipleOrders(multipleOrderSet);
         setUpBundleResponse.setDeliverymen(idLivreurs);
-        setUpBundleResponse.setTruck(immatriculationTrucks);
+        setUpBundleResponse.setTrucks(immatriculationTrucks);
         return setUpBundleResponse ;
     }
     public DayResponseDTO getDay(LocalDate date){

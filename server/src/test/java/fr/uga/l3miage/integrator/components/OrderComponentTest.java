@@ -1,11 +1,12 @@
 package fr.uga.l3miage.integrator.components;
 
-import fr.uga.l3miage.integrator.dataTypes.Address;
-import fr.uga.l3miage.integrator.dataTypes.MultipleOrder;
+
+import fr.uga.l3miage.integrator.datatypes.Address;
 import fr.uga.l3miage.integrator.enums.OrderState;
 import fr.uga.l3miage.integrator.models.CustomerEntity;
 import fr.uga.l3miage.integrator.models.OrderEntity;
 import fr.uga.l3miage.integrator.repositories.OrderRepository;
+import fr.uga.l3miage.integrator.responses.datatypes.MultipleOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

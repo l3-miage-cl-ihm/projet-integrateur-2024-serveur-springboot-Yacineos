@@ -1,6 +1,5 @@
 package fr.uga.l3miage.integrator.responses;
 
-import fr.uga.l3miage.integrator.dataTypes.MultipleOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
