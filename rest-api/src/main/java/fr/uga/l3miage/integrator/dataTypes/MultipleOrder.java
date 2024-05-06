@@ -28,7 +28,7 @@ public class MultipleOrder {
                 stringBuilder.append(order);
                 stringBuilder.append(",");
             }
-            stringBuilder.setLength(stringBuilder.length() - 2); // Retirer la dernière virgule et l'espace
+            stringBuilder.setLength(stringBuilder.length() - 1); // Retirer la dernière virgule et l'espace
         }
         stringBuilder.append("],");
         stringBuilder.append(address);

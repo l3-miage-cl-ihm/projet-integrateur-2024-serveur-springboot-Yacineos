@@ -117,7 +117,7 @@ public class DayServiceSetupBundleTest {
         assertThat(response.getDeliverymen().size()).isEqualTo(3);
         assertThat(response.getMultipleOrders().size()).isEqualTo(2);
         assertThat(response.getTruck().size()).isEqualTo(2);
-        assertThat(response.getMultipleOrders().stream().findFirst().get()).isEqualTo("[[c01,c0],21 rue de la paix, Grenoble]");
+        assertThat(response.getMultipleOrders().stream().findFirst().get()).isEqualTo("[[c01,c02],21 rue de la paix, Grenoble]");
 
     }
 }

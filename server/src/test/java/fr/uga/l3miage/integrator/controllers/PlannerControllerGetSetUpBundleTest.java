@@ -55,7 +55,7 @@ public class PlannerControllerGetSetUpBundleTest {
 
     @Autowired
     private CustomerRepository customerRepository;
-    
+
 
     @AfterEach
     void clear(){
