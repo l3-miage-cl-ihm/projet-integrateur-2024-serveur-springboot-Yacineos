@@ -1,0 +1,123 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.3.0.RELEASE)
+
+2024-04-19 18:47:42.932  INFO 48740 --- [           main] u.l.i.IntegratorProjectSpringApplication : Starting IntegratorProjectSpringApplication v1.0-SNAPSHOT on l3m-projet-2024-oukkaly-904 with PID 48740 (/home/ecloud/projet_integrateur/projet-integrateur-2024-serveur-springboot-Yacineos/server/target/integrator-project.jar started by ecloud in /home/ecloud/projet_integrateur/projet-integrateur-2024-serveur-springboot-Yacineos)
+2024-04-19 18:47:42.937  INFO 48740 --- [           main] u.l.i.IntegratorProjectSpringApplication : No active profile set, falling back to default profiles: default
+2024-04-19 18:47:44.371  INFO 48740 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFERRED mode.
+2024-04-19 18:47:44.442  INFO 48740 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 65ms. Found 4 JPA repository interfaces.
+2024-04-19 18:47:44.989  INFO 48740 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2024-04-19 18:47:44.999  INFO 48740 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-04-19 18:47:44.999  INFO 48740 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.35]
+2024-04-19 18:47:45.049  INFO 48740 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-04-19 18:47:45.049  INFO 48740 --- [           main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 2020 ms
+2024-04-19 18:47:45.281  INFO 48740 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2024-04-19 18:47:45.334  INFO 48740 --- [         task-1] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-04-19 18:47:45.431  INFO 48740 --- [         task-1] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.15.Final
+2024-04-19 18:47:45.526  WARN 48740 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-04-19 18:47:45.574  INFO 48740 --- [         task-1] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
+2024-04-19 18:47:45.743  INFO 48740 --- [         task-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-04-19 18:47:45.982  INFO 48740 --- [         task-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-04-19 18:47:46.012  INFO 48740 --- [         task-1] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL10Dialect
+2024-04-19 18:47:46.365  WARN 48740 --- [         task-1] org.hibernate.mapping.RootClass          : HHH000038: Composite-id class does not override equals(): fr.uga.l3miage.integrator.models.LineKey
+2024-04-19 18:47:46.365  WARN 48740 --- [         task-1] org.hibernate.mapping.RootClass          : HHH000039: Composite-id class does not override hashCode(): fr.uga.l3miage.integrator.models.LineKey
+2024-04-19 18:47:46.829  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.829  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "day_entity" does not exist, skipping
+2024-04-19 18:47:46.829  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.829  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "day_entity" does not exist, skipping
+2024-04-19 18:47:46.830  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.830  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "delivery_entity" does not exist, skipping
+2024-04-19 18:47:46.830  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.830  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "employee_entity" does not exist, skipping
+2024-04-19 18:47:46.830  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.830  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "line_entity" does not exist, skipping
+2024-04-19 18:47:46.831  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.831  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "line_entity" does not exist, skipping
+2024-04-19 18:47:46.831  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.831  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "order_entity" does not exist, skipping
+2024-04-19 18:47:46.832  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.832  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "order_entity" does not exist, skipping
+2024-04-19 18:47:46.832  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.832  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "tour_entity" does not exist, skipping
+2024-04-19 18:47:46.832  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.832  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "tour_entity" does not exist, skipping
+2024-04-19 18:47:46.833  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.833  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "tour_entity_delivery_men" does not exist, skipping
+2024-04-19 18:47:46.833  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.833  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "tour_entity_delivery_men" does not exist, skipping
+2024-04-19 18:47:46.833  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.833  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "truck_entity" does not exist, skipping
+2024-04-19 18:47:46.834  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.834  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "customer_entity" does not exist, skipping
+2024-04-19 18:47:46.834  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.834  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "day_entity" does not exist, skipping
+2024-04-19 18:47:46.835  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.835  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "delivery_entity" does not exist, skipping
+2024-04-19 18:47:46.835  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.835  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "employee_entity" does not exist, skipping
+2024-04-19 18:47:46.835  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.835  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "healthcheck_entity" does not exist, skipping
+2024-04-19 18:47:46.836  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.836  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "line_entity" does not exist, skipping
+2024-04-19 18:47:46.836  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.836  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "order_entity" does not exist, skipping
+2024-04-19 18:47:46.836  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.836  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "product_entity" does not exist, skipping
+2024-04-19 18:47:46.837  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.837  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "tour_entity" does not exist, skipping
+2024-04-19 18:47:46.837  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.837  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "tour_entity_delivery_men" does not exist, skipping
+2024-04-19 18:47:46.837  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.838  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "truck_entity" does not exist, skipping
+2024-04-19 18:47:46.838  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-04-19 18:47:46.838  WARN 48740 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "warehouse_entity" does not exist, skipping
+2024-04-19 18:47:46.971  INFO 48740 --- [         task-1] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-04-19 18:47:46.979  INFO 48740 --- [         task-1] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-04-19 18:47:48.280  WARN 48740 --- [           main] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates or check your Thymeleaf configuration)
+2024-04-19 18:47:48.476  INFO 48740 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2024-04-19 18:47:48.516  INFO 48740 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2024-04-19 18:47:48.517  INFO 48740 --- [           main] DeferredRepositoryInitializationListener : Triggering deferred initialization of Spring Data repositories…
+2024-04-19 18:47:48.577  INFO 48740 --- [           main] DeferredRepositoryInitializationListener : Spring Data repositories initialized!
+2024-04-19 18:47:48.619  INFO 48740 --- [           main] u.l.i.IntegratorProjectSpringApplication : Started IntegratorProjectSpringApplication in 6.253 seconds (JVM running for 6.68)
+2024-04-19 18:58:51.203  INFO 48740 --- [nio-8080-exec-1] o.apache.coyote.http11.Http11Processor   : Error parsing HTTP request header
+ Note: further occurrences of HTTP request parsing errors will be logged at DEBUG level.
+
+java.lang.IllegalArgumentException: Invalid character found in method name [0x160x030x010x020x000x010x000x010xfc0x030x03>]<f0xc00xac0xf80xa10xc50x1e|0x82c"90x9bk0xc20xcd0xbb0x1d0xb70xe10xdb0x1e0xb00x8b0x950x85Q0x050xde]. HTTP method names must be tokens
+	at org.apache.coyote.http11.Http11InputBuffer.parseRequestLine(Http11InputBuffer.java:418) ~[tomcat-embed-core-9.0.35.jar!/:9.0.35]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:260) ~[tomcat-embed-core-9.0.35.jar!/:9.0.35]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65) ~[tomcat-embed-core-9.0.35.jar!/:9.0.35]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:868) ~[tomcat-embed-core-9.0.35.jar!/:9.0.35]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1590) ~[tomcat-embed-core-9.0.35.jar!/:9.0.35]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49) ~[tomcat-embed-core-9.0.35.jar!/:9.0.35]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[na:na]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-9.0.35.jar!/:9.0.35]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+
+2024-04-19 18:59:03.369  INFO 48740 --- [nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-04-19 18:59:03.369  INFO 48740 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-04-19 18:59:03.379  INFO 48740 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 10 ms
+2024-04-27 07:43:55.772  INFO 48740 --- [extShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-04-27 07:43:55.801  INFO 48740 --- [extShutdownHook] .SchemaDropperImpl$DelayedDropActionImpl : HHH000477: Starting delayed evictData of schema as part of SessionFactory shut-down'
+2024-04-27 07:43:55.824  WARN 48740 --- [extShutdownHook] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@4f45dde9 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2024-04-27 07:43:55.825  WARN 48740 --- [extShutdownHook] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@2faeedd (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2024-04-27 07:43:55.826  WARN 48740 --- [extShutdownHook] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@e1970e7 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2024-04-27 07:43:55.830  WARN 48740 --- [extShutdownHook] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@6f525e58 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2024-04-27 07:43:55.830  WARN 48740 --- [extShutdownHook] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@8791284 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2024-04-27 07:43:55.831  WARN 48740 --- [extShutdownHook] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@5da08950 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2024-04-27 07:43:55.831  WARN 48740 --- [extShutdownHook] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@187b444b (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2024-04-27 07:43:55.831  WARN 48740 --- [extShutdownHook] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@65266982 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2024-04-27 07:43:55.832  WARN 48740 --- [extShutdownHook] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@258bba90 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2024-04-27 07:43:55.832  WARN 48740 --- [extShutdownHook] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@7cb85d78 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2024-04-27 07:44:25.809  WARN 48740 --- [extShutdownHook] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 08001
+2024-04-27 07:44:25.810 ERROR 48740 --- [extShutdownHook] o.h.engine.jdbc.spi.SqlExceptionHelper   : HikariPool-1 - Connection is not available, request timed out after 30002ms.
+2024-04-27 07:44:25.810 ERROR 48740 --- [extShutdownHook] o.h.engine.jdbc.spi.SqlExceptionHelper   : Connection to localhost:5432 refused. Check that the hostname and port are correct and that the postmaster is accepting TCP/IP connections.
+2024-04-27 07:44:25.815  WARN 48740 --- [extShutdownHook] o.s.b.f.support.DisposableBeanAdapter    : Invocation of destroy method failed on bean with name 'entityManagerFactory': org.hibernate.exception.JDBCConnectionException: Unable to open JDBC Connection for DDL execution
+2024-04-27 07:44:25.815  INFO 48740 --- [extShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2024-04-27 07:44:25.816  INFO 48740 --- [extShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-04-27 07:44:34.156  INFO 48740 --- [extShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

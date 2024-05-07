@@ -20,7 +20,6 @@ public class PlannerControllers implements PlannerEndpoints {
     private final   DayService dayService;
     @Override
     public DayResponseDTO getDay(LocalDate date)  {
-        //call the service
         return  dayService.getDay(date);
 
     }
@@ -32,7 +31,6 @@ public class PlannerControllers implements PlannerEndpoints {
     }
     @Override
     public SetUpBundleResponse getSetUpBundle() {
-        //call the service
         return dayService.getSetUpBundle();
     }
 
