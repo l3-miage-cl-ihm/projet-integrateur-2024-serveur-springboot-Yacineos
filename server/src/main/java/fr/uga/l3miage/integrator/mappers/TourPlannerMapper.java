@@ -1,6 +1,7 @@
 package fr.uga.l3miage.integrator.mappers;
 
 import fr.uga.l3miage.integrator.exceptions.technical.InvalidInputValueException;
+import fr.uga.l3miage.integrator.mappers.utils.TourPlannerMapperUtils;
 import fr.uga.l3miage.integrator.models.EmployeeEntity;
 import fr.uga.l3miage.integrator.models.TourEntity;
 import fr.uga.l3miage.integrator.models.TruckEntity;
@@ -14,23 +15,13 @@ import org.mapstruct.Named;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper(uses = {DeliveryPlannerMapper.class})
+@Mapper(uses = {DeliveryPlannerMapper.class, TourPlannerMapperUtils.class})
 @DecoratedWith(TourPlannerMapperDecorator.class)
 public interface TourPlannerMapper {
-
-    @Mapping(source = "truck",target = "truck",qualifiedByName = "getTruckID")
+    @Mapping(source = "truck",target = "truck",qualifiedBy=TourPlannerMapperUtils.GetTruckID.class)
     @Mapping(source = "reference", target = "refTour")
-    @Mapping(source= "deliverymen",target = "deliveryMen", qualifiedByName = "getDeliveryMenIDs")
+    @Mapping(source= "deliverymen",target = "deliveryMen", qualifiedBy=TourPlannerMapperUtils.GetDeliveryMenIDs.class)
     TourPlannerResponseDTO toResponse(TourEntity tourEntity);
-
-    @Named("getTruckID")
-    default String getTruckID (TruckEntity truckEntity){
-        return truckEntity.getImmatriculation();
-    }
-    @Named("getDeliveryMenIDs")
-    default Set<String> getDeliveryMenIDs(Set<EmployeeEntity> deliverymen){
-        return deliverymen.stream().map(EmployeeEntity::getTrigram).collect(Collectors.toSet());
-    }
 
     @Mapping(target = "deliverymen", ignore=true)
     @Mapping(target = "deliveries", ignore=true)

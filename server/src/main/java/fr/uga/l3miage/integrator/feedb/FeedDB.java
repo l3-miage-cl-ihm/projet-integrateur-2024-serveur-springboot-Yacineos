@@ -1,4 +1,4 @@
-package fr.uga.l3miage.integrator.feedDB;
+package fr.uga.l3miage.integrator.feedb;
 
 
 import fr.uga.l3miage.integrator.datatypes.Address;
@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
