@@ -26,10 +26,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -111,17 +108,17 @@ public class DayService {
     public SetUpBundleResponse getSetUpBundle(){
 
         SetUpBundleResponse setUpBundleResponse = new SetUpBundleResponse();
-
-        Set<MultipleOrder> multipleOrder = orderComponent.createMultipleOrders();
-        Set<String> multipleOrderSet = new HashSet<>();
-        for (MultipleOrder multipleOrder1 : multipleOrder){
-            multipleOrderSet.add(multipleOrder1.toString());
-        }
+        LinkedHashSet<MultipleOrder> multipleOrder = new LinkedHashSet<>();
+        multipleOrder = orderComponent.createMultipleOrders();
+//        Set<String> multipleOrderSet = new HashSet<>();
+//        for (MultipleOrder multipleOrder1 : multipleOrder){
+//            multipleOrderSet.add(multipleOrder1.toString());
+//        }
 
         Set<String> immatriculationTrucks = truckComponent.getAllTrucksImmatriculation();
         Set<String> idLivreurs = employeeComponent.getAllDeliveryMenID();
 
-        setUpBundleResponse.setMultipleOrders(multipleOrderSet);
+        setUpBundleResponse.setMultipleOrders(multipleOrder);
         setUpBundleResponse.setDeliverymen(idLivreurs);
         setUpBundleResponse.setTrucks(immatriculationTrucks);
         return setUpBundleResponse ;

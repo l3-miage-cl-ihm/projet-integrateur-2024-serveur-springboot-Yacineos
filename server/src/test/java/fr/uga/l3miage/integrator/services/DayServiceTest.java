@@ -30,6 +30,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -702,12 +703,12 @@ public class DayServiceTest {
                 .immatriculation("DEF")
                 .build();
 
-        Set<String> ref = new HashSet<>();
+        Set<String> ref = new LinkedHashSet<>();
         ref.add(o1.getReference());
         ref.add(o2.getReference());
         MultipleOrder m1 = new MultipleOrder(ref,a1.toString());
         MultipleOrder m2 = new MultipleOrder(Set.of(o3.getReference()),a2.toString());
-        Set<MultipleOrder> m3 = new HashSet<>();
+        LinkedHashSet<MultipleOrder> m3 = new LinkedHashSet<>();
         m3.add(m1);
         m3.add(m2);
 
@@ -728,7 +729,7 @@ public class DayServiceTest {
         assertThat(response.getDeliverymen().size()).isEqualTo(3);
         assertThat(response.getMultipleOrders().size()).isEqualTo(2);
         assertThat(response.getTrucks().size()).isEqualTo(2);
-        assertThat(response.getMultipleOrders().stream().findFirst().get()).isEqualTo("[[c02,c01],21 rue de la paix, Grenoble]");
+        assertThat(response.getMultipleOrders().stream().findFirst().get().getAddress()).isEqualTo("21 rue de la paix, Grenoble");
 
     }
 

@@ -16,9 +16,9 @@ import java.util.*;
 @RequiredArgsConstructor
 public class OrderComponent {
     private final OrderRepository orderRepository;
-    public Set<MultipleOrder> createMultipleOrders() {
+    public LinkedHashSet<MultipleOrder> createMultipleOrders() {
         Set<OrderEntity> allOrders = orderRepository.findOrderEntitiesByStateOrderByCreationDateAsc(OrderState.OPENED);
-        Set<MultipleOrder> multipleOrders =  new LinkedHashSet<>();
+        LinkedHashSet<MultipleOrder> multipleOrders =  new LinkedHashSet<>();
         String address = allOrders.stream().findFirst().get().getCustomer().getAddress().toString();
         Set<String> reference = new LinkedHashSet<>();
         reference.add(allOrders.stream().findFirst().get().getReference());
