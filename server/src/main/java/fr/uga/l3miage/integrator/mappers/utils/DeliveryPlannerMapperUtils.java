@@ -37,7 +37,7 @@ public class DeliveryPlannerMapperUtils {
     }
 
     @GetDeliveryAddress
-    public String GetDeliveryAddress(Set<OrderEntity> orderEntities){
+    public String getDeliveryAddress(Set<OrderEntity> orderEntities){
         Address customerAddress=orderEntities.stream().findFirst().get().getCustomer().getAddress();
         return customerAddress.getAddress()+","+customerAddress.getCity();
     }

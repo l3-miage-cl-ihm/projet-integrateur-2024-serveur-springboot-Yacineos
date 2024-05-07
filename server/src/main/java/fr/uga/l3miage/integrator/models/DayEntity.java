@@ -11,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -34,6 +35,6 @@ public class DayEntity {
 
     @OneToMany
     @JoinColumn(name = "refDay", referencedColumnName = "reference")
-    private Set<TourEntity> tours;
+    private List<TourEntity> tours;
 
 }

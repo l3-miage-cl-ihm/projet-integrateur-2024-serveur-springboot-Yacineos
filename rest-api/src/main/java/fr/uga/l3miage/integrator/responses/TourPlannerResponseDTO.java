@@ -5,13 +5,15 @@ import lombok.Data;
 import lombok.Setter;
 
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 @Data
 @Schema(description = "Tour representation for planner")
 public class TourPlannerResponseDTO {
     @Schema(description = "Deliveries list ")
-    private LinkedHashSet<DeliveryPlannerResponseDTO> deliveries ;
+    private List<DeliveryPlannerResponseDTO> deliveries ;
     @Schema(description = "list of deliveryMan id")
     private Set<String> deliveryMen;
     @Schema(description = "Truck id")

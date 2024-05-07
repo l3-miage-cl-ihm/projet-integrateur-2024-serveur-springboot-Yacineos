@@ -18,10 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -58,7 +55,7 @@ public class TourComponentTest {
 
 
         //given
-        DayEntity day = DayEntity.builder().tours(Set.of()).reference("J238").build();
+        DayEntity day = DayEntity.builder().tours(new LinkedList<>()).reference("J238").build();
 
         //when
         when(dayRepository.findByDate(any())).thenReturn(Optional.of(day));
@@ -85,7 +82,7 @@ public class TourComponentTest {
         tour.setDeliverymen(deliverymen);
 
         tours.add(tour);
-        DayEntity day = DayEntity.builder().tours(Set.of()).reference("J238").build();
+        DayEntity day = DayEntity.builder().tours(new LinkedList<>()).reference("J238").build();
 
         //when
         when(dayRepository.findByDate(any())).thenReturn(Optional.of(day));
@@ -99,7 +96,7 @@ public class TourComponentTest {
 
 
         //given
-        Set<TourEntity> tours= new HashSet<>();
+        List<TourEntity> tours= new LinkedList<>();
         Set<EmployeeEntity> deliverymen= new HashSet<>();
         EmployeeEntity m1=EmployeeEntity.builder().email("jojo@gmail.com").build();
         EmployeeEntity m2=EmployeeEntity.builder().email("axel@gmail.com").build();
@@ -143,7 +140,7 @@ public class TourComponentTest {
                 .reference("t123G-A")
                 .letter("A")
                 .state(TourState.PLANNED)
-                .deliveries(new LinkedHashSet<>())
+                .deliveries(new LinkedList<>())
                 .deliverymen(Set.of())
                 .truck(truck)
                 .distanceToCover(34)

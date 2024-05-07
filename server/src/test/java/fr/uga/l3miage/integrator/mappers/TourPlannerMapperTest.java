@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Set;
 
@@ -53,7 +54,7 @@ public class TourPlannerMapperTest {
         when(employeeRepository.findById(deliveryman1.getTrigram())).thenReturn(Optional.of(deliveryman1));
         when(employeeRepository.findById(deliveryman2.getTrigram())).thenReturn(Optional.of(deliveryman2));
 
-        TourEntity expectedResponse= TourEntity.builder().reference("t122G-A").state(TourState.PLANNED).distanceToCover(49).letter("A").deliveries(new LinkedHashSet<>()).deliverymen(Set.of(deliveryman1,deliveryman2)).truck(truck).build();
+        TourEntity expectedResponse= TourEntity.builder().reference("t122G-A").state(TourState.PLANNED).distanceToCover(49).letter("A").deliveries(new LinkedList<>()).deliverymen(Set.of(deliveryman1,deliveryman2)).truck(truck).build();
 
         TourEntity actualResponse= tourPlannerMapper.toEntity(tourCreationRequest,"t122G-A");
         //then

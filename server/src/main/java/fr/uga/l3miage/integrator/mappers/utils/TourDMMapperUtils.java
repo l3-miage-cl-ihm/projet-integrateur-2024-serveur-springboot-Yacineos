@@ -28,7 +28,6 @@ public class TourDMMapperUtils {
         //deliverymen are necessarily required for a tour.
         return deliverymen.stream().findFirst().get().getWarehouse().getName();
     }
-
     @ExtractFirstAndLastName
     public   Set<String> extractFirstAndLastName(Set<EmployeeEntity> deliverymen){
         return   deliverymen.stream().map(deliveryman -> deliveryman.getFirstName()+" "+deliveryman.getLastName()).collect(Collectors.toSet());

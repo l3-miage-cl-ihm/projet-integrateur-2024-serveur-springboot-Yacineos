@@ -1,16 +1,13 @@
 package fr.uga.l3miage.integrator.mappers;
 
 import fr.uga.l3miage.integrator.datatypes.Address;
-import fr.uga.l3miage.integrator.enums.CustomerState;
+
 import fr.uga.l3miage.integrator.enums.DayState;
 import fr.uga.l3miage.integrator.enums.Job;
-import fr.uga.l3miage.integrator.enums.OrderState;
 import fr.uga.l3miage.integrator.mappers.utils.DayPlannerMapperUtils;
-import fr.uga.l3miage.integrator.mappers.utils.TourDMMapperUtils;
 import fr.uga.l3miage.integrator.models.*;
 import fr.uga.l3miage.integrator.repositories.*;
 import fr.uga.l3miage.integrator.requests.DayCreationRequest;
-import fr.uga.l3miage.integrator.requests.DeliveryCreationRequest;
 import fr.uga.l3miage.integrator.requests.TourCreationRequest;
 import fr.uga.l3miage.integrator.responses.DayResponseDTO;
 import fr.uga.l3miage.integrator.responses.DeliveryPlannerResponseDTO;
@@ -21,13 +18,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -57,7 +50,7 @@ public class DayPlannerMapperTest {
 
         //when
         when(employeeRepository.findById(planner.getTrigram())).thenReturn(Optional.of(planner));
-        DayEntity expectedResponse= DayEntity.builder().reference(dayPlannerMapperUtils.generateDayReference(LocalDate.now())).state(DayState.PLANNED).date(now).planner(planner).tours(Set.of()).build();
+        DayEntity expectedResponse= DayEntity.builder().reference(dayPlannerMapperUtils.generateDayReference(LocalDate.now())).state(DayState.PLANNED).date(now).planner(planner).tours(new LinkedList<>()).build();
         DayEntity dayEntityResponse=dayPlannerMapper.toEntity(dayCreationRequest);
 
         //then
@@ -68,7 +61,7 @@ public class DayPlannerMapperTest {
     @Test
     void toResponseTest(){
         // creation deliveryMen 1
-        Set<TourEntity> tours= new HashSet<>();
+        List<TourEntity> tours= new LinkedList<>();
         Set<EmployeeEntity> deliverymen= new HashSet<>();
         EmployeeEntity m1=EmployeeEntity.builder().trigram("jjo").email("jojo@gmail.com").build();
         EmployeeEntity m2=EmployeeEntity.builder().trigram("axl").email("axel@gmail.com").build();
@@ -85,25 +78,18 @@ public class DayPlannerMapperTest {
 
         OrderEntity order11=OrderEntity.builder().reference("c11").customer(customer1).build();
         OrderEntity order12=OrderEntity.builder().reference("c12").customer(customer1).build();
-
-        Set<OrderEntity> orders1 = new HashSet<>();
-        orders1.add(order11);
-        orders1.add(order12);
         DeliveryEntity del1=DeliveryEntity.builder().reference("T238G-A1").distanceToCover(1.0).build();
-        del1.setOrders(orders1);
+        del1.setOrders(Set.of(order11,order12));
 
         //Creation delivery 2
         //creation order
         OrderEntity order21=OrderEntity.builder().reference("c21").customer(customer2).build();
         OrderEntity order22=OrderEntity.builder().reference("c22").customer(customer2).build();
 
-        Set<OrderEntity> orders2 = new HashSet<>();
-        orders2.add(order21);
-        orders2.add(order22);
         DeliveryEntity del2=DeliveryEntity.builder().reference("T238G-A2").distanceToCover(2.0).build();
-        del2.setOrders(orders2);
+        del2.setOrders(Set.of(order21,order22));
 
-        LinkedHashSet<DeliveryEntity> deliveries1=new LinkedHashSet();
+        List<DeliveryEntity> deliveries1=new LinkedList<>();
         deliveries1.add(del1);
         deliveries1.add(del2);
         //creation tour 1
@@ -127,24 +113,19 @@ public class DayPlannerMapperTest {
         OrderEntity order31=OrderEntity.builder().reference("c31").customer(customer3).build();
         OrderEntity order32=OrderEntity.builder().reference("c32").customer(customer3).build();
 
-        Set<OrderEntity> orders3 = new HashSet<>();
-        orders3.add(order31);
-        orders3.add(order32);
         DeliveryEntity del3=DeliveryEntity.builder().reference("T238G-B1").distanceToCover(3.0).build();
-        del3.setOrders(orders3);
+        del3.setOrders(Set.of(order31,order32));
 
         //Creation delivery 4
         //creation order
         OrderEntity order41=OrderEntity.builder().reference("c41").customer(customer4).build();
         OrderEntity order42=OrderEntity.builder().reference("c42").customer(customer4).build();
 
-        Set<OrderEntity> orders4 = new HashSet<>();
-        orders4.add(order41);
-        orders4.add(order42);
-        DeliveryEntity del4=DeliveryEntity.builder().reference("T238G-B2").distanceToCover(4.0).build();
-        del4.setOrders(orders4);
 
-        LinkedHashSet<DeliveryEntity> deliveries2=new LinkedHashSet<>();
+        DeliveryEntity del4=DeliveryEntity.builder().reference("T238G-B2").distanceToCover(4.0).build();
+        del4.setOrders(Set.of(order41,order42));
+
+        List<DeliveryEntity> deliveries2=new LinkedList<>();
         deliveries2.add(del3);
         deliveries2.add(del4);
         //creation tour 2
@@ -185,9 +166,9 @@ public class DayPlannerMapperTest {
         tDTO1.setDeliveryMen(Set.of("jjo","axl"));
         tDTO1.setDistanceToCover(0.0);
         tDTO1.setRefTour("T238G-A");
-        LinkedHashSet<DeliveryPlannerResponseDTO> s1=new LinkedHashSet<>();
-        s1.add(dDTO2);
+        List<DeliveryPlannerResponseDTO> s1=new LinkedList<>();
         s1.add(dDTO1);
+        s1.add(dDTO2);
         tDTO1.setDeliveries(s1);
 
 
@@ -196,22 +177,25 @@ public class DayPlannerMapperTest {
         tDTO2.setDeliveryMen(Set.of("jju","alx"));
         tDTO2.setDistanceToCover(12.2);
         tDTO2.setRefTour("T238G-B");
-        LinkedHashSet<DeliveryPlannerResponseDTO> s2=new LinkedHashSet<>();
-        s2.add(dDTO4);
+        List<DeliveryPlannerResponseDTO> s2=new LinkedList<>();
         s2.add(dDTO3);
+        s2.add(dDTO4);
         tDTO2.setDeliveries(s2);
 
 
 
         DayResponseDTO expectedResponse = new DayResponseDTO();
         expectedResponse.setDate(LocalDate.of(2024,4,29));
-        expectedResponse.setTours(Set.of(tDTO2,tDTO1));
+        List<TourPlannerResponseDTO> s=new LinkedList<>();
+        s.add(tDTO1);
+        s.add(tDTO2);
+        expectedResponse.setTours(s);
 
         DayResponseDTO response = dayPlannerMapper.toResponse(day);
 
         assertThat(response.getDate()).isEqualTo(expectedResponse.getDate());
         assertThat(response.getTours().size()).isEqualTo(expectedResponse.getTours().size());
-        //assertThat(response).usingRecursiveComparison().isEqualTo(expectedResponse);  active this after fixing deliveries order (Set to LinkedSet)
+       //assertThat(response).usingRecursiveComparison().isEqualTo(expectedResponse);  //active this after fixing deliveries order (Set to LinkedSet)
 
 
     }

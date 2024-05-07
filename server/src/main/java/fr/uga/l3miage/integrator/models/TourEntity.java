@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -34,7 +35,7 @@ public class TourEntity {
 
     @OneToMany
     @JoinColumn(name = "refTour", referencedColumnName = "reference")
-    private LinkedHashSet<DeliveryEntity> deliveries;
+    private List<DeliveryEntity> deliveries;
 
     @ManyToOne
     private TruckEntity truck;

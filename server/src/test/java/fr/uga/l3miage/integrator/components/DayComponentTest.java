@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -56,7 +54,7 @@ public class DayComponentTest {
                 .reference("J124G")
                 .date(date)
                 .state(DayState.PLANNED)
-                .tours(Set.of())
+                .tours(new LinkedList<>())
                 .planner(planner)
                 .build();
 
@@ -95,7 +93,7 @@ public class DayComponentTest {
                 .reference("J124G")
                 .date(date)
                 .state(DayState.PLANNED)
-                .tours(Set.of())
+                .tours(new LinkedList<>())
                 .planner(planner)
                 .build();
 
@@ -133,7 +131,7 @@ public class DayComponentTest {
     @Test
     void getDayOK() throws DayNotFoundException {
         //given
-        Set<TourEntity> tours= new HashSet<>();
+        List<TourEntity> tours= new LinkedList<>();
         Set<EmployeeEntity> deliverymen= new HashSet<>();
         EmployeeEntity m1=EmployeeEntity.builder().email("jojo@gmail.com").build();
         EmployeeEntity m2=EmployeeEntity.builder().email("axel@gmail.com").build();

@@ -20,7 +20,9 @@ import fr.uga.l3miage.integrator.requests.DayCreationRequest;
 import fr.uga.l3miage.integrator.requests.DeliveryCreationRequest;
 import fr.uga.l3miage.integrator.requests.TourCreationRequest;
 import fr.uga.l3miage.integrator.responses.DayResponseDTO;
+import fr.uga.l3miage.integrator.responses.DeliveryPlannerResponseDTO;
 import fr.uga.l3miage.integrator.responses.SetUpBundleResponse;
+import fr.uga.l3miage.integrator.responses.TourPlannerResponseDTO;
 import fr.uga.l3miage.integrator.responses.datatypes.MultipleOrder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -64,7 +66,7 @@ public class DayService {
 
              //add tours to day
             AtomicInteger tourIndex= new AtomicInteger(0);
-            Set<TourEntity> dayTours = new HashSet<>();
+            List<TourEntity> dayTours = new LinkedList<>();
             for(TourCreationRequest tourCreationRequest : dayCreationRequest.getTours() ) {
                 try {
                     String refTour=tourComponent.generateTourReference(dayCreationRequest.getDate(),tourIndex.get());
@@ -72,7 +74,7 @@ public class DayService {
 
                     //add deliveries to tour
                     AtomicInteger deliveryIndex= new AtomicInteger(1);
-                    LinkedHashSet<DeliveryEntity> tourDeliveries= new LinkedHashSet<>();
+                    List<DeliveryEntity> tourDeliveries= new LinkedList<>();
                     for(DeliveryCreationRequest deliveryCreationRequest: tourCreationRequest.getDeliveries() ) {
                         DeliveryEntity deliveryEntity = deliveryPlannerMapper.toEntity(deliveryCreationRequest,deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),deliveryIndex.get()));
                         //save delivery and add it to tourDeliveries
@@ -93,7 +95,6 @@ public class DayService {
                 }
 
             };
-
             //add tours into day and save it.
             dayEntity.setTours(dayTours);
             dayComponent.planDay(dayEntity);
@@ -124,15 +125,48 @@ public class DayService {
         return setUpBundleResponse ;
     }
     public DayResponseDTO getDay(LocalDate date){
-        
-        try{
+        try {
             DayEntity day = dayComponent.getDay(date);
-            return dayPlannerMapper.toResponse(day);
-        }catch (DayNotFoundException e){
+
+            // Création de la DayResponseDTO avec les tournées et les livraisons ordonnées
+            DayResponseDTO dayResponseDTO = dayPlannerMapper.toResponse(day);
+
+            // Parcourir les tournées de DayEntity
+            List<TourPlannerResponseDTO> tours = new ArrayList<>();
+            for (TourEntity tourEntity : day.getTours()) {
+                TourPlannerResponseDTO tourDTO = tourPlannerMapper.toResponse(tourEntity);
+
+                // Maintenir l'ordre des livraisons tel qu'il est dans TourEntity
+                List<DeliveryEntity> deliveriesInTour = new LinkedList<>(tourEntity.getDeliveries());
+                List<DeliveryPlannerResponseDTO> orderedDeliveries = mapDeliveries(deliveriesInTour);
+                tourDTO.setDeliveries(orderedDeliveries);
+
+                // Ajouter la tournée avec les livraisons ordonnées à la liste des tournées
+                tours.add(tourDTO);
+            }
+
+            // Affecter les tournées ordonnées à la DayResponseDTO
+            dayResponseDTO.setTours(tours);
+
+            return dayResponseDTO;
+        } catch (DayNotFoundException e) {
             throw new EntityNotFoundRestException(e.getMessage());
         }
 
     }
 
-     
+    public List<DeliveryPlannerResponseDTO> mapDeliveries(List<DeliveryEntity> deliveries) {
+        Map<Integer, DeliveryPlannerResponseDTO> deliveryMap = new LinkedHashMap<>();
+
+        for (int i = 0; i < deliveries.size(); i++) {
+            DeliveryEntity delivery = deliveries.get(i);
+            DeliveryPlannerResponseDTO deliveryDTO = deliveryPlannerMapper.toResponse(delivery);
+            // Utilisation de l'index de la livraison comme ordre
+            deliveryMap.put(i, deliveryDTO);
+        }
+
+        return new ArrayList<>(deliveryMap.values());
+    }
+
+
 }

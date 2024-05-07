@@ -76,7 +76,7 @@ void clear(){
         urlParams.put("email", "juju@gmail.com");
 
         //create and save a tour
-        TourEntity tour = TourEntity.builder().reference("T123G-B").letter("G").distanceToCover(12.1).deliveries(new LinkedHashSet<>()).build();
+        TourEntity tour = TourEntity.builder().reference("T123G-B").letter("G").distanceToCover(12.1).deliveries(new LinkedList<>()).build();
         EmployeeEntity man1 = EmployeeEntity.builder().email("antoinedupont@gmail.com").trigram("ant").photo(".png").lastName("okj").firstName("jd").mobilePhone("098Y5E").build();
         EmployeeEntity man2 = EmployeeEntity.builder().email("juju@gmail.com").trigram("jug").photo(".png").lastName("our").firstName("jug").mobilePhone("098YGED").build();
         WarehouseEntity warehouse =WarehouseEntity.builder().name("Grenis").letter("G").build();
@@ -103,7 +103,7 @@ void clear(){
 
         DeliveryEntity d1=DeliveryEntity.builder().reference("L1").orders(Set.of(order1)).build();
         deliveryRepository.save(d1);
-        LinkedHashSet<DeliveryEntity> s1= new LinkedHashSet<>();
+        List<DeliveryEntity> s1= new LinkedList<>();
         s1.add(d1);
         tour.setDeliveries(s1);
         tourRepository.save(tour);
@@ -111,7 +111,7 @@ void clear(){
         //create and save a planned day including the above tour
         LocalDate today = LocalDate.now();
         DayEntity day = DayEntity.builder().reference("J123G").date(today).build();
-        Set<TourEntity> tours = new HashSet<>();
+        List<TourEntity> tours = new LinkedList<>();
         tours.add(tour);
         day.setTours(tours);
         dayRepository.save(day);

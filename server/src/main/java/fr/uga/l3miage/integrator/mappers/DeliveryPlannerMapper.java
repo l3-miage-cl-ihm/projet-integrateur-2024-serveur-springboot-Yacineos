@@ -1,17 +1,14 @@
 package fr.uga.l3miage.integrator.mappers;
 
 import fr.uga.l3miage.integrator.mappers.utils.DeliveryPlannerMapperUtils;
+import fr.uga.l3miage.integrator.mappers.utils.TourPlannerMapperUtils;
 import fr.uga.l3miage.integrator.models.DeliveryEntity;
-import fr.uga.l3miage.integrator.models.OrderEntity;
 import fr.uga.l3miage.integrator.requests.DeliveryCreationRequest;
 import fr.uga.l3miage.integrator.responses.DeliveryPlannerResponseDTO;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Mapper(uses = {DeliveryPlannerMapperUtils.class})
 @DecoratedWith(DeliveryPlannerMapperDecorator.class)
