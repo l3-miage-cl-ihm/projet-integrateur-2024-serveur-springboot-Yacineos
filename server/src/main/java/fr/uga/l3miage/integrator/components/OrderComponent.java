@@ -17,7 +17,9 @@ import java.util.*;
 public class OrderComponent {
     private final OrderRepository orderRepository;
     public LinkedHashSet<MultipleOrder> createMultipleOrders() {
-        Set<OrderEntity> allOrders = orderRepository.findOrderEntitiesByStateOrderByCreationDateAsc(OrderState.OPENED);
+        Set<OrderEntity> allOrder = orderRepository.findOrderEntitiesByStateOrderByCreationDateAsc(OrderState.OPENED);
+        LinkedHashSet<OrderEntity> allOrders = new LinkedHashSet<>();
+        allOrder.stream().limit(30).forEach(allOrders::add);
         LinkedHashSet<MultipleOrder> multipleOrders =  new LinkedHashSet<>();
         String address = allOrders.stream().findFirst().get().getCustomer().getAddress().toString();
         Set<String> reference = new LinkedHashSet<>();
