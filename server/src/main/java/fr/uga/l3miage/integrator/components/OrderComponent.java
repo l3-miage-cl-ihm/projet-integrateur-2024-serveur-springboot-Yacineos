@@ -20,32 +20,7 @@ import static java.util.stream.Collectors.groupingBy;
 @RequiredArgsConstructor
 public class OrderComponent {
     private final OrderRepository orderRepository;
-    public LinkedHashSet<MultipleOrder> createMultipleOrdersc() {
-        Set<OrderEntity> allOrder = orderRepository.findOrderEntitiesByStateOrderByCreationDateAsc(OrderState.OPENED);
-        LinkedHashSet<OrderEntity> allOrders = new LinkedHashSet<>();
-        allOrder.stream().limit(30).forEach(allOrders::add);
-//        Map<CustomerEntity, List<OrderEntity>> postsPerType = allOrders.stream()
-//                .collect(groupingBy(OrderEntity::getCustomer));
-        LinkedHashSet<MultipleOrder> multipleOrders =  new LinkedHashSet<>();
-        String address = allOrders.stream().findFirst().get().getCustomer().getAddress().toString();
-        Set<String> reference = new LinkedHashSet<>();
-        reference.add(allOrders.stream().findFirst().get().getReference());
-        MultipleOrder multipleOrder = new MultipleOrder(reference,address);
-        for(OrderEntity orderEntity: allOrders){
-            if(multipleOrder.getAddress().equals(orderEntity.getCustomer().getAddress().toString())){
-                reference.add(orderEntity.getReference());
-                multipleOrder.setOrders(reference);
-            }else{
-                multipleOrders.add(multipleOrder);
-                address = orderEntity.getCustomer().getAddress().toString();
-                reference = new LinkedHashSet<>();
-                reference.add(orderEntity.getReference());
-                multipleOrder = new MultipleOrder(reference,address);
-            }
-        }
-        multipleOrders.add(multipleOrder);
-        return multipleOrders;
-    }
+
 
     public LinkedHashSet<MultipleOrder> createMultipleOrders() {
         // Récupérer toutes les commandes ouvertes
