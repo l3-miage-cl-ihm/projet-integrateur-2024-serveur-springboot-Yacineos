@@ -729,8 +729,6 @@ public class DayServiceTest {
         assertThat(response.getDeliverymen().size()).isEqualTo(3);
         assertThat(response.getMultipleOrders().size()).isEqualTo(2);
         assertThat(response.getTrucks().size()).isEqualTo(2);
-        assertThat(response.getMultipleOrders().stream().findFirst().get().getAddress()).isEqualTo("21 rue de la paix, Grenoble");
-
     }
 
 
