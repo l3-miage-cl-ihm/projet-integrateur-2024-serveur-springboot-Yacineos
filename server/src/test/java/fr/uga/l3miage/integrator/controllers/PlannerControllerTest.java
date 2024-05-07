@@ -646,7 +646,6 @@ public class PlannerControllerTest {
         TruckEntity t2 = TruckEntity.builder()
                 .immatriculation("DEF")
                 .build();
-
         truckRepository.save(t1);
         truckRepository.save(t2);
 
