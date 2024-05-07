@@ -6,7 +6,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
 import java.util.Arrays;
+
 /**
  * Correspond au main de l'application et donc ce qui va la lancer
  * Les Annotations :
@@ -19,6 +21,7 @@ public class IntegratorProjectSpringApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(IntegratorProjectSpringApplication.class,args);
+
     }
 
     @Bean
@@ -36,4 +39,6 @@ public class IntegratorProjectSpringApplication {
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
         return new CorsFilter(urlBasedCorsConfigurationSource);
     }
+
+
 }

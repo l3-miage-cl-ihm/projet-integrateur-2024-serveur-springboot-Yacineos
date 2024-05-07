@@ -20,10 +20,10 @@ import java.util.Date;
 
 @RestController
 @Tag(name = "Planner endpoints")
-@RequestMapping("/api/v1.0/day")
+@RequestMapping("/api/v2.0/planner")
 public interface PlannerEndpoints {
 
-    @Operation(description = "Get set up bundle (orders, deliverymen,trucks) ")
+    @Operation(description = "Get set up bundle  (orders, deliverymen,trucks) ")
     @ApiResponse(responseCode= "200", description = "Bundle sent  ")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/bundle")
@@ -34,17 +34,16 @@ public interface PlannerEndpoints {
     @ApiResponse(responseCode= "200", description = "Day found  ")
     @ApiResponse(responseCode= "404", description = "Day not found with given date",content = @Content(schema = @Schema(implementation = NotFoundErrorResponse.class),mediaType = MediaType.APPLICATION_JSON_VALUE))
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("")
-    DayResponseDTO getDay(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date);
+    @GetMapping("/day")
+    DayResponseDTO getDay(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) ;
 
 
 
     @Operation(description = "PLan a day with given day creation request ")
     @ApiResponse(responseCode= "200", description = "Day successfully planned ")
     @ApiResponse(responseCode= "406", description = "Invalid input value ",content = @Content(schema = @Schema(implementation = PlanDayErrorResponse.class),mediaType = MediaType.APPLICATION_JSON_VALUE))
-    @ApiResponse(responseCode= "406", description = "Day is already planned ",content = @Content(schema = @Schema(implementation = PlanDayErrorResponse.class),mediaType = MediaType.APPLICATION_JSON_VALUE))
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/plan")
+    @PostMapping("/day/plan")
     void planDay(@RequestBody DayCreationRequest dayCreationRequest);
 
 

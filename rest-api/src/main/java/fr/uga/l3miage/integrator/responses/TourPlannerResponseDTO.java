@@ -2,6 +2,7 @@ package fr.uga.l3miage.integrator.responses;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.Setter;
 
 import java.util.Set;
 

@@ -1,9 +1,13 @@
+
 # sur quel port le serveur démarre
 server:
   port: 8080
 
 # Les informations de connexion de la bd
+
 spring:
+  profiles:
+    active: dev
   datasource:
     username: postgres
     password: postgres
