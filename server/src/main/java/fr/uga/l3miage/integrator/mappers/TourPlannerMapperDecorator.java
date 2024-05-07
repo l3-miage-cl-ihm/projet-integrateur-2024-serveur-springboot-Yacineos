@@ -20,10 +20,8 @@ public abstract class TourPlannerMapperDecorator implements TourPlannerMapper {
     @Autowired
     @Qualifier("delegate")
     private TourPlannerMapper delegate;
-
     @Autowired
     private EmployeeRepository employeeRepository;
-
     @Autowired
     private TruckRepository truckRepository;
 

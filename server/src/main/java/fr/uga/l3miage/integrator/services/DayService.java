@@ -74,7 +74,7 @@ public class DayService {
                     TourEntity tourEntity = tourPlannerMapper.toEntity(tourCreationRequest,refTour);
 
                     //add deliveries to tour
-                    AtomicInteger deliveryIndex= new AtomicInteger(0);
+                    AtomicInteger deliveryIndex= new AtomicInteger(1);
                     Set<DeliveryEntity> tourDeliveries= new HashSet<>();
                     for(DeliveryCreationRequest deliveryCreationRequest: tourCreationRequest.getDeliveries() ) {
                         DeliveryEntity deliveryEntity = deliveryPlannerMapper.toEntity(deliveryCreationRequest,deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),deliveryIndex.get()));
@@ -112,7 +112,6 @@ public class DayService {
 
         SetUpBundleResponse setUpBundleResponse = new SetUpBundleResponse();
 
-
         Set<MultipleOrder> multipleOrder = orderComponent.createMultipleOrders();
         Set<String> multipleOrderSet = new HashSet<>();
         for (MultipleOrder multipleOrder1 : multipleOrder){
@@ -120,9 +119,7 @@ public class DayService {
         }
 
         Set<String> immatriculationTrucks = truckComponent.getAllTrucksImmatriculation();
-
         Set<String> idLivreurs = employeeComponent.getAllDeliveryMenID();
-
 
         setUpBundleResponse.setMultipleOrders(multipleOrderSet);
         setUpBundleResponse.setDeliverymen(idLivreurs);

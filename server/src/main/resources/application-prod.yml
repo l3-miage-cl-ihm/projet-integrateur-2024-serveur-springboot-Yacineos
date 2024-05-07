@@ -4,6 +4,8 @@ server:
 
 # Les informations de connexion de la bd
 spring:
+  profiles:
+    active: prod
   datasource:
     username: postgres
     password: postgres

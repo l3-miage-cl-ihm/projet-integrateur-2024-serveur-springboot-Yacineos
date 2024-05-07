@@ -1,5 +1,6 @@
 package fr.uga.l3miage.integrator.mappers;
 
+import fr.uga.l3miage.integrator.mappers.utils.DeliveryPlannerMapperUtils;
 import fr.uga.l3miage.integrator.models.DeliveryEntity;
 import fr.uga.l3miage.integrator.models.OrderEntity;
 import fr.uga.l3miage.integrator.requests.DeliveryCreationRequest;
@@ -12,7 +13,7 @@ import org.mapstruct.Named;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper
+@Mapper(uses = {DeliveryPlannerMapperUtils.class})
 @DecoratedWith(DeliveryPlannerMapperDecorator.class)
 public interface DeliveryPlannerMapper {
 
@@ -25,13 +26,8 @@ public interface DeliveryPlannerMapper {
     DeliveryEntity  toEntity(DeliveryCreationRequest deliveryCreationRequest,String deliveryRef);
 
 
-    @Mapping(source = "orders",target = "orders",qualifiedByName="getOrdersIDs")
+    @Mapping(source = "orders",target = "orders",qualifiedBy=DeliveryPlannerMapperUtils.GetOrdersIDs.class)
     DeliveryPlannerResponseDTO toResponse(DeliveryEntity deliveryEntity);
 
-    @Named("getOrdersIDs")
-    default Set<String> getOrdersIDs(Set<OrderEntity> orders){
-        return   orders.stream().map(OrderEntity::getReference).collect(Collectors.toSet());
-
-    }
 
 }
