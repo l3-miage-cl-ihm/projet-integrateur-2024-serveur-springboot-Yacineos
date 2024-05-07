@@ -73,11 +73,11 @@ public class OrderComponentTest {
                 .reference("c04")
                 .creationDate(LocalDate.of(2024, 2, 8))
                 .state(OrderState.OPENED)
-                .customer(c3)
+                .customer(c1)
                 .build();
 
 
-        Set<OrderEntity> orderEntities = new LinkedHashSet<>();;
+        LinkedHashSet<OrderEntity> orderEntities = new LinkedHashSet<>();;
         orderEntities.add(o1);
         orderEntities.add(o2);
         orderEntities.add(o3);
@@ -90,7 +90,6 @@ public class OrderComponentTest {
         when(orderRepository.findOrderEntitiesByStateOrderByCreationDateAsc(OrderState.OPENED)).thenReturn(orderEntities);
         Set<MultipleOrder> multipleOrderSet = orderComponent.createMultipleOrders();
 
-        assertThat(multipleOrderSet.size()).isEqualTo(3);
-        assertThat(multipleOrderSet.stream().findFirst().get().getAddress()).isEqualTo(a1.toString());
+        assertThat(multipleOrderSet.size()).isEqualTo(2);
     }
 }

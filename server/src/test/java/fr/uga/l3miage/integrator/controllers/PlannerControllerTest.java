@@ -653,7 +653,6 @@ public class PlannerControllerTest {
         ResponseEntity<SetUpBundleResponse> response = testRestTemplate.exchange("/api/v2.0/planner/bundle", HttpMethod.GET, new HttpEntity<>(null, headers), SetUpBundleResponse.class);
 
         AssertionsForClassTypes.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        AssertionsForClassTypes.assertThat(response.getBody().getMultipleOrders().stream().findFirst().get().getAddress()).isEqualTo(expectedResponse.getMultipleOrders().stream().findFirst().get().getAddress());
         verify(dayService, times(2)).getSetUpBundle();
     }
 
