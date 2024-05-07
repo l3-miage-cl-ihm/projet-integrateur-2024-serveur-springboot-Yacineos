@@ -23,7 +23,7 @@ import java.util.Date;
 @RequestMapping("/api/v2.0/planner")
 public interface PlannerEndpoints {
 
-    @Operation(description = "Get set up bundle (orders, deliverymen,trucks) ")
+    @Operation(description = "Get set up bundle  (orders, deliverymen,trucks) ")
     @ApiResponse(responseCode= "200", description = "Bundle sent  ")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/bundle")
