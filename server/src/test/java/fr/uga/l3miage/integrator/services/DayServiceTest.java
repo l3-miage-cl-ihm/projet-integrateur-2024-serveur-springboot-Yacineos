@@ -587,7 +587,7 @@ public class DayServiceTest {
         orders2.add(order12);
         DeliveryEntity del2=DeliveryEntity.builder().reference("T238G-A2").build();
         del2.setOrders(orders2);
-        Set<DeliveryEntity> deliveries1=new HashSet<>();
+        LinkedHashSet<DeliveryEntity> deliveries1=new LinkedHashSet<>();
         deliveries1.add(del1);
         deliveries1.add(del2);
         //creation tour 1
@@ -621,7 +621,7 @@ public class DayServiceTest {
         orders4.add(order12);
         DeliveryEntity del4=DeliveryEntity.builder().reference("T238G-B2").build();
         del4.setOrders(orders4);
-        Set<DeliveryEntity> deliveries2=new HashSet<>();
+        LinkedHashSet<DeliveryEntity> deliveries2=new LinkedHashSet<>();
         deliveries2.add(del3);
         deliveries2.add(del4);
         //creation tour 2

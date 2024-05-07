@@ -4,13 +4,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.Setter;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Data
 @Schema(description = "Tour representation for planner")
 public class TourPlannerResponseDTO {
     @Schema(description = "Deliveries list ")
-    private Set<DeliveryPlannerResponseDTO> deliveries ;
+    private LinkedHashSet<DeliveryPlannerResponseDTO> deliveries ;
     @Schema(description = "list of deliveryMan id")
     private Set<String> deliveryMen;
     @Schema(description = "Truck id")

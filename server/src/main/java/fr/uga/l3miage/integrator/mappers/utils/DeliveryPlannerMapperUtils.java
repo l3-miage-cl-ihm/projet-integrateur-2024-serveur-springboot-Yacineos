@@ -1,5 +1,6 @@
 package fr.uga.l3miage.integrator.mappers.utils;
 
+import fr.uga.l3miage.integrator.datatypes.Address;
 import fr.uga.l3miage.integrator.models.OrderEntity;
 import fr.uga.l3miage.integrator.models.TruckEntity;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,23 @@ public class DeliveryPlannerMapperUtils {
     @Target(ElementType.METHOD)
     public @interface GetOrdersIDs{}
 
+
+    @Qualifier
+    @Retention(RetentionPolicy.CLASS)
+    @Target(ElementType.METHOD)
+    public @interface GetDeliveryAddress{}
+
     @GetOrdersIDs
    public Set<String> getOrdersIDs(Set<OrderEntity> orders){
         return   orders.stream().map(OrderEntity::getReference).collect(Collectors.toSet());
 
     }
+
+    @GetDeliveryAddress
+    public String GetDeliveryAddress(Set<OrderEntity> orderEntities){
+        Address customerAddress=orderEntities.stream().findFirst().get().getCustomer().getAddress();
+        return customerAddress.getAddress()+","+customerAddress.getCity();
+    }
+
+
 }

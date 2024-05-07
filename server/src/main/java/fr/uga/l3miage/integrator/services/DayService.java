@@ -72,7 +72,7 @@ public class DayService {
 
                     //add deliveries to tour
                     AtomicInteger deliveryIndex= new AtomicInteger(1);
-                    Set<DeliveryEntity> tourDeliveries= new HashSet<>();
+                    LinkedHashSet<DeliveryEntity> tourDeliveries= new LinkedHashSet<>();
                     for(DeliveryCreationRequest deliveryCreationRequest: tourCreationRequest.getDeliveries() ) {
                         DeliveryEntity deliveryEntity = deliveryPlannerMapper.toEntity(deliveryCreationRequest,deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),deliveryIndex.get()));
                         //save delivery and add it to tourDeliveries

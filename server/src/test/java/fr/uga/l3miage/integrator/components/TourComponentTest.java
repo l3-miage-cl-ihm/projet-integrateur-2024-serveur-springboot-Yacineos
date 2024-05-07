@@ -19,6 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -142,7 +143,7 @@ public class TourComponentTest {
                 .reference("t123G-A")
                 .letter("A")
                 .state(TourState.PLANNED)
-                .deliveries(Set.of())
+                .deliveries(new LinkedHashSet<>())
                 .deliverymen(Set.of())
                 .truck(truck)
                 .distanceToCover(34)

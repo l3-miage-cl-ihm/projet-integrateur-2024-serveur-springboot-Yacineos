@@ -27,6 +27,7 @@ public interface DeliveryPlannerMapper {
 
 
     @Mapping(source = "orders",target = "orders",qualifiedBy=DeliveryPlannerMapperUtils.GetOrdersIDs.class)
+    @Mapping(source = "orders",target = "address",qualifiedBy = DeliveryPlannerMapperUtils.GetDeliveryAddress.class)
     DeliveryPlannerResponseDTO toResponse(DeliveryEntity deliveryEntity);
 
 
