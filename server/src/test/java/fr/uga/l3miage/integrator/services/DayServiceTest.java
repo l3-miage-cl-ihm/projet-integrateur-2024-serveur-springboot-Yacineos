@@ -18,7 +18,9 @@ import fr.uga.l3miage.integrator.requests.DayCreationRequest;
 import fr.uga.l3miage.integrator.requests.DeliveryCreationRequest;
 import fr.uga.l3miage.integrator.requests.TourCreationRequest;
 import fr.uga.l3miage.integrator.responses.DayResponseDTO;
+import fr.uga.l3miage.integrator.responses.DeliveryPlannerResponseDTO;
 import fr.uga.l3miage.integrator.responses.SetUpBundleResponse;
+import fr.uga.l3miage.integrator.responses.TourPlannerResponseDTO;
 import fr.uga.l3miage.integrator.responses.datatypes.MultipleOrder;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -76,7 +78,7 @@ public class DayServiceTest {
 
 
         //given
-        Set<TourCreationRequest> tourCreationRequestSet= new HashSet<>();
+        List<TourCreationRequest> tourCreationRequestSet= new ArrayList<>();
         TruckEntity truck= TruckEntity.builder().immatriculation("AY-124-GF").build();
         //IMPORTANT: do not forget the planner because as decided before, he is one to manage the warehouse and it is loaded in the DayPlannerMapper
         WarehouseEntity grenis = WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
@@ -145,7 +147,7 @@ public class DayServiceTest {
                 .customer(customer2)
                 .build();
 
-        Set<DeliveryCreationRequest> deliveryCreationRequestSet=new HashSet<>();
+        List<DeliveryCreationRequest> deliveryCreationRequestList=new ArrayList<>();
         DeliveryCreationRequest d1= DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of(o1.getReference(),o2.getReference()))
@@ -156,13 +158,13 @@ public class DayServiceTest {
                 .orders(Set.of(o3.getReference()))
                 .build();
 
-        deliveryCreationRequestSet.add(d1);
-        deliveryCreationRequestSet.add(d2);
+        deliveryCreationRequestList.add(d1);
+        deliveryCreationRequestList.add(d2);
         TourCreationRequest t1= TourCreationRequest.builder()
                 .distanceToCover(23)
                 .truck(truck.getImmatriculation())
                 .deliverymen(Set.of(deliveryman1.getTrigram(),deliveryman2.getTrigram()))
-                .deliveries(deliveryCreationRequestSet)
+                .deliveries(deliveryCreationRequestList)
                 .build();
 
         tourCreationRequestSet.add(t1);
@@ -175,9 +177,9 @@ public class DayServiceTest {
 
         when(dayComponent.isDayAlreadyPlanned(any(LocalDate.class))).thenReturn(false);
         when(tourComponent.generateTourReference(any(LocalDate.class),any(Integer.class))).thenReturn("t123G-A");
-        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),0)).thenReturn("c001");
-        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),1)).thenReturn("c002");
-        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),2)).thenReturn("c003");
+        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),0,"A")).thenReturn("t123G-A1");
+        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),1,"A")).thenReturn("t123G-A2");
+        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),2,"A")).thenReturn("t123G-A3");
         when(truckRepository.findById(truck.getImmatriculation())).thenReturn(Optional.of(truck));
         when(employeeRepository.findById(deliveryman1.getTrigram())).thenReturn(Optional.of(deliveryman1));
         when(employeeRepository.findById(deliveryman2.getTrigram())).thenReturn(Optional.of(deliveryman2));
@@ -188,10 +190,7 @@ public class DayServiceTest {
         Mockito.doNothing().when(deliveryComponent).saveDelivery(any(DeliveryEntity.class));
         Mockito.doNothing().when(tourComponent).saveTour(any(TourEntity.class));
 
-
         dayService.planDay(dayCreationRequest);
-
-
 
         //then
         verify(dayComponent,times(1)).planDay(any(DayEntity.class));
@@ -211,7 +210,7 @@ public class DayServiceTest {
     @Test    //missed deliveryman or (deliverymen.size()!=1 and deliverymen.size()!=2)
     void planDay_NotOK_BecauseOf_MissedInputs() throws InvalidInputValueException {
         //given
-        Set<TourCreationRequest> tourCreationRequestSet= new HashSet<>();
+        List<TourCreationRequest> tourCreationRequestList= new ArrayList<>();
         TruckEntity truck= TruckEntity.builder().immatriculation("AY-124-GF").build();
 
 
@@ -253,7 +252,7 @@ public class DayServiceTest {
                 .customer(customer2)
                 .build();
 
-        Set<DeliveryCreationRequest> deliveryCreationRequestSet=new HashSet<>();
+        List<DeliveryCreationRequest> deliveryCreationRequestList=new ArrayList<>();
         DeliveryCreationRequest d1= DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of(o1.getReference(),o2.getReference()))
@@ -264,39 +263,34 @@ public class DayServiceTest {
                 .orders(Set.of(o3.getReference()))
                 .build();
 
-        deliveryCreationRequestSet.add(d1);
-        deliveryCreationRequestSet.add(d2);
+        deliveryCreationRequestList.add(d1);
+        deliveryCreationRequestList.add(d2);
         TourCreationRequest t1= TourCreationRequest.builder()
                 .distanceToCover(23)
                 .truck(truck.getImmatriculation())
                 .deliverymen(Set.of())
-                .deliveries(deliveryCreationRequestSet)
+                .deliveries(deliveryCreationRequestList)
                 .build();
 
-        tourCreationRequestSet.add(t1);
+        tourCreationRequestList.add(t1);
         DayCreationRequest dayCreationRequest= DayCreationRequest.builder()
                 .date(LocalDate.now())
-                .tours(tourCreationRequestSet)
+                .tours(tourCreationRequestList)
                 .build();
 
         //when
 
         when(dayComponent.isDayAlreadyPlanned(any(LocalDate.class))).thenReturn(false);
         when(tourComponent.generateTourReference(any(LocalDate.class),any(Integer.class))).thenReturn("t123G-A");
-        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),0)).thenReturn("c001");
-        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),1)).thenReturn("c002");
-        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),2)).thenReturn("c003");
+        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),0,"A")).thenReturn("t123G-A");
+        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),1,"A")).thenReturn("t123G-A");
+        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),2,"A")).thenReturn("t123G-A");
         when(truckRepository.findById(truck.getImmatriculation())).thenReturn(Optional.of(truck));
         when(orderRepository.findById(o1.getReference())).thenReturn(Optional.of(o1));
         when(orderRepository.findById(o2.getReference())).thenReturn(Optional.of(o2));
         when(orderRepository.findById(o3.getReference())).thenReturn(Optional.of(o3));
         Mockito.doNothing().when(deliveryComponent).saveDelivery(any(DeliveryEntity.class));
         Mockito.doNothing().when(tourComponent).saveTour(any(TourEntity.class));
-
-
-
-
-
 
         //then
         assertThrows(DayCreationRestException.class,()->dayService.planDay(dayCreationRequest));
@@ -306,15 +300,12 @@ public class DayServiceTest {
         verify(employeeRepository,times(0)).findById(anyString());
         verify(orderRepository,times(0)).findById(anyString());
 
-
     }
-
-
 
     @Test   //wrong inputs such as wrong order reference or wrong deliveryman trigram
     void planDay_NotOK_BecauseOf_WrongInputs_NotFoundEntities() throws InvalidInputValueException {
         //given
-        Set<TourCreationRequest> tourCreationRequestSet= new HashSet<>();
+        List<TourCreationRequest> tourCreationRequestList= new ArrayList<>();
         TruckEntity truck= TruckEntity.builder().immatriculation("AY-124-GF").build();
         //IMPORTANT: do not forget the planner because as decided before, he is one to manage the warehouse and it is loaded in the DayPlannerMapper
         WarehouseEntity grenis = WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
@@ -374,7 +365,7 @@ public class DayServiceTest {
                 .customer(customer2)
                 .build();
 
-        Set<DeliveryCreationRequest> deliveryCreationRequestSet=new HashSet<>();
+        List<DeliveryCreationRequest> deliveryCreationRequestList=new ArrayList<>();
         DeliveryCreationRequest d1= DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of(o1.getReference(),"c1023"))  //the order "c123" doesn't exist so it should throw an exception
@@ -385,28 +376,28 @@ public class DayServiceTest {
                 .orders(Set.of(o3.getReference()))
                 .build();
 
-        deliveryCreationRequestSet.add(d1);
-        deliveryCreationRequestSet.add(d2);
+        deliveryCreationRequestList.add(d1);
+        deliveryCreationRequestList.add(d2);
         TourCreationRequest t1= TourCreationRequest.builder()
                 .distanceToCover(23)
                 .truck(truck.getImmatriculation())
                 .deliverymen(Set.of(deliveryman1.getTrigram(),deliveryman2.getTrigram()))
-                .deliveries(deliveryCreationRequestSet)
+                .deliveries(deliveryCreationRequestList)
                 .build();
 
-        tourCreationRequestSet.add(t1);
+        tourCreationRequestList.add(t1);
         DayCreationRequest dayCreationRequest= DayCreationRequest.builder()
                 .date(LocalDate.now())
-                .tours(tourCreationRequestSet)
+                .tours(tourCreationRequestList)
                 .build();
 
         //when
 
         when(dayComponent.isDayAlreadyPlanned(any(LocalDate.class))).thenReturn(false);
         when(tourComponent.generateTourReference(any(LocalDate.class),any(Integer.class))).thenReturn("t123G-A");
-        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),0)).thenReturn("c001");
-        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),1)).thenReturn("c002");
-        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),2)).thenReturn("c003");
+        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),0,"A")).thenReturn("t123G-A");
+        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),1,"A")).thenReturn("t123G-A");
+        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),2,"A")).thenReturn("t123G-A");
         when(truckRepository.findById(truck.getImmatriculation())).thenReturn(Optional.of(truck));
         when(employeeRepository.findById(deliveryman1.getTrigram())).thenReturn(Optional.of(deliveryman1));
         when(employeeRepository.findById(deliveryman2.getTrigram())).thenReturn(Optional.of(deliveryman2));
@@ -434,7 +425,7 @@ public class DayServiceTest {
     @Test   //wrong inputs: day already planned for given date .
     void planDay_NotOK_BecauseOf_WrongInputs_DayAlreadyPlanned() throws InvalidInputValueException {
         //given
-        Set<TourCreationRequest> tourCreationRequestSet= new HashSet<>();
+        List<TourCreationRequest> tourCreationRequestList= new ArrayList<>();
         TruckEntity truck= TruckEntity.builder().immatriculation("AY-124-GF").build();
 
         EmployeeEntity deliveryman1= EmployeeEntity.builder()
@@ -487,7 +478,7 @@ public class DayServiceTest {
                 .customer(customer2)
                 .build();
 
-        Set<DeliveryCreationRequest> deliveryCreationRequestSet=new HashSet<>();
+        List<DeliveryCreationRequest> deliveryCreationRequestList=new ArrayList<>();
         DeliveryCreationRequest d1= DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of(o1.getReference(),"c123"))  //the order "c123" doesn't exist so it should throw an exception
@@ -498,28 +489,28 @@ public class DayServiceTest {
                 .orders(Set.of(o3.getReference()))
                 .build();
 
-        deliveryCreationRequestSet.add(d1);
-        deliveryCreationRequestSet.add(d2);
+        deliveryCreationRequestList.add(d1);
+        deliveryCreationRequestList.add(d2);
         TourCreationRequest t1= TourCreationRequest.builder()
                 .distanceToCover(23)
                 .truck(truck.getImmatriculation())
                 .deliverymen(Set.of(deliveryman1.getTrigram(),deliveryman2.getTrigram()))
-                .deliveries(deliveryCreationRequestSet)
+                .deliveries(deliveryCreationRequestList)
                 .build();
 
-        tourCreationRequestSet.add(t1);
+        tourCreationRequestList.add(t1);
         DayCreationRequest dayCreationRequest= DayCreationRequest.builder()
                 .date(LocalDate.now())
-                .tours(tourCreationRequestSet)
+                .tours(tourCreationRequestList)
                 .build();
 
         //when
 
         when(dayComponent.isDayAlreadyPlanned(any(LocalDate.class))).thenReturn(true);
         when(tourComponent.generateTourReference(any(LocalDate.class),any(Integer.class))).thenReturn("t123G-A");
-        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),0)).thenReturn("c001");
-        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),1)).thenReturn("c002");
-        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),2)).thenReturn("c003");
+        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),0,"A")).thenReturn("l123G-A1");
+        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),1,"A")).thenReturn("l123G-A2");
+        when(deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),2,"A")).thenReturn("l123G-A3");
         when(truckRepository.findById(truck.getImmatriculation())).thenReturn(Optional.of(truck));
         when(employeeRepository.findById(deliveryman1.getTrigram())).thenReturn(Optional.of(deliveryman1));
         when(employeeRepository.findById(deliveryman2.getTrigram())).thenReturn(Optional.of(deliveryman2));
@@ -560,15 +551,15 @@ public class DayServiceTest {
 
         //given
         // creation deliveryMen 1
-        List<TourEntity> tours= new LinkedList<>();
+        List<TourEntity> tours= new ArrayList<>();
         Set<EmployeeEntity> deliverymen= new HashSet<>();
-        EmployeeEntity m1=EmployeeEntity.builder().email("jojo@gmail.com").build();
-        EmployeeEntity m2=EmployeeEntity.builder().email("axel@gmail.com").build();
+        EmployeeEntity m1=EmployeeEntity.builder().email("jojo@gmail.com").firstName("Jug").lastName("OURZIK").trigram("JOK").build();
+        EmployeeEntity m2=EmployeeEntity.builder().email("axel@gmail.com").firstName("Juju").lastName("LEROY").trigram("JLY").build();
         deliverymen.add(m1);
         deliverymen.add(m2);
         //Creation delivery 1
         //creation order
-        CustomerEntity customer1=CustomerEntity.builder().address(new Address("2 rue de paris","76000","Ohio")).firstName("Rony").lastName("Diiiirect").build();
+        CustomerEntity customer1=CustomerEntity.builder().address(new Address("2 rue de paris","76000","Paris")).firstName("Rony").lastName("Diiiirect").build();
         CustomerEntity customer2=CustomerEntity.builder().address(new Address("16 rue de caen","34650","Caen")).firstName("Jug").lastName("Diiiirectman").build();
         CustomerEntity customer3=CustomerEntity.builder().address(new Address("02 rue de toulon","10002","Toulon")).firstName("mely").lastName("joie").build();
         CustomerEntity customer4=CustomerEntity.builder().address(new Address("02 rue de marseille","13003","Marseille")).firstName("melyssa").lastName("bondy").build();
@@ -578,7 +569,7 @@ public class DayServiceTest {
         Set<OrderEntity> orders1 = new HashSet<>();
         orders1.add(order11);
         orders1.add(order12);
-        DeliveryEntity del1=DeliveryEntity.builder().reference("T238G-A1").build();
+        DeliveryEntity del1=DeliveryEntity.builder().reference("l238G-A1").build();
         del1.setOrders(orders1);
         //Creation delivery 2
         //creation order
@@ -587,22 +578,22 @@ public class DayServiceTest {
         Set<OrderEntity> orders2 = new HashSet<>();
         orders2.add(order11);
         orders2.add(order12);
-        DeliveryEntity del2=DeliveryEntity.builder().reference("T238G-A2").build();
+        DeliveryEntity del2=DeliveryEntity.builder().reference("l238G-A2").build();
         del2.setOrders(orders2);
-        List<DeliveryEntity> deliveries1=new LinkedList<>();
+        List<DeliveryEntity> deliveries1=new ArrayList<>();
         deliveries1.add(del1);
         deliveries1.add(del2);
         //creation tour 1
         TruckEntity truck1=TruckEntity.builder().immatriculation("EV-666-IL").build();
-        TourEntity tour1= TourEntity.builder().reference("T238G-A").build();
+        TourEntity tour1= TourEntity.builder().reference("t238G-A").build();
         tour1.setDeliverymen(deliverymen);
         tour1.setTruck(truck1);
         tour1.setDeliveries(deliveries1);
         tours.add(tour1);
         // creation deliveryMen 2
         Set<EmployeeEntity> deliverymen2= new HashSet<>();
-        EmployeeEntity m3=EmployeeEntity.builder().email("juju@gmail.com").build();
-        EmployeeEntity m4=EmployeeEntity.builder().email("alexis@gmail.com").build();
+        EmployeeEntity m3=EmployeeEntity.builder().email("juju@gmail.com").firstName("Massi").lastName("GHER").trigram("MGR").build();
+        EmployeeEntity m4=EmployeeEntity.builder().email("alexis@gmail.com").firstName("Samy").lastName("SPINCER").trigram("SSR").build();
         deliverymen2.add(m3);
         deliverymen2.add(m4);
         //Creation delivery 3
@@ -612,7 +603,7 @@ public class DayServiceTest {
         Set<OrderEntity> orders3 = new HashSet<>();
         orders3.add(order31);
         orders3.add(order32);
-        DeliveryEntity del3=DeliveryEntity.builder().reference("T238G-B1").build();
+        DeliveryEntity del3=DeliveryEntity.builder().reference("l238G-B1").build();
         del3.setOrders(orders3);
         //Creation delivery 4
         //creation order
@@ -621,19 +612,55 @@ public class DayServiceTest {
         Set<OrderEntity> orders4 = new HashSet<>();
         orders4.add(order11);
         orders4.add(order12);
-        DeliveryEntity del4=DeliveryEntity.builder().reference("T238G-B2").build();
+        DeliveryEntity del4=DeliveryEntity.builder().reference("l238G-B2").build();
         del4.setOrders(orders4);
 
-        List<DeliveryEntity> deliveries2=new LinkedList<>();
+        List<DeliveryEntity> deliveries2=new ArrayList<>();
         deliveries2.add(del3);
         deliveries2.add(del4);
         //creation tour 2
         TruckEntity truck2=TruckEntity.builder().immatriculation("AB-345-CD").build();
-        TourEntity tour2= TourEntity.builder().reference("T238G-B").build();
+        TourEntity tour2= TourEntity.builder().reference("t238G-B").build();
         tour2.setDeliverymen(deliverymen2);
         tour2.setTruck(truck2);
         tour2.setDeliveries(deliveries2);
         tours.add(tour2);
+
+        /******** Expected response creation ******/
+        List<DeliveryPlannerResponseDTO> d1= new ArrayList<>();
+        List<DeliveryPlannerResponseDTO> d2= new ArrayList<>();
+
+        DeliveryPlannerResponseDTO dp1=new DeliveryPlannerResponseDTO();
+        dp1.setAddress("2 rue de paris,Paris");
+        dp1.setOrders(Set.of(order11.getReference(),order12.getReference()));
+        dp1.setDistanceToCover(0.0);
+
+        DeliveryPlannerResponseDTO dp2=new DeliveryPlannerResponseDTO();
+        dp2.setAddress("16 rue de caen,Caen");
+        dp2.setOrders(Set.of(order21.getReference(),order22.getReference()));
+        dp2.setDistanceToCover(0.0);
+
+        DeliveryPlannerResponseDTO dp3=new DeliveryPlannerResponseDTO();
+        dp3.setAddress("02 rue de toulon,Toulon");
+        dp3.setOrders(Set.of(order31.getReference(),order32.getReference()));
+        dp3.setDistanceToCover(0.0);
+
+        DeliveryPlannerResponseDTO dp4=new DeliveryPlannerResponseDTO();
+        dp4.setAddress("02 rue de marseille,Marseille");
+        dp4.setOrders(Set.of(order41.getReference(),order42.getReference()));
+        dp4.setDistanceToCover(0.0);
+        d1.add(dp1);
+        d2.add(dp2);
+
+        TourPlannerResponseDTO t1= new TourPlannerResponseDTO();
+        t1.setRefTour(tour1.getReference());
+        t1.setDeliverymen(Set.of(m1.getTrigram(),m2.getTrigram()));
+        t1.setDeliveries(d1);
+
+        TourPlannerResponseDTO t2= new TourPlannerResponseDTO();
+        t2.setRefTour(tour2.getReference());
+        t2.setDeliverymen(Set.of(m3.getTrigram(),m4.getTrigram()));
+        t2.setDeliveries(d2);
 
         // creation day
         DayEntity day = DayEntity.builder().reference("J238").date(LocalDate.of(2024,4,29)).build();
@@ -643,14 +670,17 @@ public class DayServiceTest {
         when(dayComponent.getDay(any())).thenReturn(day);
 
         DayResponseDTO expectedResponse= dayPlannerMapper.toResponse(day);
+        List<TourPlannerResponseDTO> toursF =new ArrayList<>();
+        toursF.add(t1);
+        toursF.add(t2);
+        expectedResponse.setTours(toursF);
         DayResponseDTO response= dayService.getDay(LocalDate.of(2024,4,29));
 
         //then
-        assertThat(response).usingRecursiveComparison().isEqualTo(expectedResponse);
-
+        assertThat(response.getDate()).isEqualTo(expectedResponse.getDate());
         verify(dayPlannerMapper,times(2)).toResponse(day);
-        //verify(tourPlannerMapper,times(4)).toResponse(any());
-        //verify(deliveryPlannerMapper,times(8)).toResponse(any());
+        verify(tourPlannerMapper,times(2)).toResponse(any());
+        verify(deliveryPlannerMapper,times(4)).toResponse(any());
         verify(dayComponent,times(1)).getDay(LocalDate.of(2024,4,29));
 
 

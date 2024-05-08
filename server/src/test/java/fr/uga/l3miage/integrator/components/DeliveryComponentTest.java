@@ -59,7 +59,7 @@ public class DeliveryComponentTest {
         String expectedDeliveryRef= "l123G-A2";
 
         //when
-        String response=deliveryComponent.generateDeliveryReference(date,deliveryIndex);
+        String response=deliveryComponent.generateDeliveryReference(date,deliveryIndex,"A");
 
         //then
         assertThat(expectedDeliveryRef).isEqualTo(response);

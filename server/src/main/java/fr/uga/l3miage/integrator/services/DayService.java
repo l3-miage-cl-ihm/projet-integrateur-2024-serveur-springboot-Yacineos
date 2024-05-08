@@ -15,7 +15,6 @@ import fr.uga.l3miage.integrator.mappers.*;
 import fr.uga.l3miage.integrator.models.DayEntity;
 import fr.uga.l3miage.integrator.models.DeliveryEntity;
 import fr.uga.l3miage.integrator.models.TourEntity;
-import fr.uga.l3miage.integrator.repositories.DayRepository;
 import fr.uga.l3miage.integrator.requests.DayCreationRequest;
 import fr.uga.l3miage.integrator.requests.DeliveryCreationRequest;
 import fr.uga.l3miage.integrator.requests.TourCreationRequest;
@@ -30,7 +29,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,37 +51,38 @@ public class DayService {
                throw new DayAlreadyPlannedException("Day is already planned !");
 
             //else check if inputs are not empty
-            Set<TourCreationRequest> tours = dayCreationRequest.getTours();
+            List<TourCreationRequest> tours = dayCreationRequest.getTours();
             if(tours.isEmpty())
                 throw  new InvalidInputValueException("Invalid input values, need 1 tour at least !");
 
             boolean anyInvalidTour= tours.stream().anyMatch(tour -> tour.getDeliveries().isEmpty() || (tour.getDeliverymen().size()!=2  && tour.getDeliverymen().size()!=1) || tour.getTruck().isEmpty() );
             if(anyInvalidTour)
-                throw new InvalidInputValueException("Invalid inputs !, need 1 truck, 1 or 2 delivermen and some deliveries");
+                throw new InvalidInputValueException("Invalid inputs, need 1 truck, 1 or 2 deliverymen and at least one delivery !");
 
             //finally plan the day by adding to it its tours and to tours their deliveries
              DayEntity dayEntity = dayPlannerMapper.toEntity(dayCreationRequest);
 
              //add tours to day
             AtomicInteger tourIndex= new AtomicInteger(0);
-            List<TourEntity> dayTours = new LinkedList<>();
+            List<TourEntity> dayTours = new ArrayList<>();
             for(TourCreationRequest tourCreationRequest : dayCreationRequest.getTours() ) {
                 try {
                     String refTour=tourComponent.generateTourReference(dayCreationRequest.getDate(),tourIndex.get());
+                    String tourLetter=Character.toString(refTour.charAt(refTour.length()-1));
                     TourEntity tourEntity = tourPlannerMapper.toEntity(tourCreationRequest,refTour);
 
                     //add deliveries to tour
                     AtomicInteger deliveryIndex= new AtomicInteger(1);
-                    List<DeliveryEntity> tourDeliveries= new LinkedList<>();
+                    List<DeliveryEntity> tourDeliveries= new ArrayList<>();
                     for(DeliveryCreationRequest deliveryCreationRequest: tourCreationRequest.getDeliveries() ) {
-                        DeliveryEntity deliveryEntity = deliveryPlannerMapper.toEntity(deliveryCreationRequest,deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),deliveryIndex.get()));
+                        DeliveryEntity deliveryEntity = deliveryPlannerMapper.toEntity(deliveryCreationRequest,deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),deliveryIndex.get(),tourLetter));
                         //save delivery and add it to tourDeliveries
                         deliveryComponent.saveDelivery(deliveryEntity);
                         tourDeliveries.add(deliveryEntity);
                         deliveryIndex.getAndIncrement();
-                    };
+                    }
 
-                    tourEntity.setLetter(Character.toString(refTour.charAt(refTour.length()-1)));
+                    tourEntity.setLetter(tourLetter);
                     tourEntity.setDeliveries(tourDeliveries);
                     //save tour and add it to dayTours
                     tourComponent.saveTour(tourEntity);
@@ -94,7 +93,7 @@ public class DayService {
                     throw new DayCreationRestException(e.getMessage());
                 }
 
-            };
+            }
             //add tours into day and save it.
             dayEntity.setTours(dayTours);
             dayComponent.planDay(dayEntity);
@@ -128,45 +127,31 @@ public class DayService {
         try {
             DayEntity day = dayComponent.getDay(date);
 
-            // Création de la DayResponseDTO avec les tournées et les livraisons ordonnées
             DayResponseDTO dayResponseDTO = dayPlannerMapper.toResponse(day);
 
-            // Parcourir les tournées de DayEntity
-            List<TourPlannerResponseDTO> tours = new ArrayList<>();
+            List<TourPlannerResponseDTO> toursInDay = new ArrayList<>();
             for (TourEntity tourEntity : day.getTours()) {
-                TourPlannerResponseDTO tourDTO = tourPlannerMapper.toResponse(tourEntity);
+                TourPlannerResponseDTO tourPlannerResponseDTO = tourPlannerMapper.toResponse(tourEntity);
+                List<DeliveryPlannerResponseDTO> deliveriesInTour = new ArrayList<>();
+                tourEntity.getDeliveries().forEach(deliveryEntity -> {
+                    DeliveryPlannerResponseDTO deliveryPlannerResponseDTO = deliveryPlannerMapper.toResponse(deliveryEntity);
+                    deliveriesInTour.add(deliveryPlannerResponseDTO);
+                });
 
-                // Maintenir l'ordre des livraisons tel qu'il est dans TourEntity
-                List<DeliveryEntity> deliveriesInTour = new LinkedList<>(tourEntity.getDeliveries());
-                List<DeliveryPlannerResponseDTO> orderedDeliveries = mapDeliveries(deliveriesInTour);
-                tourDTO.setDeliveries(orderedDeliveries);
-
-                // Ajouter la tournée avec les livraisons ordonnées à la liste des tournées
-                tours.add(tourDTO);
+                tourPlannerResponseDTO.setDeliveries(deliveriesInTour);
+                toursInDay.add(tourPlannerResponseDTO);
             }
 
-            // Affecter les tournées ordonnées à la DayResponseDTO
-            dayResponseDTO.setTours(tours);
-
+            dayResponseDTO.setTours(toursInDay);
             return dayResponseDTO;
+
         } catch (DayNotFoundException e) {
             throw new EntityNotFoundRestException(e.getMessage());
         }
 
     }
 
-    public List<DeliveryPlannerResponseDTO> mapDeliveries(List<DeliveryEntity> deliveries) {
-        Map<Integer, DeliveryPlannerResponseDTO> deliveryMap = new LinkedHashMap<>();
 
-        for (int i = 0; i < deliveries.size(); i++) {
-            DeliveryEntity delivery = deliveries.get(i);
-            DeliveryPlannerResponseDTO deliveryDTO = deliveryPlannerMapper.toResponse(delivery);
-            // Utilisation de l'index de la livraison comme ordre
-            deliveryMap.put(i, deliveryDTO);
-        }
-
-        return new ArrayList<>(deliveryMap.values());
-    }
 
 
 }

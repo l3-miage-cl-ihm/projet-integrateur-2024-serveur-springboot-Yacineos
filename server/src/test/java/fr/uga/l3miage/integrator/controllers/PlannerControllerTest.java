@@ -92,7 +92,7 @@ public class PlannerControllerTest {
                 .lastName("TESSIERE").firstName("claudia").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
         employeeRepository.save(planner);
 
-        Set<TourCreationRequest> tourCreationRequestSet= new HashSet<>();
+        List<TourCreationRequest> tourCreationRequestList= new ArrayList<>();
         TruckEntity truck= TruckEntity.builder().immatriculation("AY-124-GF").build();
         truckRepository.save(truck);
         EmployeeEntity deliveryman1= EmployeeEntity.builder()
@@ -158,7 +158,7 @@ public class PlannerControllerTest {
         orderRepository.save(o1);
         orderRepository.save(o2);
         orderRepository.save(o3);
-        Set<DeliveryCreationRequest> deliveryCreationRequestSet=new HashSet<>();
+        List<DeliveryCreationRequest> deliveryCreationRequestList=new ArrayList<>();
         DeliveryCreationRequest d1= DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of(o1.getReference(),o2.getReference()))
@@ -168,19 +168,19 @@ public class PlannerControllerTest {
                 .distanceToCover(12)
                 .orders(Set.of(o3.getReference()))
                 .build();
-        deliveryCreationRequestSet.add(d1);
-        deliveryCreationRequestSet.add(d2);
+        deliveryCreationRequestList.add(d1);
+        deliveryCreationRequestList.add(d2);
         TourCreationRequest t1= TourCreationRequest.builder()
                 .distanceToCover(24)
                 .truck(truck.getImmatriculation())
                 .deliverymen(Set.of(deliveryman1.getTrigram(),deliveryman2.getTrigram()))
-                .deliveries(deliveryCreationRequestSet)
+                .deliveries(deliveryCreationRequestList)
                 .build();
 
-        tourCreationRequestSet.add(t1);
+        tourCreationRequestList.add(t1);
         DayCreationRequest dayCreationRequest= DayCreationRequest.builder()
                 .date(LocalDate.now())
-                .tours(tourCreationRequestSet)
+                .tours(tourCreationRequestList)
                 .build();
 
 
@@ -206,7 +206,7 @@ public class PlannerControllerTest {
 
             DayCreationRequest dayCreationRequest= DayCreationRequest.builder()
                     .date(LocalDate.now())
-                    .tours(Set.of())
+                    .tours(new ArrayList<>())
                     .build();
 
 
@@ -237,7 +237,7 @@ public class PlannerControllerTest {
                 .lastName("TESSIERE").firstName("claudia").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
         employeeRepository.save(planner);
 
-        Set<TourCreationRequest> tourCreationRequestSet = new HashSet<>();
+        List<TourCreationRequest> tourCreationRequestList= new ArrayList<>();
         TruckEntity truck = TruckEntity.builder().immatriculation("AY-124-GF").build();
         truckRepository.save(truck);
         EmployeeEntity deliveryman1 = EmployeeEntity.builder()
@@ -293,7 +293,7 @@ public class PlannerControllerTest {
         orderRepository.save(o1);
         orderRepository.save(o2);
         orderRepository.save(o3);
-        Set<DeliveryCreationRequest> deliveryCreationRequestSet = new HashSet<>();
+        List<DeliveryCreationRequest> deliveryCreationRequestList = new ArrayList<>();
         DeliveryCreationRequest d1 = DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of(o1.getReference(), o2.getReference()))
@@ -303,19 +303,19 @@ public class PlannerControllerTest {
                 .distanceToCover(12)
                 .orders(Set.of(o3.getReference()))
                 .build();
-        deliveryCreationRequestSet.add(d1);
-        deliveryCreationRequestSet.add(d2);
+        deliveryCreationRequestList.add(d1);
+        deliveryCreationRequestList.add(d2);
         TourCreationRequest t1 = TourCreationRequest.builder()
                 .distanceToCover(24)
                 .truck(truck.getImmatriculation())
                 .deliverymen(Set.of(deliveryman1.getTrigram(), "YTR")) //no existing deliveryman with trigram 'YTR'
-                .deliveries(deliveryCreationRequestSet)
+                .deliveries(deliveryCreationRequestList)
                 .build();
 
-        tourCreationRequestSet.add(t1);
+        tourCreationRequestList.add(t1);
         DayCreationRequest dayCreationRequest = DayCreationRequest.builder()
                 .date(LocalDate.now())
-                .tours(tourCreationRequestSet)
+                .tours(tourCreationRequestList)
                 .build();
 
 
@@ -346,7 +346,7 @@ public class PlannerControllerTest {
                 .lastName("Paul").firstName("Christian").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
         employeeRepository.save(planner);
 
-        Set<TourCreationRequest> tourCreationRequestSet = new HashSet<>();
+        List<TourCreationRequest> tourCreationRequestList = new ArrayList<>();
         TruckEntity truck = TruckEntity.builder().immatriculation("AY-124-GF").build();
         truckRepository.save(truck);
         EmployeeEntity deliveryman1 = EmployeeEntity.builder()
@@ -411,7 +411,7 @@ public class PlannerControllerTest {
         orderRepository.save(o1);
         orderRepository.save(o2);
         orderRepository.save(o3);
-        Set<DeliveryCreationRequest> deliveryCreationRequestSet = new HashSet<>();
+        List<DeliveryCreationRequest> deliveryCreationRequestList = new ArrayList<>();
         DeliveryCreationRequest d1 = DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of(o1.getReference(), o2.getReference()))
@@ -421,19 +421,19 @@ public class PlannerControllerTest {
                 .distanceToCover(12)
                 .orders(Set.of("c900")) //no existing order with given reference c170
                 .build();
-        deliveryCreationRequestSet.add(d1);
-        deliveryCreationRequestSet.add(d2);
+        deliveryCreationRequestList.add(d1);
+        deliveryCreationRequestList.add(d2);
         TourCreationRequest t1 = TourCreationRequest.builder()
                 .distanceToCover(24)
                 .truck(truck.getImmatriculation())
                 .deliverymen(Set.of(deliveryman1.getTrigram(), deliveryman2.getTrigram()))
-                .deliveries(deliveryCreationRequestSet)
+                .deliveries(deliveryCreationRequestList)
                 .build();
 
-        tourCreationRequestSet.add(t1);
+        tourCreationRequestList.add(t1);
         DayCreationRequest dayCreationRequest = DayCreationRequest.builder()
                 .date(LocalDate.now())
-                .tours(tourCreationRequestSet)
+                .tours(tourCreationRequestList)
                 .build();
 
 
@@ -457,7 +457,7 @@ public class PlannerControllerTest {
 
         //given
         // creation deliveryMen 1
-        List<TourEntity> tours= new LinkedList<>();
+        List<TourEntity> tours= new ArrayList<>();
         Set<EmployeeEntity> deliverymen= new HashSet<>();
         EmployeeEntity m1=EmployeeEntity.builder().trigram("jjo").email("jojo@gmail.com").build();
         EmployeeEntity m2=EmployeeEntity.builder().trigram("axl").email("axel@gmail.com").build();
@@ -493,7 +493,7 @@ public class PlannerControllerTest {
         DeliveryEntity del2=DeliveryEntity.builder().reference("T238G-A2").build();
         del2.setOrders(Set.of(order21,order22));
         deliveryRepository.save(del2);
-        List<DeliveryEntity> deliveries1=new LinkedList<>();
+        List<DeliveryEntity> deliveries1=new ArrayList<>();
         deliveries1.add(del1);
         deliveries1.add(del2);
         //creation tour 1

@@ -26,7 +26,7 @@ public interface TourPlannerMapper {
 
     @Mapping(source = "truck",target = "truck",qualifiedBy=TourPlannerMapperUtils.GetTruckID.class)
     @Mapping(source = "reference", target = "refTour")
-    @Mapping(source= "deliverymen",target = "deliveryMen", qualifiedBy=TourPlannerMapperUtils.GetDeliveryMenIDs.class)
+    @Mapping(source= "deliverymen",target = "deliverymen", qualifiedBy=TourPlannerMapperUtils.GetDeliveryMenIDs.class)
     @Mapping(target = "deliveries",ignore = true)
     TourPlannerResponseDTO toResponse(TourEntity tourEntity);
 

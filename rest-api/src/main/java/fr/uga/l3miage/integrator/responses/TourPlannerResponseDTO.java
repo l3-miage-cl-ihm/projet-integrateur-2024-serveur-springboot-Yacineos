@@ -1,6 +1,7 @@
 package fr.uga.l3miage.integrator.responses;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Setter;
 
@@ -15,7 +16,7 @@ public class TourPlannerResponseDTO {
     @Schema(description = "Deliveries list ")
     private List<DeliveryPlannerResponseDTO> deliveries ;
     @Schema(description = "list of deliveryMan id")
-    private Set<String> deliveryMen;
+    private Set<String> deliverymen;
     @Schema(description = "Truck id")
     private String truck;
     @Schema(description ="Total amount of distance to cover for the Tour")
