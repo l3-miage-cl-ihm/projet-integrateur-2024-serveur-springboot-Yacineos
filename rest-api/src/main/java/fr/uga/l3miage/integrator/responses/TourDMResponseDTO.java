@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -12,7 +13,7 @@ import java.util.Set;
 @Schema(description = "Tour representation fot deliveryman")
 public class TourDMResponseDTO {
     @Schema(description = "Deliveries list ")
-    private Set<DeliveryDMResponseDTO> deliveries ;
+    private List<DeliveryDMResponseDTO> deliveries ;
 
     @Schema(description = "Deliverymen ids list")
     private Set<String> deliverymen;

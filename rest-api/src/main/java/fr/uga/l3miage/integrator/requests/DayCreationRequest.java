@@ -7,6 +7,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -16,5 +17,5 @@ public class DayCreationRequest {
     @Schema(description = "Date of the day we want plan ", example = "2024-04-30")
     private final LocalDate date;
     @Schema(description = "Day tour list ")
-    private final Set<TourCreationRequest> tours;
+    private final List<TourCreationRequest> tours;
 }
