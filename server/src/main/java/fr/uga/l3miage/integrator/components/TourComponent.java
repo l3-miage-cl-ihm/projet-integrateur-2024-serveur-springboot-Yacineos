@@ -3,6 +3,7 @@ package fr.uga.l3miage.integrator.components;
 import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
 import fr.uga.l3miage.integrator.exceptions.technical.TourNotFoundException;
 import fr.uga.l3miage.integrator.models.DayEntity;
+import fr.uga.l3miage.integrator.models.DeliveryEntity;
 import fr.uga.l3miage.integrator.models.TourEntity;
 import fr.uga.l3miage.integrator.repositories.DayRepository;
 import fr.uga.l3miage.integrator.repositories.TourRepository;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -44,6 +46,7 @@ public class TourComponent {
     public TourEntity findTourById(String tourId) throws TourNotFoundException {
         return tourRepository.findById(tourId).orElseThrow(()-> new TourNotFoundException("No tour was found !"));
     }
+
 
 
 }
