@@ -1,5 +1,8 @@
 package fr.uga.l3miage.integrator.components;
 
+import fr.uga.l3miage.integrator.enums.DeliveryState;
+import fr.uga.l3miage.integrator.exceptions.technical.DeliveryNotFoundException;
+import fr.uga.l3miage.integrator.exceptions.technical.UpdateDeliveryStateException;
 import fr.uga.l3miage.integrator.models.DeliveryEntity;
 import fr.uga.l3miage.integrator.repositories.DeliveryRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,4 +22,63 @@ public class DeliveryComponent {
     public void saveDelivery(DeliveryEntity delivery){
         deliveryRepository.save(delivery);
     }
+
+    public void updateDeliveryState(String deliveryId, DeliveryState newState) throws DeliveryNotFoundException, UpdateDeliveryStateException {
+        DeliveryEntity deliveryEntity=deliveryRepository.findById(deliveryId).orElseThrow(()->new DeliveryNotFoundException("No delivery was found with given reference <"+deliveryId+">"));
+        //do some logic and throw UpdateDeliverySTateException if necessary
+        DeliveryState currentState= deliveryEntity.getState();
+
+
+        switch (currentState){
+            case PLANNED:
+                if( newState == DeliveryState.IN_COURSE ){
+                    deliveryEntity.setState(newState);
+                } else{
+                    throw new UpdateDeliveryStateException("Cannot switch from "+currentState+ " into <" + newState+">", deliveryEntity.getState());
+                }
+                break;
+
+
+            case IN_COURSE:
+                if( newState == DeliveryState.UNLOADING ){
+                    deliveryEntity.setState(newState);
+                } else{
+                    throw new UpdateDeliveryStateException("Cannot switch from "+currentState+ " into <" + newState+">", deliveryEntity.getState());
+                }
+                break;
+
+            case UNLOADING:
+                if( newState == DeliveryState.WITH_CUSTOMER ){
+                    deliveryEntity.setState(newState);
+                } else{
+                    throw new UpdateDeliveryStateException("Cannot switch from "+currentState+ "into <" + newState+">", deliveryEntity.getState());
+                }
+                break;
+
+            case WITH_CUSTOMER:
+                if( newState == DeliveryState.ASSEMBLY || newState == DeliveryState.COMPLETED  ){
+                    deliveryEntity.setState(newState);
+                } else{
+                    throw new UpdateDeliveryStateException("Cannot switch from "+currentState+ "into <" + newState+">", deliveryEntity.getState());
+                }
+                break;
+
+            case ASSEMBLY:
+                if( newState == DeliveryState.COMPLETED  ){
+                    deliveryEntity.setState(newState);
+                } else{
+                    throw new UpdateDeliveryStateException("Cannot switch from "+currentState+ "into <" + newState+">", deliveryEntity.getState());
+                }
+                break;
+
+            default:
+                throw new UpdateDeliveryStateException("Delivery is already completed !", deliveryEntity.getState());
+
+        }
+
+
+        deliveryRepository.save(deliveryEntity);
+    }
+
+
 }
