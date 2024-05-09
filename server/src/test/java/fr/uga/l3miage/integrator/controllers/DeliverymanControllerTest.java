@@ -2,12 +2,15 @@ package fr.uga.l3miage.integrator.controllers;
 
 import fr.uga.l3miage.integrator.components.TourComponent;
 import fr.uga.l3miage.integrator.datatypes.Address;
+import fr.uga.l3miage.integrator.enums.DeliveryState;
+import fr.uga.l3miage.integrator.enums.TourState;
 import fr.uga.l3miage.integrator.exceptions.NotFoundErrorResponse;
 import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
 import fr.uga.l3miage.integrator.exceptions.technical.TourNotFoundException;
 import fr.uga.l3miage.integrator.models.*;
 import fr.uga.l3miage.integrator.repositories.*;
 import fr.uga.l3miage.integrator.responses.TourDMResponseDTO;
+import fr.uga.l3miage.integrator.services.DeliveryService;
 import fr.uga.l3miage.integrator.services.TourService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +35,8 @@ import static org.mockito.Mockito.verify;
 public class DeliverymanControllerTest {
     @Autowired
     private TestRestTemplate testRestTemplate;
+    @SpyBean
+    private DeliveryService deliveryService;
     @SpyBean
     private TourService tourService;
     @Autowired
@@ -120,7 +125,7 @@ void clear(){
         //when
         TourDMResponseDTO expectedResponse = tourService.getDeliveryTourOfTheDay(man2.getEmail());
 
-        ResponseEntity<TourDMResponseDTO> response = testRestTemplate.exchange("/api/v2.0/deliveryman/tour?email={email}", HttpMethod.GET, new HttpEntity<>(null, headers), TourDMResponseDTO.class, urlParams);
+        ResponseEntity<TourDMResponseDTO> response = testRestTemplate.exchange("/api/v3.0/deliveryman/tour?email={email}", HttpMethod.GET, new HttpEntity<>(null, headers), TourDMResponseDTO.class, urlParams);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -141,9 +146,9 @@ void clear(){
         urlParams.put("email", "hola@gmail.com");
 
         //when
-        NotFoundErrorResponse expectedResponse = NotFoundErrorResponse.builder().uri("/api/v2.0/deliveryman/tour").errorMessage("No day was planned for today : "+LocalDate.now()).build();
+        NotFoundErrorResponse expectedResponse = NotFoundErrorResponse.builder().uri("/api/v3.0/deliveryman/tour").errorMessage("No day was planned for today : "+LocalDate.now()).build();
 
-        ResponseEntity<NotFoundErrorResponse> response = testRestTemplate.exchange("/api/v2.0/deliveryman/tour?email={email}", HttpMethod.GET, new HttpEntity<>(null, headers), NotFoundErrorResponse.class, urlParams);
+        ResponseEntity<NotFoundErrorResponse> response = testRestTemplate.exchange("/api/v3.0/deliveryman/tour?email={email}", HttpMethod.GET, new HttpEntity<>(null, headers), NotFoundErrorResponse.class, urlParams);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -168,14 +173,127 @@ void clear(){
         dayRepository.save(day);
 
         //when
-        NotFoundErrorResponse expectedResponse = NotFoundErrorResponse.builder().uri("/api/v2.0/deliveryman/tour").errorMessage("No tour was found for <hola@gmail.com>").build();
-        ResponseEntity<NotFoundErrorResponse> response = testRestTemplate.exchange("/api/v2.0/deliveryman/tour?email={email}", HttpMethod.GET, new HttpEntity<>(null, headers), NotFoundErrorResponse.class, urlParams);
+        NotFoundErrorResponse expectedResponse = NotFoundErrorResponse.builder().uri("/api/v3.0/deliveryman/tour").errorMessage("No tour was found for <hola@gmail.com>").build();
+        ResponseEntity<NotFoundErrorResponse> response = testRestTemplate.exchange("/api/v3.0/deliveryman/tour?email={email}", HttpMethod.GET, new HttpEntity<>(null, headers), NotFoundErrorResponse.class, urlParams);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).usingRecursiveComparison().isEqualTo(expectedResponse);
         verify(tourComponent, times(1)).getTourOfTheDay(anyString());
         verify(tourService, times(1)).getDeliveryTourOfTheDay(anyString());
+
+
+    }
+
+    @Test
+    void updateDeliveryStateOK(){
+        //given
+        final HttpHeaders headers = new HttpHeaders();
+
+        final Map<String, Object> urlParams = new HashMap<>();
+        urlParams.put("deliveryId", "l130G-A1");
+        urlParams.put("deliveryState","UNLOADING");
+        urlParams.put("tourId","t130G-A");
+
+        DeliveryEntity deliveryEntity=DeliveryEntity.builder()
+                .reference("l130G-A1")
+                .state(DeliveryState.IN_COURSE)
+                .distanceToCover(3.9)
+                .orders(Set.of())
+                .build();
+        deliveryRepository.save(deliveryEntity);
+        TourEntity tour=TourEntity.builder().reference("t130G-A").deliveries(List.of(deliveryEntity)).build();
+        tourRepository.save(tour);
+
+        //when
+        ResponseEntity<Void> response=testRestTemplate.exchange("/api/v3.0/deliveryman/tours/{tourId}/deliveries/{deliveryId}/updateState?deliveryState={deliveryState}", HttpMethod.PUT, new HttpEntity<>(null, headers), Void.class, urlParams);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(deliveryService,times(1)).updateDeliveryState(DeliveryState.UNLOADING,deliveryEntity.getReference(),tour.getReference());
+
+
+    }
+
+    @Test
+    void updateDeliveryStateAndTourOK() throws TourNotFoundException {
+        //given
+        final HttpHeaders headers = new HttpHeaders();
+
+        final Map<String, Object> urlParams = new HashMap<>();
+        urlParams.put("deliveryId", "l130G-A1");
+        urlParams.put("deliveryState","COMPLETED");
+        urlParams.put("tourId","t130G-A");
+
+        DeliveryEntity deliveryEntity=DeliveryEntity.builder()
+                .reference("l130G-A1")
+                .state(DeliveryState.WITH_CUSTOMER)
+                .distanceToCover(3.9)
+                .orders(Set.of())
+                .build();
+        deliveryRepository.save(deliveryEntity);
+        TourEntity tour=TourEntity.builder().state(TourState.IN_COURSE).reference("t130G-A").deliveries(List.of(deliveryEntity)).build();
+        tourRepository.save(tour);
+
+        //when
+        ResponseEntity<Void> response=testRestTemplate.exchange("/api/v3.0/deliveryman/tours/{tourId}/deliveries/{deliveryId}/updateState?deliveryState={deliveryState}", HttpMethod.PUT, new HttpEntity<>(null, headers), Void.class, urlParams);
+
+        TourEntity tourAfterUpdating= tourRepository.findById(tour.getReference()).orElseThrow(()-> new TourNotFoundException("No tour was found "));
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(deliveryService,times(1)).updateDeliveryState(DeliveryState.COMPLETED,deliveryEntity.getReference(),tour.getReference());
+        assertThat(tourAfterUpdating.getState()).isEqualTo(TourState.COMPLETED);
+
+
+    }
+
+    @Test
+    void updateDeliveryStateNotOK_BecauseOfNotFoundDelivery(){
+        //given
+        final HttpHeaders headers = new HttpHeaders();
+
+        final Map<String, Object> urlParams = new HashMap<>();
+        urlParams.put("deliveryId", "l130G-A1");
+        urlParams.put("deliveryState","UNLOADING");
+        urlParams.put("tourId","t130G-A");
+
+        //when
+        ResponseEntity<Void> response=testRestTemplate.exchange("/api/v3.0/deliveryman/tours/{tourId}/deliveries/{deliveryId}/updateState?deliveryState={deliveryState}", HttpMethod.PUT, new HttpEntity<>(null, headers), Void.class, urlParams);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        verify(deliveryService,times(1)).updateDeliveryState(DeliveryState.UNLOADING,"l130G-A1","t130G-A");
+
+
+    }
+
+    @Test
+    void updateDeliveryStateNotOK_BecauseOfWrongState(){
+        //given
+        final HttpHeaders headers = new HttpHeaders();
+
+        final Map<String, Object> urlParams = new HashMap<>();
+        urlParams.put("deliveryId", "l130G-A1");
+        urlParams.put("deliveryState","COMPLETED");
+        urlParams.put("tourId","t130G-A");
+
+        DeliveryEntity deliveryEntity=DeliveryEntity.builder()
+                .reference("l130G-A1")
+                .state(DeliveryState.IN_COURSE)
+                .distanceToCover(3.9)
+                .orders(Set.of())
+                .build();
+        deliveryRepository.save(deliveryEntity);
+        TourEntity tour = TourEntity.builder().reference("t130G-A").deliveries(List.of(deliveryEntity)).build();
+        tourRepository.save(tour);
+
+
+        //when
+        ResponseEntity<Void> response=testRestTemplate.exchange("/api/v3.0/deliveryman/tours/{tourId}/deliveries/{deliveryId}/updateState?deliveryState={deliveryState}", HttpMethod.PUT, new HttpEntity<>(null, headers), Void.class, urlParams);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        verify(deliveryService,times(1)).updateDeliveryState(DeliveryState.COMPLETED,deliveryEntity.getReference(),tour.getReference());
 
 
     }
