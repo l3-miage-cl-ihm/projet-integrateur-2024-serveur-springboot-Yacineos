@@ -70,7 +70,7 @@ public class DeliveryComponentTest {
     }
 
     @Test
-    void updateDeliveryStateOK() throws DeliveryNotFoundException, UpdateDeliveryStateException {
+    void updateDeliveryStateOK1() throws DeliveryNotFoundException, UpdateDeliveryStateException {
 
         //given
         DeliveryEntity deliveryEntity=DeliveryEntity.builder()
@@ -93,6 +93,28 @@ public class DeliveryComponentTest {
 
     }
     @Test
+    void updateDeliveryState_OK2() throws DeliveryNotFoundException, UpdateDeliveryStateException {
+
+        //given
+        DeliveryEntity deliveryEntity=DeliveryEntity.builder()
+                .reference("l120G-A1")
+                .state(DeliveryState.WITH_CUSTOMER)
+                .distanceToCover(3.9)
+                .orders(Set.of())
+                .build();
+
+
+        //when
+        when(deliveryRepository.findById(deliveryEntity.getReference())).thenReturn(Optional.of(deliveryEntity));
+        when(deliveryRepository.save(any(DeliveryEntity.class))).thenReturn(deliveryEntity);
+
+        DeliveryEntity response=deliveryComponent.updateDeliveryState(deliveryEntity.getReference(),DeliveryState.COMPLETED);
+
+        //then
+        assertThat(response.getState()).isEqualTo(DeliveryState.COMPLETED);
+
+    }
+    @Test
     void updateDeliveryState_NotOK_BeacauseOf_NotFoundDelivery()  {
 
         //when
@@ -105,7 +127,7 @@ public class DeliveryComponentTest {
     }
 
     @Test
-    void updateDeliveryState_NotOK_BeacauseOf_WrongState() throws DeliveryNotFoundException, UpdateDeliveryStateException {
+    void updateDeliveryState_NotOK_BeacauseOf_WrongState1() throws DeliveryNotFoundException, UpdateDeliveryStateException {
 
         //given
         DeliveryEntity deliveryEntity=DeliveryEntity.builder()
@@ -124,4 +146,68 @@ public class DeliveryComponentTest {
         assertThrows(UpdateDeliveryStateException.class,()->deliveryComponent.updateDeliveryState(deliveryEntity.getReference(),DeliveryState.UNLOADING));
 
     }
+    @Test
+    void updateDeliveryState_NotOK_BeacauseOf_WrongState2() throws DeliveryNotFoundException, UpdateDeliveryStateException {
+
+        //given
+        DeliveryEntity deliveryEntity=DeliveryEntity.builder()
+                .reference("l120G-A1")
+                .state(DeliveryState.IN_COURSE)
+                .distanceToCover(3.9)
+                .orders(Set.of())
+                .build();
+
+
+        //when
+        when(deliveryRepository.findById(deliveryEntity.getReference())).thenReturn(Optional.of(deliveryEntity));
+        when(deliveryRepository.save(any(DeliveryEntity.class))).thenReturn(deliveryEntity);
+
+        //then
+        assertThrows(UpdateDeliveryStateException.class,()->deliveryComponent.updateDeliveryState(deliveryEntity.getReference(),DeliveryState.WITH_CUSTOMER));
+
+    }
+
+    @Test
+    void updateDeliveryState_NotOK_BeacauseOf_WrongState3() throws DeliveryNotFoundException, UpdateDeliveryStateException {
+
+        //given
+        DeliveryEntity deliveryEntity=DeliveryEntity.builder()
+                .reference("l120G-A1")
+                .state(DeliveryState.UNLOADING)
+                .distanceToCover(3.9)
+                .orders(Set.of())
+                .build();
+
+
+        //when
+        when(deliveryRepository.findById(deliveryEntity.getReference())).thenReturn(Optional.of(deliveryEntity));
+        when(deliveryRepository.save(any(DeliveryEntity.class))).thenReturn(deliveryEntity);
+
+        //then
+        assertThrows(UpdateDeliveryStateException.class,()->deliveryComponent.updateDeliveryState(deliveryEntity.getReference(),DeliveryState.COMPLETED));
+
+    }
+
+    @Test
+    void updateDeliveryState_NotOK_BeacauseOf_WrongState4() throws DeliveryNotFoundException, UpdateDeliveryStateException {
+
+        //given
+        DeliveryEntity deliveryEntity=DeliveryEntity.builder()
+                .reference("l120G-A1")
+                .state(DeliveryState.COMPLETED)
+                .distanceToCover(3.9)
+                .orders(Set.of())
+                .build();
+
+
+        //when
+        when(deliveryRepository.findById(deliveryEntity.getReference())).thenReturn(Optional.of(deliveryEntity));
+        when(deliveryRepository.save(any(DeliveryEntity.class))).thenReturn(deliveryEntity);
+
+        //then
+        assertThrows(UpdateDeliveryStateException.class,()->deliveryComponent.updateDeliveryState(deliveryEntity.getReference(),DeliveryState.COMPLETED));
+
+
+    }
+
 }

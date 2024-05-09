@@ -83,12 +83,11 @@ public class DayServiceTest {
         //IMPORTANT: do not forget the planner because as decided before, he is one to manage the warehouse and it is loaded in the DayPlannerMapper
         WarehouseEntity grenis = WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
                 .address(new Address("21 rue des cafards", "65001", "San antonio")).trucks(Set.of()).build();
-        warehouseRepository.save(grenis);
         EmployeeEntity planner = EmployeeEntity.builder()
                 .trigram("STR")
                 .email("claudiatessiere@grenis.com").job(Job.PLANNER).photo("claudia.png")
                 .lastName("TESSIERE").firstName("claudia").mobilePhone("07654377876").warehouse(grenis).build();
-        employeeRepository.save(planner);
+
 
         EmployeeEntity deliveryman1= EmployeeEntity.builder()
                 .email("samy@gmail.com")
@@ -184,6 +183,8 @@ public class DayServiceTest {
         when(employeeRepository.findById(deliveryman1.getTrigram())).thenReturn(Optional.of(deliveryman1));
         when(employeeRepository.findById(deliveryman2.getTrigram())).thenReturn(Optional.of(deliveryman2));
         when(employeeRepository.findById(planner.getTrigram())).thenReturn(Optional.of(planner));
+        when(warehouseRepository.findById(grenis.getName())).thenReturn(Optional.of(grenis));
+
         when(orderRepository.findById(o1.getReference())).thenReturn(Optional.of(o1));
         when(orderRepository.findById(o2.getReference())).thenReturn(Optional.of(o2));
         when(orderRepository.findById(o3.getReference())).thenReturn(Optional.of(o3));

@@ -2,12 +2,14 @@ package fr.uga.l3miage.integrator.controllers;
 
 import fr.uga.l3miage.integrator.components.TourComponent;
 import fr.uga.l3miage.integrator.datatypes.Address;
+import fr.uga.l3miage.integrator.enums.DeliveryState;
 import fr.uga.l3miage.integrator.exceptions.NotFoundErrorResponse;
 import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
 import fr.uga.l3miage.integrator.exceptions.technical.TourNotFoundException;
 import fr.uga.l3miage.integrator.models.*;
 import fr.uga.l3miage.integrator.repositories.*;
 import fr.uga.l3miage.integrator.responses.TourDMResponseDTO;
+import fr.uga.l3miage.integrator.services.DeliveryService;
 import fr.uga.l3miage.integrator.services.TourService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +34,8 @@ import static org.mockito.Mockito.verify;
 public class DeliverymanControllerTest {
     @Autowired
     private TestRestTemplate testRestTemplate;
+    @SpyBean
+    private DeliveryService deliveryService;
     @SpyBean
     private TourService tourService;
     @Autowired
@@ -176,6 +180,79 @@ void clear(){
         assertThat(response.getBody()).usingRecursiveComparison().isEqualTo(expectedResponse);
         verify(tourComponent, times(1)).getTourOfTheDay(anyString());
         verify(tourService, times(1)).getDeliveryTourOfTheDay(anyString());
+
+
+    }
+
+    @Test
+    void updateDeliveryStateOK(){
+        //given
+        final HttpHeaders headers = new HttpHeaders();
+
+        final Map<String, Object> urlParams = new HashMap<>();
+        urlParams.put("deliveryId", "l130G-A1");
+        urlParams.put("deliveryState","UNLOADING");
+
+        DeliveryEntity deliveryEntity=DeliveryEntity.builder()
+                .reference("l130G-A1")
+                .state(DeliveryState.IN_COURSE)
+                .distanceToCover(3.9)
+                .orders(Set.of())
+                .build();
+        deliveryRepository.save(deliveryEntity);
+
+        //when
+        ResponseEntity<Void> response=testRestTemplate.exchange("/api/v3.0/deliveryman/deliveries/{deliveryId}/updateState?deliveryState={deliveryState}", HttpMethod.PUT, new HttpEntity<>(null, headers), Void.class, urlParams);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(deliveryService,times(1)).updateDeliveryState(DeliveryState.UNLOADING,deliveryEntity.getReference());
+
+
+    }
+
+    @Test
+    void updateDeliveryStateNotOK_BecauseOfNotFoundDelivery(){
+        //given
+        final HttpHeaders headers = new HttpHeaders();
+
+        final Map<String, Object> urlParams = new HashMap<>();
+        urlParams.put("deliveryId", "l130G-A1");
+        urlParams.put("deliveryState","UNLOADING");
+
+        //when
+        ResponseEntity<Void> response=testRestTemplate.exchange("/api/v3.0/deliveryman/deliveries/{deliveryId}/updateState?deliveryState={deliveryState}", HttpMethod.PUT, new HttpEntity<>(null, headers), Void.class, urlParams);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        verify(deliveryService,times(1)).updateDeliveryState(DeliveryState.UNLOADING,"l130G-A1");
+
+
+    }
+
+    @Test
+    void updateDeliveryStateNotOK_BecauseOfWrongState(){
+        //given
+        final HttpHeaders headers = new HttpHeaders();
+
+        final Map<String, Object> urlParams = new HashMap<>();
+        urlParams.put("deliveryId", "l130G-A1");
+        urlParams.put("deliveryState","COMPLETED");
+
+        DeliveryEntity deliveryEntity=DeliveryEntity.builder()
+                .reference("l130G-A1")
+                .state(DeliveryState.IN_COURSE)
+                .distanceToCover(3.9)
+                .orders(Set.of())
+                .build();
+        deliveryRepository.save(deliveryEntity);
+
+        //when
+        ResponseEntity<Void> response=testRestTemplate.exchange("/api/v3.0/deliveryman/deliveries/{deliveryId}/updateState?deliveryState={deliveryState}", HttpMethod.PUT, new HttpEntity<>(null, headers), Void.class, urlParams);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        verify(deliveryService,times(1)).updateDeliveryState(DeliveryState.COMPLETED,deliveryEntity.getReference());
 
 
     }
