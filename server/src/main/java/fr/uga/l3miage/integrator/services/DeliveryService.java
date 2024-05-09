@@ -15,6 +15,8 @@ import fr.uga.l3miage.integrator.models.TourEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class DeliveryService {
@@ -25,8 +27,9 @@ public class DeliveryService {
         try {
             DeliveryEntity deliveryEntity= deliveryComponent.updateDeliveryState(deliveryId, deliveryState,tourId);
             TourEntity tourEntity= tourComponent.findTourById(tourId);
-            DeliveryEntity lastDelivery = tourEntity.getDeliveries().get(tourEntity.getDeliveries().size() - 1);
-            if(lastDelivery.getReference()==deliveryId && lastDelivery.getState()==DeliveryState.COMPLETED){
+            List<DeliveryEntity> deliveries = tourEntity.getDeliveries();
+
+            if(deliveries.stream().allMatch(delivery -> delivery.getState()==DeliveryState.COMPLETED)){
                 //update tour state
                 tourEntity.setState(TourState.COMPLETED);
                 tourComponent.saveTour(tourEntity);
