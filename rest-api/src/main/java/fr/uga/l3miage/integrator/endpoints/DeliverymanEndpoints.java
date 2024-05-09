@@ -37,7 +37,7 @@ public interface DeliverymanEndpoints {
     @ApiResponse(responseCode = "409" ,description = "Cannot update delivery state", content = @Content(schema = @Schema(implementation = DeliveryStatusNotUpdatedResponse.class),mediaType = MediaType.APPLICATION_JSON_VALUE))
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/deliveries/{deliveryId}")
-    void  updateDeliveryState(@RequestParam DeliveryState deliveryState, @PathVariable String deliveryId) throws DeliveryNotFoundException;
+    void  updateDeliveryState(@RequestParam DeliveryState deliveryState, @PathVariable String deliveryId);
 
 
 

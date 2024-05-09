@@ -23,7 +23,7 @@ public class DeliveryComponent {
         deliveryRepository.save(delivery);
     }
 
-    public void updateDeliveryState(String deliveryId, DeliveryState newState) throws DeliveryNotFoundException, UpdateDeliveryStateException {
+    public DeliveryEntity updateDeliveryState(String deliveryId, DeliveryState newState) throws DeliveryNotFoundException, UpdateDeliveryStateException {
         DeliveryEntity deliveryEntity=deliveryRepository.findById(deliveryId).orElseThrow(()->new DeliveryNotFoundException("No delivery was found with given reference <"+deliveryId+">"));
         //do some logic and throw UpdateDeliverySTateException if necessary
         DeliveryState currentState= deliveryEntity.getState();
@@ -76,8 +76,7 @@ public class DeliveryComponent {
 
         }
 
-
-        deliveryRepository.save(deliveryEntity);
+        return deliveryRepository.save(deliveryEntity);
     }
 
 

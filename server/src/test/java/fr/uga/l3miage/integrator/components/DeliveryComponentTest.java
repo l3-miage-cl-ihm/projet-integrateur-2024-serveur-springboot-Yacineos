@@ -1,6 +1,8 @@
 package fr.uga.l3miage.integrator.components;
 
 import fr.uga.l3miage.integrator.enums.DeliveryState;
+import fr.uga.l3miage.integrator.exceptions.technical.DeliveryNotFoundException;
+import fr.uga.l3miage.integrator.exceptions.technical.UpdateDeliveryStateException;
 import fr.uga.l3miage.integrator.models.DayEntity;
 import fr.uga.l3miage.integrator.models.DeliveryEntity;
 import fr.uga.l3miage.integrator.models.OrderEntity;
@@ -12,9 +14,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -63,5 +67,61 @@ public class DeliveryComponentTest {
 
         //then
         assertThat(expectedDeliveryRef).isEqualTo(response);
+    }
+
+    @Test
+    void updateDeliveryStateOK() throws DeliveryNotFoundException, UpdateDeliveryStateException {
+
+        //given
+        DeliveryEntity deliveryEntity=DeliveryEntity.builder()
+                .reference("l120G-A1")
+                .state(DeliveryState.PLANNED)
+                .distanceToCover(3.9)
+                .orders(Set.of())
+                .build();
+
+
+        //when
+        when(deliveryRepository.findById(deliveryEntity.getReference())).thenReturn(Optional.of(deliveryEntity));
+        when(deliveryRepository.save(any(DeliveryEntity.class))).thenReturn(deliveryEntity);
+
+        DeliveryEntity response=deliveryComponent.updateDeliveryState(deliveryEntity.getReference(),DeliveryState.IN_COURSE);
+
+        //then
+        assertThat(response.getState()).isEqualTo(DeliveryState.IN_COURSE);
+
+
+    }
+    @Test
+    void updateDeliveryState_NotOK_BeacauseOf_NotFoundDelivery()  {
+
+        //when
+        when(deliveryRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        //then
+        assertThrows(DeliveryNotFoundException.class,()->deliveryComponent.updateDeliveryState(anyString(),DeliveryState.IN_COURSE));
+
+
+    }
+
+    @Test
+    void updateDeliveryState_NotOK_BeacauseOf_WrongState() throws DeliveryNotFoundException, UpdateDeliveryStateException {
+
+        //given
+        DeliveryEntity deliveryEntity=DeliveryEntity.builder()
+                .reference("l120G-A1")
+                .state(DeliveryState.PLANNED)
+                .distanceToCover(3.9)
+                .orders(Set.of())
+                .build();
+
+
+        //when
+        when(deliveryRepository.findById(deliveryEntity.getReference())).thenReturn(Optional.of(deliveryEntity));
+        when(deliveryRepository.save(any(DeliveryEntity.class))).thenReturn(deliveryEntity);
+
+        //then
+        assertThrows(UpdateDeliveryStateException.class,()->deliveryComponent.updateDeliveryState(deliveryEntity.getReference(),DeliveryState.UNLOADING));
+
     }
 }
