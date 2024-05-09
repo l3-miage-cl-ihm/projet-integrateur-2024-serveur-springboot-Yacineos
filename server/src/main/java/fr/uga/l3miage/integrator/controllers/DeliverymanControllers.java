@@ -21,7 +21,7 @@ public class DeliverymanControllers implements DeliverymanEndpoints {
 
     }
     @Override
-    public void updateDeliveryState(DeliveryState deliveryState, String deliveryId)  {
-        deliveryService.updateDeliveryState(deliveryState,deliveryId);
+    public void updateDeliveryState(DeliveryState deliveryState, String deliveryId,String tourId)  {
+        deliveryService.updateDeliveryState(deliveryState,deliveryId,tourId);
     }
 }

@@ -36,8 +36,8 @@ public interface DeliverymanEndpoints {
     @ApiResponse(responseCode = "404" ,description = "No delivery  was found !", content = @Content(schema = @Schema(implementation = NotFoundErrorResponse.class),mediaType = MediaType.APPLICATION_JSON_VALUE))
     @ApiResponse(responseCode = "409" ,description = "Cannot update delivery state", content = @Content(schema = @Schema(implementation = DeliveryStatusNotUpdatedResponse.class),mediaType = MediaType.APPLICATION_JSON_VALUE))
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping("/deliveries/{deliveryId}/updateState")
-    void  updateDeliveryState(@RequestParam DeliveryState deliveryState, @PathVariable String deliveryId);
+    @PutMapping("tours/{tourId}/deliveries/{deliveryId}/updateState")
+    void  updateDeliveryState(@RequestParam DeliveryState deliveryState, @PathVariable String deliveryId,@PathVariable String tourId);
 
 
 

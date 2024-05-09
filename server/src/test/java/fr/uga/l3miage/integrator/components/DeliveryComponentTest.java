@@ -1,12 +1,16 @@
 package fr.uga.l3miage.integrator.components;
 
 import fr.uga.l3miage.integrator.enums.DeliveryState;
+import fr.uga.l3miage.integrator.enums.TourState;
 import fr.uga.l3miage.integrator.exceptions.technical.DeliveryNotFoundException;
+import fr.uga.l3miage.integrator.exceptions.technical.TourNotFoundException;
 import fr.uga.l3miage.integrator.exceptions.technical.UpdateDeliveryStateException;
 import fr.uga.l3miage.integrator.models.DayEntity;
 import fr.uga.l3miage.integrator.models.DeliveryEntity;
 import fr.uga.l3miage.integrator.models.OrderEntity;
+import fr.uga.l3miage.integrator.models.TourEntity;
 import fr.uga.l3miage.integrator.repositories.DeliveryRepository;
+import fr.uga.l3miage.integrator.repositories.TourRepository;
 import org.apache.tomcat.jni.Local;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +18,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -27,6 +33,8 @@ public class DeliveryComponentTest {
 
     @Autowired
     private DeliveryComponent deliveryComponent;
+    @MockBean
+    private TourRepository tourRepository;
 
     @MockBean
     private DeliveryRepository deliveryRepository;
@@ -70,7 +78,7 @@ public class DeliveryComponentTest {
     }
 
     @Test
-    void updateDeliveryStateOK1() throws DeliveryNotFoundException, UpdateDeliveryStateException {
+    void updateDeliveryStateOK1() throws DeliveryNotFoundException, UpdateDeliveryStateException, TourNotFoundException {
 
         //given
         DeliveryEntity deliveryEntity=DeliveryEntity.builder()
@@ -80,12 +88,14 @@ public class DeliveryComponentTest {
                 .orders(Set.of())
                 .build();
 
+        TourEntity tour=TourEntity.builder().reference("t120G-A").deliveries(List.of(deliveryEntity)).build();
 
         //when
         when(deliveryRepository.findById(deliveryEntity.getReference())).thenReturn(Optional.of(deliveryEntity));
         when(deliveryRepository.save(any(DeliveryEntity.class))).thenReturn(deliveryEntity);
+        when(tourRepository.findById(tour.getReference())).thenReturn(Optional.of(tour));
 
-        DeliveryEntity response=deliveryComponent.updateDeliveryState(deliveryEntity.getReference(),DeliveryState.IN_COURSE);
+        DeliveryEntity response=deliveryComponent.updateDeliveryState(deliveryEntity.getReference(),DeliveryState.IN_COURSE,tour.getReference());
 
         //then
         assertThat(response.getState()).isEqualTo(DeliveryState.IN_COURSE);
@@ -93,7 +103,7 @@ public class DeliveryComponentTest {
 
     }
     @Test
-    void updateDeliveryState_OK2() throws DeliveryNotFoundException, UpdateDeliveryStateException {
+    void updateDeliveryState_OK2() throws DeliveryNotFoundException, UpdateDeliveryStateException, TourNotFoundException {
 
         //given
         DeliveryEntity deliveryEntity=DeliveryEntity.builder()
@@ -103,12 +113,14 @@ public class DeliveryComponentTest {
                 .orders(Set.of())
                 .build();
 
+        TourEntity tour=TourEntity.builder().state(TourState.IN_COURSE).reference("t120G-A").deliveries(List.of(deliveryEntity)).build();
 
         //when
         when(deliveryRepository.findById(deliveryEntity.getReference())).thenReturn(Optional.of(deliveryEntity));
         when(deliveryRepository.save(any(DeliveryEntity.class))).thenReturn(deliveryEntity);
+        when(tourRepository.findById(tour.getReference())).thenReturn(Optional.of(tour));
 
-        DeliveryEntity response=deliveryComponent.updateDeliveryState(deliveryEntity.getReference(),DeliveryState.COMPLETED);
+        DeliveryEntity response=deliveryComponent.updateDeliveryState(deliveryEntity.getReference(),DeliveryState.COMPLETED,tour.getReference());
 
         //then
         assertThat(response.getState()).isEqualTo(DeliveryState.COMPLETED);
@@ -121,7 +133,7 @@ public class DeliveryComponentTest {
         when(deliveryRepository.findById(anyString())).thenReturn(Optional.empty());
 
         //then
-        assertThrows(DeliveryNotFoundException.class,()->deliveryComponent.updateDeliveryState(anyString(),DeliveryState.IN_COURSE));
+        assertThrows(DeliveryNotFoundException.class,()->deliveryComponent.updateDeliveryState(anyString(),DeliveryState.IN_COURSE,"t120G-A"));
 
 
     }
@@ -143,7 +155,7 @@ public class DeliveryComponentTest {
         when(deliveryRepository.save(any(DeliveryEntity.class))).thenReturn(deliveryEntity);
 
         //then
-        assertThrows(UpdateDeliveryStateException.class,()->deliveryComponent.updateDeliveryState(deliveryEntity.getReference(),DeliveryState.UNLOADING));
+        assertThrows(UpdateDeliveryStateException.class,()->deliveryComponent.updateDeliveryState(deliveryEntity.getReference(),DeliveryState.UNLOADING,anyString()));
 
     }
     @Test
@@ -163,7 +175,7 @@ public class DeliveryComponentTest {
         when(deliveryRepository.save(any(DeliveryEntity.class))).thenReturn(deliveryEntity);
 
         //then
-        assertThrows(UpdateDeliveryStateException.class,()->deliveryComponent.updateDeliveryState(deliveryEntity.getReference(),DeliveryState.WITH_CUSTOMER));
+        assertThrows(UpdateDeliveryStateException.class,()->deliveryComponent.updateDeliveryState(deliveryEntity.getReference(),DeliveryState.WITH_CUSTOMER,anyString()));
 
     }
 
@@ -184,7 +196,7 @@ public class DeliveryComponentTest {
         when(deliveryRepository.save(any(DeliveryEntity.class))).thenReturn(deliveryEntity);
 
         //then
-        assertThrows(UpdateDeliveryStateException.class,()->deliveryComponent.updateDeliveryState(deliveryEntity.getReference(),DeliveryState.COMPLETED));
+        assertThrows(UpdateDeliveryStateException.class,()->deliveryComponent.updateDeliveryState(deliveryEntity.getReference(),DeliveryState.COMPLETED,anyString()));
 
     }
 
@@ -205,7 +217,7 @@ public class DeliveryComponentTest {
         when(deliveryRepository.save(any(DeliveryEntity.class))).thenReturn(deliveryEntity);
 
         //then
-        assertThrows(UpdateDeliveryStateException.class,()->deliveryComponent.updateDeliveryState(deliveryEntity.getReference(),DeliveryState.COMPLETED));
+        assertThrows(UpdateDeliveryStateException.class,()->deliveryComponent.updateDeliveryState(deliveryEntity.getReference(),DeliveryState.COMPLETED,anyString()));
 
 
     }
