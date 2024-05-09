@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Set;
 
@@ -23,8 +24,8 @@ public class DayRepositoryTest {
     void findByDate(){
         //Given
         LocalDate now=LocalDate.now();
-        DayEntity day1= DayEntity.builder().date(now).reference("J124G").tours(Set.of()).build();
-        DayEntity day2= DayEntity.builder().date(now.plusDays(23)).reference("J057G").tours(Set.of()).build();
+        DayEntity day1= DayEntity.builder().date(now).reference("J124G").tours(new LinkedList<>()).build();
+        DayEntity day2= DayEntity.builder().date(now.plusDays(23)).reference("J057G").tours(new LinkedList<>()).build();
         dayRepository.save(day1);
         dayRepository.save(day2);
 

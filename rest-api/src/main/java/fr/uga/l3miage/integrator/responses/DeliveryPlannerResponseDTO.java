@@ -1,6 +1,7 @@
 package fr.uga.l3miage.integrator.responses;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Set;
@@ -12,4 +13,7 @@ public class DeliveryPlannerResponseDTO {
     private Set<String> orders;
     @Schema(description = "distance to cover from last delivery or from warehouse")
     private Double distanceToCover;
+    @Schema(description = "The address of the delivery")
+    private String address;
+
 }

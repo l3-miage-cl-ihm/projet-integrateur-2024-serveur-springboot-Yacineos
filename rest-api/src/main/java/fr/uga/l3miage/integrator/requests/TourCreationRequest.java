@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -12,7 +13,8 @@ import java.util.Set;
 public class TourCreationRequest {
 
     @Schema(description = "Tour deliveries")
-    private final Set<DeliveryCreationRequest> deliveries;
+    private final List<DeliveryCreationRequest> deliveries;
+
     @Schema(description = "Tour deliverymen ")
     private final Set<String> deliverymen;
     @Schema(description = "Tour associated truck ",example = "XY-435-RT")

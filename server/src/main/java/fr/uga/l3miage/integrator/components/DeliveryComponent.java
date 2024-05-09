@@ -11,9 +11,9 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class DeliveryComponent {
     private final DeliveryRepository deliveryRepository;
-    public String generateDeliveryReference(LocalDate date, int deliveryIndex ) {
+    public String generateDeliveryReference(LocalDate date, int deliveryIndex ,String tourLetter) {
         String dayNumber = String.format("%03d", date.getDayOfYear());
-        return 'l' + dayNumber+'G'+'-'+'A'+deliveryIndex;
+        return 'l' + dayNumber+'G'+'-'+tourLetter+deliveryIndex;
     }
 
     public void saveDelivery(DeliveryEntity delivery){

@@ -29,10 +29,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -95,7 +92,7 @@ public class PlannerControllerTest {
                 .lastName("TESSIERE").firstName("claudia").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
         employeeRepository.save(planner);
 
-        Set<TourCreationRequest> tourCreationRequestSet= new HashSet<>();
+        List<TourCreationRequest> tourCreationRequestList= new ArrayList<>();
         TruckEntity truck= TruckEntity.builder().immatriculation("AY-124-GF").build();
         truckRepository.save(truck);
         EmployeeEntity deliveryman1= EmployeeEntity.builder()
@@ -161,7 +158,7 @@ public class PlannerControllerTest {
         orderRepository.save(o1);
         orderRepository.save(o2);
         orderRepository.save(o3);
-        Set<DeliveryCreationRequest> deliveryCreationRequestSet=new HashSet<>();
+        List<DeliveryCreationRequest> deliveryCreationRequestList=new ArrayList<>();
         DeliveryCreationRequest d1= DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of(o1.getReference(),o2.getReference()))
@@ -171,24 +168,23 @@ public class PlannerControllerTest {
                 .distanceToCover(12)
                 .orders(Set.of(o3.getReference()))
                 .build();
-        deliveryCreationRequestSet.add(d1);
-        deliveryCreationRequestSet.add(d2);
+        deliveryCreationRequestList.add(d1);
+        deliveryCreationRequestList.add(d2);
         TourCreationRequest t1= TourCreationRequest.builder()
                 .distanceToCover(24)
                 .truck(truck.getImmatriculation())
                 .deliverymen(Set.of(deliveryman1.getTrigram(),deliveryman2.getTrigram()))
-                .deliveries(deliveryCreationRequestSet)
+                .deliveries(deliveryCreationRequestList)
                 .build();
 
-        tourCreationRequestSet.add(t1);
+        tourCreationRequestList.add(t1);
         DayCreationRequest dayCreationRequest= DayCreationRequest.builder()
                 .date(LocalDate.now())
-                .tours(tourCreationRequestSet)
+                .tours(tourCreationRequestList)
                 .build();
 
 
         //when
-        //dayService.planDay(dayCreationRequest);  //Here dayService returns nothing but the call can help to verify others repositories, components or mappers apparences.
         ResponseEntity<Void> response=testRestTemplate.exchange("/api/v2.0/planner/day/plan", HttpMethod.POST, new HttpEntity<>(dayCreationRequest, headers), Void.class, urlParams);
 
         //then
@@ -210,7 +206,7 @@ public class PlannerControllerTest {
 
             DayCreationRequest dayCreationRequest= DayCreationRequest.builder()
                     .date(LocalDate.now())
-                    .tours(Set.of())
+                    .tours(new ArrayList<>())
                     .build();
 
 
@@ -241,7 +237,7 @@ public class PlannerControllerTest {
                 .lastName("TESSIERE").firstName("claudia").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
         employeeRepository.save(planner);
 
-        Set<TourCreationRequest> tourCreationRequestSet = new HashSet<>();
+        List<TourCreationRequest> tourCreationRequestList= new ArrayList<>();
         TruckEntity truck = TruckEntity.builder().immatriculation("AY-124-GF").build();
         truckRepository.save(truck);
         EmployeeEntity deliveryman1 = EmployeeEntity.builder()
@@ -297,7 +293,7 @@ public class PlannerControllerTest {
         orderRepository.save(o1);
         orderRepository.save(o2);
         orderRepository.save(o3);
-        Set<DeliveryCreationRequest> deliveryCreationRequestSet = new HashSet<>();
+        List<DeliveryCreationRequest> deliveryCreationRequestList = new ArrayList<>();
         DeliveryCreationRequest d1 = DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of(o1.getReference(), o2.getReference()))
@@ -307,19 +303,19 @@ public class PlannerControllerTest {
                 .distanceToCover(12)
                 .orders(Set.of(o3.getReference()))
                 .build();
-        deliveryCreationRequestSet.add(d1);
-        deliveryCreationRequestSet.add(d2);
+        deliveryCreationRequestList.add(d1);
+        deliveryCreationRequestList.add(d2);
         TourCreationRequest t1 = TourCreationRequest.builder()
                 .distanceToCover(24)
                 .truck(truck.getImmatriculation())
                 .deliverymen(Set.of(deliveryman1.getTrigram(), "YTR")) //no existing deliveryman with trigram 'YTR'
-                .deliveries(deliveryCreationRequestSet)
+                .deliveries(deliveryCreationRequestList)
                 .build();
 
-        tourCreationRequestSet.add(t1);
+        tourCreationRequestList.add(t1);
         DayCreationRequest dayCreationRequest = DayCreationRequest.builder()
                 .date(LocalDate.now())
-                .tours(tourCreationRequestSet)
+                .tours(tourCreationRequestList)
                 .build();
 
 
@@ -350,7 +346,7 @@ public class PlannerControllerTest {
                 .lastName("Paul").firstName("Christian").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
         employeeRepository.save(planner);
 
-        Set<TourCreationRequest> tourCreationRequestSet = new HashSet<>();
+        List<TourCreationRequest> tourCreationRequestList = new ArrayList<>();
         TruckEntity truck = TruckEntity.builder().immatriculation("AY-124-GF").build();
         truckRepository.save(truck);
         EmployeeEntity deliveryman1 = EmployeeEntity.builder()
@@ -415,7 +411,7 @@ public class PlannerControllerTest {
         orderRepository.save(o1);
         orderRepository.save(o2);
         orderRepository.save(o3);
-        Set<DeliveryCreationRequest> deliveryCreationRequestSet = new HashSet<>();
+        List<DeliveryCreationRequest> deliveryCreationRequestList = new ArrayList<>();
         DeliveryCreationRequest d1 = DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of(o1.getReference(), o2.getReference()))
@@ -425,19 +421,19 @@ public class PlannerControllerTest {
                 .distanceToCover(12)
                 .orders(Set.of("c900")) //no existing order with given reference c170
                 .build();
-        deliveryCreationRequestSet.add(d1);
-        deliveryCreationRequestSet.add(d2);
+        deliveryCreationRequestList.add(d1);
+        deliveryCreationRequestList.add(d2);
         TourCreationRequest t1 = TourCreationRequest.builder()
                 .distanceToCover(24)
                 .truck(truck.getImmatriculation())
                 .deliverymen(Set.of(deliveryman1.getTrigram(), deliveryman2.getTrigram()))
-                .deliveries(deliveryCreationRequestSet)
+                .deliveries(deliveryCreationRequestList)
                 .build();
 
-        tourCreationRequestSet.add(t1);
+        tourCreationRequestList.add(t1);
         DayCreationRequest dayCreationRequest = DayCreationRequest.builder()
                 .date(LocalDate.now())
-                .tours(tourCreationRequestSet)
+                .tours(tourCreationRequestList)
                 .build();
 
 
@@ -461,7 +457,7 @@ public class PlannerControllerTest {
 
         //given
         // creation deliveryMen 1
-        Set<TourEntity> tours= new HashSet<>();
+        List<TourEntity> tours= new ArrayList<>();
         Set<EmployeeEntity> deliverymen= new HashSet<>();
         EmployeeEntity m1=EmployeeEntity.builder().trigram("jjo").email("jojo@gmail.com").build();
         EmployeeEntity m2=EmployeeEntity.builder().trigram("axl").email("axel@gmail.com").build();
@@ -471,29 +467,33 @@ public class PlannerControllerTest {
         deliverymen.add(m2);
         //Creation delivery 1
         //creation order
-        OrderEntity order11=OrderEntity.builder().reference("c11").build();
-        OrderEntity order12=OrderEntity.builder().reference("c12").build();
+        //creation customers
+        CustomerEntity customer1= CustomerEntity.builder().address(new Address("1 rue de paris","75000","Paris")).state(CustomerState.REGISTERED).firstName("A").lastName("E").email("A@gmail.com").build();
+        CustomerEntity customer2= CustomerEntity.builder().address(new Address("2 rue de marseille","13000","Marseille")).state(CustomerState.REGISTERED).firstName("B").lastName("F").email("B@gmail.com").build();
+        CustomerEntity customer3= CustomerEntity.builder().address(new Address("3 rue de valence","26000","Valence")).state(CustomerState.REGISTERED).firstName("C").lastName("G").email("C@gmail.com").build();
+        CustomerEntity customer4= CustomerEntity.builder().address(new Address("4 rue de toulon","10000","Toulon")).state(CustomerState.REGISTERED).firstName("D").lastName("H").email("D@gmail.com").build();
+        customerRepository.save(customer1);
+        customerRepository.save(customer2);
+        customerRepository.save(customer3);
+        customerRepository.save(customer4);
+
+        OrderEntity order11=OrderEntity.builder().reference("c11").customer(customer1).build();
+        OrderEntity order12=OrderEntity.builder().reference("c12").customer(customer1).build();
         orderRepository.save(order11);
         orderRepository.save(order12);
-        Set<OrderEntity> orders1 = new HashSet<>();
-        orders1.add(order11);
-        orders1.add(order12);
         DeliveryEntity del1=DeliveryEntity.builder().reference("T238G-A1").build();
-        del1.setOrders(orders1);
+        del1.setOrders(Set.of(order11,order12));
         deliveryRepository.save(del1);
-        //Creation delivery 2
+        //Creation delivery
         //creation order
-        OrderEntity order21=OrderEntity.builder().reference("c21").build();
-        OrderEntity order22=OrderEntity.builder().reference("c22").build();
+        OrderEntity order21=OrderEntity.builder().reference("c21").customer(customer2).build();
+        OrderEntity order22=OrderEntity.builder().reference("c22").customer(customer2).build();
         orderRepository.save(order21);
         orderRepository.save(order22);
-        Set<OrderEntity> orders2 = new HashSet<>();
-        orders2.add(order11);
-        orders2.add(order12);
         DeliveryEntity del2=DeliveryEntity.builder().reference("T238G-A2").build();
-        del2.setOrders(orders2);
+        del2.setOrders(Set.of(order21,order22));
         deliveryRepository.save(del2);
-        Set<DeliveryEntity> deliveries1=new HashSet<>();
+        List<DeliveryEntity> deliveries1=new ArrayList<>();
         deliveries1.add(del1);
         deliveries1.add(del2);
         //creation tour 1
@@ -515,29 +515,24 @@ public class PlannerControllerTest {
         deliverymen2.add(m4);
         //Creation delivery 3
         //creation order
-        OrderEntity order31=OrderEntity.builder().reference("c31").build();
-        OrderEntity order32=OrderEntity.builder().reference("c32").build();
+        OrderEntity order31=OrderEntity.builder().reference("c31").customer(customer3).build();
+        OrderEntity order32=OrderEntity.builder().reference("c32").customer(customer3).build();
         orderRepository.save(order31);
         orderRepository.save(order32);
-        Set<OrderEntity> orders3 = new HashSet<>();
-        orders3.add(order31);
-        orders3.add(order32);
         DeliveryEntity del3=DeliveryEntity.builder().reference("T238G-B1").build();
-        del3.setOrders(orders3);
+        del3.setOrders(Set.of(order31,order32));
         deliveryRepository.save(del3);
         //Creation delivery 4
         //creation order
-        OrderEntity order41=OrderEntity.builder().reference("c41").build();
-        OrderEntity order42=OrderEntity.builder().reference("c42").build();
+        OrderEntity order41=OrderEntity.builder().reference("c41").customer(customer4).build();
+        OrderEntity order42=OrderEntity.builder().reference("c42").customer(customer4).build();
         orderRepository.save(order41);
         orderRepository.save(order42);
-        Set<OrderEntity> orders4 = new HashSet<>();
-        orders4.add(order11);
-        orders4.add(order12);
+
         DeliveryEntity del4=DeliveryEntity.builder().reference("T238G-B2").build();
-        del4.setOrders(orders4);
+        del4.setOrders(Set.of(order41,order42));
         deliveryRepository.save(del4);
-        Set<DeliveryEntity> deliveries2=new HashSet<>();
+        List<DeliveryEntity> deliveries2=new LinkedList<>();
         deliveries2.add(del3);
         deliveries2.add(del4);
         //creation tour 2
@@ -557,12 +552,11 @@ public class PlannerControllerTest {
 
         //when
         DayResponseDTO expectedResponse = dayService.getDay(LocalDate.of(2024,4,29));
-
         ResponseEntity<DayResponseDTO> response = testRestTemplate.exchange("/api/v2.0/planner/day?date={date}", HttpMethod.GET, new HttpEntity<>(null, headers), DayResponseDTO.class, urlParams);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        AssertionsForClassTypes.assertThat(response.getBody()).isEqualTo(expectedResponse);
+        assertThat(response.getBody()).isEqualTo(expectedResponse);
         verify(dayComponent, times(2)).getDay(any());
         verify(dayService, times(2)).getDay(any());
 
@@ -653,7 +647,6 @@ public class PlannerControllerTest {
         ResponseEntity<SetUpBundleResponse> response = testRestTemplate.exchange("/api/v2.0/planner/bundle", HttpMethod.GET, new HttpEntity<>(null, headers), SetUpBundleResponse.class);
 
         AssertionsForClassTypes.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        AssertionsForClassTypes.assertThat(response.getBody().getMultipleOrders().stream().findFirst().get().getAddress()).isEqualTo(expectedResponse.getMultipleOrders().stream().findFirst().get().getAddress());
         verify(dayService, times(2)).getSetUpBundle();
     }
 

@@ -18,6 +18,7 @@ public interface DayPlannerMapper {
     @Mapping(source = "date", target = "reference",qualifiedBy = DayPlannerMapperUtils.GenerateDayReference.class)
     DayEntity  toEntity(DayCreationRequest dayCreationRequest);
 
+    @Mapping(target = "tours", ignore=true)
     DayResponseDTO toResponse(DayEntity dayEntity);
 
 }

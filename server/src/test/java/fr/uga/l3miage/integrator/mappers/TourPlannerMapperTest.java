@@ -17,8 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -44,7 +43,7 @@ public class TourPlannerMapperTest {
                 .distanceToCover(49)
                 .truck(truck.getImmatriculation())
                 .deliverymen(Set.of(deliveryman1.getTrigram(),deliveryman2.getTrigram()))
-                .deliveries(Set.of())
+                .deliveries(new ArrayList<>())
                 .build();
 
         //when
@@ -52,7 +51,7 @@ public class TourPlannerMapperTest {
         when(employeeRepository.findById(deliveryman1.getTrigram())).thenReturn(Optional.of(deliveryman1));
         when(employeeRepository.findById(deliveryman2.getTrigram())).thenReturn(Optional.of(deliveryman2));
 
-        TourEntity expectedResponse= TourEntity.builder().reference("t122G-A").state(TourState.PLANNED).distanceToCover(49).letter("A").deliveries(Set.of()).deliverymen(Set.of(deliveryman1,deliveryman2)).truck(truck).build();
+        TourEntity expectedResponse= TourEntity.builder().reference("t122G-A").state(TourState.PLANNED).distanceToCover(49).letter("A").deliveries(new LinkedList<>()).deliverymen(Set.of(deliveryman1,deliveryman2)).truck(truck).build();
 
         TourEntity actualResponse= tourPlannerMapper.toEntity(tourCreationRequest,"t122G-A");
         //then
@@ -70,7 +69,7 @@ public class TourPlannerMapperTest {
                 .distanceToCover(49)
                 .truck("TR-123-XS")
                 .deliverymen(Set.of(deliveryman1.getTrigram(),deliveryman2.getTrigram()))
-                .deliveries(Set.of())
+                .deliveries(new ArrayList<>())
                 .build();
 
         //when
@@ -92,7 +91,7 @@ public class TourPlannerMapperTest {
                 .distanceToCover(49)
                 .truck(truck.getImmatriculation())
                 .deliverymen(Set.of(deliveryman1.getTrigram(),"PLE"))
-                .deliveries(Set.of())
+                .deliveries(new ArrayList<>())
                 .build();
 
         //when
