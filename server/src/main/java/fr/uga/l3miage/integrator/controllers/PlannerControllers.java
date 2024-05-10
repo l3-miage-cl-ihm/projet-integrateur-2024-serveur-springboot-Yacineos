@@ -1,6 +1,7 @@
 package fr.uga.l3miage.integrator.controllers;
 
 import fr.uga.l3miage.integrator.endpoints.PlannerEndpoints;
+import fr.uga.l3miage.integrator.enums.DayState;
 import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
 import fr.uga.l3miage.integrator.requests.DayCreationRequest;
 import fr.uga.l3miage.integrator.responses.*;
@@ -33,6 +34,11 @@ public class PlannerControllers implements PlannerEndpoints {
     @Override
     public void editDay(DayCreationRequest dayEditRequest, String dayId) {
             dayService.editDay(dayEditRequest,dayId);
+    }
+
+    @Override
+    public void updateDayState(String dayId, DayState newDayState) {
+        dayService.updateDayState(dayId,newDayState);
     }
 
     @Override

@@ -6,13 +6,12 @@ import fr.uga.l3miage.integrator.components.OrderComponent;
 import fr.uga.l3miage.integrator.components.TruckComponent;
 import fr.uga.l3miage.integrator.components.DeliveryComponent;
 import fr.uga.l3miage.integrator.components.TourComponent;
-import fr.uga.l3miage.integrator.exceptions.rest.DayCreationRestException;
-import fr.uga.l3miage.integrator.exceptions.rest.DayNotFoundRestException;
-import fr.uga.l3miage.integrator.exceptions.rest.EditDayRestException;
-import fr.uga.l3miage.integrator.exceptions.rest.EntityNotFoundRestException;
+import fr.uga.l3miage.integrator.enums.DayState;
+import fr.uga.l3miage.integrator.exceptions.rest.*;
 import fr.uga.l3miage.integrator.exceptions.technical.DayAlreadyPlannedException;
 import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
 import fr.uga.l3miage.integrator.exceptions.technical.InvalidInputValueException;
+import fr.uga.l3miage.integrator.exceptions.technical.UpdateDayStateException;
 import fr.uga.l3miage.integrator.mappers.*;
 import fr.uga.l3miage.integrator.models.DayEntity;
 import fr.uga.l3miage.integrator.models.DeliveryEntity;
@@ -107,12 +106,6 @@ public class DayService {
 
 
     }
-
-    /*
-    *  1. Search for the day we want to edit.
-    *  2. If the day exist then we check for the validity of the inputs (tours, trucks, deliverymen, ..) IMPORTANT: check if the new Date doesn't match any existing date of already planned days.
-    *  3. If everything is valid then we do the updates.
-    * */
     public void editDay(DayCreationRequest dayEditRequest, String dayId){
         try{
            //check wether the day to edit exist in the db
@@ -226,6 +219,16 @@ public class DayService {
             throw new EntityNotFoundRestException(e.getMessage());
         }
 
+    }
+
+    public DayEntity updateDayState(String dayId, DayState newDayState){
+        try{
+            return dayComponent.updateDayState(dayId,newDayState);
+        }catch (UpdateDayStateException e) {
+            throw new UpdateDayStateRestException(e.getMessage(),e.getDayState());
+        } catch (DayNotFoundException e) {
+            throw new DayNotFoundRestException(e.getMessage());
+        }
     }
 
 
