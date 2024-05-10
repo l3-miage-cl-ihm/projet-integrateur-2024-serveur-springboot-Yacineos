@@ -53,7 +53,7 @@ public interface PlannerEndpoints {
     @ApiResponse(responseCode= "200", description = "Day successfully edited ")
     @ApiResponse(responseCode= "406", description = "Invalid input value ",content = @Content(schema = @Schema(implementation = EditDayErrorResponse.class),mediaType = MediaType.APPLICATION_JSON_VALUE))
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping("/day/{dayId}/edit")
+    @PutMapping("/days/{dayId}/edit")
     void editDay(@RequestBody DayCreationRequest dayEditRequest, @PathVariable String dayId);
 
 
