@@ -168,8 +168,10 @@ public class DayService {
 
             }
             //add tours into day and save it.
-             dayEntity.setTours(dayTours);
-            dayComponent.planDay(dayEntity);
+            dayEntity.setTours(dayTours);
+            day.setTours(dayEntity.getTours());
+            day.setPlanner(dayEntity.getPlanner());
+            dayComponent.planDay(day);
 
         }catch (DayNotFoundException e) {
             throw new DayNotFoundRestException(e.getMessage());
