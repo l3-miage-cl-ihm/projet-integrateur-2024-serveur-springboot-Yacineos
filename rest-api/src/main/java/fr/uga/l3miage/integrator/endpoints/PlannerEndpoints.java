@@ -1,5 +1,6 @@
 package fr.uga.l3miage.integrator.endpoints;
 
+import fr.uga.l3miage.integrator.exceptions.EditDayErrorResponse;
 import fr.uga.l3miage.integrator.exceptions.NotFoundErrorResponse;
 import fr.uga.l3miage.integrator.exceptions.PlanDayErrorResponse;
 import fr.uga.l3miage.integrator.requests.DayCreationRequest;
@@ -20,7 +21,7 @@ import java.util.Date;
 
 @RestController
 @Tag(name = "Planner endpoints")
-@RequestMapping("/api/v2.0/planner")
+@RequestMapping("/api/v3.0/planner")
 public interface PlannerEndpoints {
 
     @Operation(description = "Get set up bundle  (orders, deliverymen,trucks) ")
@@ -45,6 +46,15 @@ public interface PlannerEndpoints {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/day/plan")
     void planDay(@RequestBody DayCreationRequest dayCreationRequest);
+
+
+
+    @Operation(description = "Edit an already planned day with given update day creation request ")
+    @ApiResponse(responseCode= "200", description = "Day successfully edited ")
+    @ApiResponse(responseCode= "406", description = "Invalid input value ",content = @Content(schema = @Schema(implementation = EditDayErrorResponse.class),mediaType = MediaType.APPLICATION_JSON_VALUE))
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/day/{dayId}/edit")
+    void editDay(@RequestBody DayCreationRequest dayEditRequest, @PathVariable String dayId);
 
 
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Tag(name = "Deliveryman endpoints")
-@RequestMapping("/api/v2.0/deliveryman")
+@RequestMapping("/api/v3.0/deliveryman")
 public interface DeliverymanEndpoints {
     @Operation(description = "Deliveryman oeprations ")
     @ApiResponse(responseCode= "200", description = "tour found ")
