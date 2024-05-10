@@ -185,7 +185,7 @@ public class PlannerControllerTest {
 
 
         //when
-        ResponseEntity<Void> response=testRestTemplate.exchange("/api/v2.0/planner/day/plan", HttpMethod.POST, new HttpEntity<>(dayCreationRequest, headers), Void.class, urlParams);
+        ResponseEntity<Void> response=testRestTemplate.exchange("/api/v3.0/planner/day/plan", HttpMethod.POST, new HttpEntity<>(dayCreationRequest, headers), Void.class, urlParams);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -211,7 +211,7 @@ public class PlannerControllerTest {
 
 
             //when
-            ResponseEntity<Void> response=testRestTemplate.exchange("/api/v2.0/planner/day/plan", HttpMethod.POST, new HttpEntity<>(dayCreationRequest, headers), Void.class, urlParams);
+            ResponseEntity<Void> response=testRestTemplate.exchange("/api/v3.0/planner/day/plan", HttpMethod.POST, new HttpEntity<>(dayCreationRequest, headers), Void.class, urlParams);
 
             //then
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
@@ -321,7 +321,7 @@ public class PlannerControllerTest {
 
         //when
         //dayService.planDay(dayCreationRequest);  //Here dayService returns nothing but the call can help to verify others repositories, components or mappers apparences.
-        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v2.0/planner/day/plan", HttpMethod.POST, new HttpEntity<>(dayCreationRequest, headers), Void.class, urlParams);
+        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v3.0/planner/day/plan", HttpMethod.POST, new HttpEntity<>(dayCreationRequest, headers), Void.class, urlParams);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
@@ -438,7 +438,7 @@ public class PlannerControllerTest {
 
 
         //when
-        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v2.0/planner/day/plan", HttpMethod.POST, new HttpEntity<>(dayCreationRequest, headers), Void.class, urlParams);
+        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v3.0/planner/day/plan", HttpMethod.POST, new HttpEntity<>(dayCreationRequest, headers), Void.class, urlParams);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
@@ -552,7 +552,7 @@ public class PlannerControllerTest {
 
         //when
         DayResponseDTO expectedResponse = dayService.getDay(LocalDate.of(2024,4,29));
-        ResponseEntity<DayResponseDTO> response = testRestTemplate.exchange("/api/v2.0/planner/day?date={date}", HttpMethod.GET, new HttpEntity<>(null, headers), DayResponseDTO.class, urlParams);
+        ResponseEntity<DayResponseDTO> response = testRestTemplate.exchange("/api/v3.0/planner/day?date={date}", HttpMethod.GET, new HttpEntity<>(null, headers), DayResponseDTO.class, urlParams);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -568,9 +568,9 @@ public class PlannerControllerTest {
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("date", "2024-04-29");
 
-        NotFoundErrorResponse expectedResponse = NotFoundErrorResponse.builder().uri("/api/v2.0/planner/day").errorMessage("No day found for the "+LocalDate.of(2024,4,29)).build();
+        NotFoundErrorResponse expectedResponse = NotFoundErrorResponse.builder().uri("/api/v3.0/planner/day").errorMessage("No day found for the "+LocalDate.of(2024,4,29)).build();
 
-        ResponseEntity<NotFoundErrorResponse> response = testRestTemplate.exchange("/api/v2.0/planner/day?date={date}", HttpMethod.GET, new HttpEntity<>(null, headers), NotFoundErrorResponse.class, urlParams);
+        ResponseEntity<NotFoundErrorResponse> response = testRestTemplate.exchange("/api/v3.0/planner/day?date={date}", HttpMethod.GET, new HttpEntity<>(null, headers), NotFoundErrorResponse.class, urlParams);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).usingRecursiveComparison().isEqualTo(expectedResponse);
         verify(dayComponent, times(1)).getDay(any());
@@ -644,7 +644,7 @@ public class PlannerControllerTest {
         truckRepository.save(t2);
 
         SetUpBundleResponse expectedResponse = dayService.getSetUpBundle();
-        ResponseEntity<SetUpBundleResponse> response = testRestTemplate.exchange("/api/v2.0/planner/bundle", HttpMethod.GET, new HttpEntity<>(null, headers), SetUpBundleResponse.class);
+        ResponseEntity<SetUpBundleResponse> response = testRestTemplate.exchange("/api/v3.0/planner/bundle", HttpMethod.GET, new HttpEntity<>(null, headers), SetUpBundleResponse.class);
 
         AssertionsForClassTypes.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         verify(dayService, times(2)).getSetUpBundle();

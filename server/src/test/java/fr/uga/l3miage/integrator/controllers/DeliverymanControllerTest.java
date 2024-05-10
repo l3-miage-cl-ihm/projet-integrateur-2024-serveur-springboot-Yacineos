@@ -120,7 +120,7 @@ void clear(){
         //when
         TourDMResponseDTO expectedResponse = tourService.getDeliveryTourOfTheDay(man2.getEmail());
 
-        ResponseEntity<TourDMResponseDTO> response = testRestTemplate.exchange("/api/v2.0/deliveryman/tour?email={email}", HttpMethod.GET, new HttpEntity<>(null, headers), TourDMResponseDTO.class, urlParams);
+        ResponseEntity<TourDMResponseDTO> response = testRestTemplate.exchange("/api/v3.0/deliveryman/tour?email={email}", HttpMethod.GET, new HttpEntity<>(null, headers), TourDMResponseDTO.class, urlParams);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -141,9 +141,9 @@ void clear(){
         urlParams.put("email", "hola@gmail.com");
 
         //when
-        NotFoundErrorResponse expectedResponse = NotFoundErrorResponse.builder().uri("/api/v2.0/deliveryman/tour").errorMessage("No day was planned for today : "+LocalDate.now()).build();
+        NotFoundErrorResponse expectedResponse = NotFoundErrorResponse.builder().uri("/api/v3.0/deliveryman/tour").errorMessage("No day was planned for today : "+LocalDate.now()).build();
 
-        ResponseEntity<NotFoundErrorResponse> response = testRestTemplate.exchange("/api/v2.0/deliveryman/tour?email={email}", HttpMethod.GET, new HttpEntity<>(null, headers), NotFoundErrorResponse.class, urlParams);
+        ResponseEntity<NotFoundErrorResponse> response = testRestTemplate.exchange("/api/v3.0/deliveryman/tour?email={email}", HttpMethod.GET, new HttpEntity<>(null, headers), NotFoundErrorResponse.class, urlParams);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -168,8 +168,8 @@ void clear(){
         dayRepository.save(day);
 
         //when
-        NotFoundErrorResponse expectedResponse = NotFoundErrorResponse.builder().uri("/api/v2.0/deliveryman/tour").errorMessage("No tour was found for <hola@gmail.com>").build();
-        ResponseEntity<NotFoundErrorResponse> response = testRestTemplate.exchange("/api/v2.0/deliveryman/tour?email={email}", HttpMethod.GET, new HttpEntity<>(null, headers), NotFoundErrorResponse.class, urlParams);
+        NotFoundErrorResponse expectedResponse = NotFoundErrorResponse.builder().uri("/api/v3.0/deliveryman/tour").errorMessage("No tour was found for <hola@gmail.com>").build();
+        ResponseEntity<NotFoundErrorResponse> response = testRestTemplate.exchange("/api/v3.0/deliveryman/tour?email={email}", HttpMethod.GET, new HttpEntity<>(null, headers), NotFoundErrorResponse.class, urlParams);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
