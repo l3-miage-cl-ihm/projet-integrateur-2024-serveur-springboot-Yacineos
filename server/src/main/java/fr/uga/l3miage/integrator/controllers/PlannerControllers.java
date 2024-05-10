@@ -29,6 +29,12 @@ public class PlannerControllers implements PlannerEndpoints {
     public void planDay(DayCreationRequest dayCreationRequest) {
         dayService.planDay(dayCreationRequest);
     }
+
+    @Override
+    public void editDay(DayCreationRequest dayEditRequest, String dayId) {
+            dayService.editDay(dayEditRequest,dayId);
+    }
+
     @Override
     public SetUpBundleResponse getSetUpBundle() {
         return dayService.getSetUpBundle();

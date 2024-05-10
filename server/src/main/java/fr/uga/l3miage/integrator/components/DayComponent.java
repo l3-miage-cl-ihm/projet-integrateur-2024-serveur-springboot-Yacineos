@@ -43,4 +43,9 @@ public class DayComponent {
         return dayEntity.isPresent();
     }
 
+    public DayEntity getDayById(String dayId) throws DayNotFoundException {
+        return dayRepository.findById(dayId).orElseThrow(()->new DayNotFoundException("Cannot update an inexistent day <"+dayId+"> !"));
+    }
+
+
 }
