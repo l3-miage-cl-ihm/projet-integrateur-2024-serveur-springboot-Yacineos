@@ -3,12 +3,10 @@ package fr.uga.l3miage.integrator.services;
 import fr.uga.l3miage.integrator.components.*;
 import fr.uga.l3miage.integrator.datatypes.Address;
 import fr.uga.l3miage.integrator.enums.*;
-import fr.uga.l3miage.integrator.exceptions.rest.DayCreationRestException;
-import fr.uga.l3miage.integrator.exceptions.rest.DayNotFoundRestException;
-import fr.uga.l3miage.integrator.exceptions.rest.EditDayRestException;
-import fr.uga.l3miage.integrator.exceptions.rest.EntityNotFoundRestException;
+import fr.uga.l3miage.integrator.exceptions.rest.*;
 import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
 import fr.uga.l3miage.integrator.exceptions.technical.InvalidInputValueException;
+import fr.uga.l3miage.integrator.exceptions.technical.UpdateDayStateException;
 import fr.uga.l3miage.integrator.mappers.DayPlannerMapper;
 import fr.uga.l3miage.integrator.mappers.DeliveryPlannerMapper;
 import fr.uga.l3miage.integrator.mappers.TourPlannerMapper;
@@ -22,6 +20,7 @@ import fr.uga.l3miage.integrator.responses.DeliveryPlannerResponseDTO;
 import fr.uga.l3miage.integrator.responses.SetUpBundleResponse;
 import fr.uga.l3miage.integrator.responses.TourPlannerResponseDTO;
 import fr.uga.l3miage.integrator.responses.datatypes.MultipleOrder;
+import org.assertj.core.api.AssertionsForInterfaceTypes;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -765,8 +764,6 @@ public class DayServiceTest {
         assertThat(response.getTrucks().size()).isEqualTo(2);
     }
 
-
-
     @Test
     void editDayOK() throws InvalidInputValueException, DayNotFoundException {
 
@@ -1277,6 +1274,81 @@ public class DayServiceTest {
         verify(deliveryPlannerMapper,times(0)).toEntity(any(DeliveryCreationRequest.class),anyString());
         verify(employeeRepository,times(0)).findById(anyString());
         verify(orderRepository,times(0)).findById(anyString());
+
+    }
+
+    @Test
+    void updateDayStateOK1() throws DayNotFoundException, UpdateDayStateException {
+        //given
+        DayEntity day= DayEntity.builder()
+                .state(DayState.PLANNED)
+                .tours(List.of())
+                .reference("J131G")
+                .build();
+
+        //when
+        when(dayComponent.getDayById(day.getReference())).thenReturn(day);
+        when(dayComponent.updateDayState(day.getReference(),DayState.IN_PROGRESS)).thenReturn(day);
+        day.setState(DayState.IN_PROGRESS);
+        DayEntity response= dayService.updateDayState(day.getReference(),DayState.IN_PROGRESS);
+
+        //then
+       assertThat(response.getState()).isEqualTo(DayState.IN_PROGRESS);
+
+    }
+
+    @Test
+    void updateDayStateOK2() throws DayNotFoundException, UpdateDayStateException {
+        //given
+        TourEntity tour=TourEntity.builder()
+                .reference("J131G-A")
+                .state(TourState.COMPLETED)
+                .build();
+        DayEntity day= DayEntity.builder()
+                .state(DayState.IN_PROGRESS)
+                .tours(List.of())
+                .reference("J131G")
+                .tours(List.of(tour))
+                .build();
+
+        //when
+        when(dayComponent.getDayById(day.getReference())).thenReturn(day);
+        when(dayComponent.updateDayState(day.getReference(),DayState.COMPLETED)).thenReturn(day);
+        day.setState(DayState.COMPLETED);
+
+        DayEntity response= dayService.updateDayState(day.getReference(),DayState.COMPLETED);
+
+        //then
+        assertThat(response.getState()).isEqualTo(DayState.COMPLETED);
+
+
+    }
+
+    @Test
+    void updateDayStateNotOK_BecauseOf_NotFoundDay() throws DayNotFoundException, UpdateDayStateException {
+        //when
+        when(dayComponent.updateDayState(anyString(),any(DayState.class))).thenThrow(new DayNotFoundException("No day was found !"));
+        //then
+        assertThrows(DayNotFoundRestException.class,()-> dayService.updateDayState("J131G",DayState.IN_PROGRESS));
+
+    }
+
+    @Test
+    void updateDayNotOK_BecauseOfWrongState() throws DayNotFoundException, UpdateDayStateException {
+
+        //given
+        DayEntity day= DayEntity.builder()
+                .state(DayState.PLANNED)
+                .tours(List.of())
+                .reference("J131G")
+                .build();
+
+        //when
+        when(dayComponent.getDayById(day.getReference())).thenReturn(day);
+        when(dayComponent.updateDayState(day.getReference(),DayState.COMPLETED)).thenThrow(new UpdateDayStateException("Cannot update current state!",DayState.PLANNED));
+
+        //then
+        assertThrows(UpdateDayStateRestException.class,()->dayService.updateDayState(day.getReference(),DayState.COMPLETED));
 
     }
 }

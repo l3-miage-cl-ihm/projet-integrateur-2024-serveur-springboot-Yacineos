@@ -65,7 +65,7 @@ public class DeliveryServiceTest {
 
 
     @Test
-    void  updateDeliveryState_NotOK_BecauseOfNotFoundDelivery() throws DeliveryNotFoundException, UpdateDeliveryStateException, TourNotFoundException {
+    void  updateDeliveryState_NotOK_BecauseOfNotFoundDelivery() throws DeliveryNotFoundException, UpdateDeliveryStateException {
         //given
         String deliveryId="l130G-A1";
 
@@ -78,7 +78,7 @@ public class DeliveryServiceTest {
     }
 
     @Test
-    void  updateDeliveryState_NotOK_BecauseOfWrongState() throws DeliveryNotFoundException, UpdateDeliveryStateException, TourNotFoundException {
+    void  updateDeliveryState_NotOK_BecauseOfWrongState() throws DeliveryNotFoundException, UpdateDeliveryStateException {
         //given
         DeliveryState state=DeliveryState.COMPLETED;
         //when

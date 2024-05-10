@@ -3,7 +3,9 @@ package fr.uga.l3miage.integrator.components;
 import fr.uga.l3miage.integrator.datatypes.Address;
 import fr.uga.l3miage.integrator.enums.DayState;
 import fr.uga.l3miage.integrator.enums.Job;
+import fr.uga.l3miage.integrator.enums.TourState;
 import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
+import fr.uga.l3miage.integrator.exceptions.technical.UpdateDayStateException;
 import fr.uga.l3miage.integrator.models.DayEntity;
 import fr.uga.l3miage.integrator.models.EmployeeEntity;
 import fr.uga.l3miage.integrator.models.TourEntity;
@@ -217,5 +219,94 @@ public class DayComponentTest {
 
 
     }
+
+
+    @Test
+    void updateDayStateOK1() throws UpdateDayStateException, DayNotFoundException {
+
+        //given
+        DayEntity day= DayEntity.builder()
+                .state(DayState.PLANNED)
+                .tours(List.of())
+                .reference("J131G")
+                .build();
+
+        //when
+        when(dayRepository.findById(day.getReference())).thenReturn(Optional.of(day));
+        when(dayRepository.save(any(DayEntity.class))).thenReturn(day);
+
+        DayEntity response= dayComponent.updateDayState(day.getReference(),DayState.IN_PROGRESS);
+
+        //then
+        assertThat(response.getState()).isEqualTo(DayState.IN_PROGRESS);
+
+    }
+
+    @Test
+    void updateDayStateOK2() throws UpdateDayStateException, DayNotFoundException {
+
+        //given
+        TourEntity tour=TourEntity.builder()
+                .reference("J131G-A")
+                .state(TourState.COMPLETED)
+                .build();
+        DayEntity day= DayEntity.builder()
+                .state(DayState.IN_PROGRESS)
+                .tours(List.of())
+                .reference("J131G")
+                .tours(List.of(tour))
+                .build();
+
+
+
+        //when
+        when(dayRepository.findById(day.getReference())).thenReturn(Optional.of(day));
+        when(dayRepository.save(any(DayEntity.class))).thenReturn(day);
+
+        DayEntity response= dayComponent.updateDayState(day.getReference(),DayState.COMPLETED);
+
+        //then
+        assertThat(response.getState()).isEqualTo(DayState.COMPLETED);
+
+    }
+
+    @Test
+    void updateDayState_NotOK_BecauseOf_TourStateNotOK()  {
+
+        //given
+        TourEntity tour=TourEntity.builder()
+                .reference("J131G-A")
+                .state(TourState.IN_COURSE)
+                .build();
+        DayEntity day= DayEntity.builder()
+                .state(DayState.IN_PROGRESS)
+                .tours(List.of())
+                .reference("J131G")
+                .tours(List.of(tour))
+                .build();
+
+
+
+        //when
+        when(dayRepository.findById(day.getReference())).thenReturn(Optional.of(day));
+        when(dayRepository.save(any(DayEntity.class))).thenReturn(day);
+
+        //then
+        assertThrows(UpdateDayStateException.class,()->dayComponent.updateDayState(day.getReference(),DayState.COMPLETED));
+
+    }
+
+
+    @Test
+    void updateDayState_NotOK_BecauseOfNotFoundDay()  {
+        //when
+        when(dayRepository.findById(anyString())).thenReturn(Optional.empty());
+        //then
+        assertThrows(DayNotFoundException.class,()->dayComponent.updateDayState(anyString(),DayState.COMPLETED));
+
+
+    }
+
+
 
 }

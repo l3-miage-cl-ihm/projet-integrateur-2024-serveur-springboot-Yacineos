@@ -1,8 +1,8 @@
 package fr.uga.l3miage.integrator.endpoints;
 
-import fr.uga.l3miage.integrator.exceptions.EditDayErrorResponse;
-import fr.uga.l3miage.integrator.exceptions.NotFoundErrorResponse;
-import fr.uga.l3miage.integrator.exceptions.PlanDayErrorResponse;
+import fr.uga.l3miage.integrator.enums.DayState;
+import fr.uga.l3miage.integrator.enums.DeliveryState;
+import fr.uga.l3miage.integrator.exceptions.*;
 import fr.uga.l3miage.integrator.requests.DayCreationRequest;
 import fr.uga.l3miage.integrator.responses.DayResponseDTO;
 import fr.uga.l3miage.integrator.responses.SetUpBundleResponse;
@@ -55,6 +55,15 @@ public interface PlannerEndpoints {
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/day/{dayId}/edit")
     void editDay(@RequestBody DayCreationRequest dayEditRequest, @PathVariable String dayId);
+
+
+    @Operation(description = "Day state update")
+    @ApiResponse(responseCode = "200",description = "Day state updated suyccessfully")
+    @ApiResponse(responseCode = "404" ,description = "No day  was found !", content = @Content(schema = @Schema(implementation = NotFoundErrorResponse.class),mediaType = MediaType.APPLICATION_JSON_VALUE))
+    @ApiResponse(responseCode = "409" ,description = "Cannot update day state", content = @Content(schema = @Schema(implementation = DayStateNotUpdatedResponse.class),mediaType = MediaType.APPLICATION_JSON_VALUE))
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/days/{dayId}/updateState")
+    void updateDayState(@PathVariable String dayId,@RequestParam DayState newDayState);
 
 
 }

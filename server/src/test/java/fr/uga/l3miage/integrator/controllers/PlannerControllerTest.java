@@ -1177,4 +1177,130 @@ public class PlannerControllerTest {
 
     }
 
+
+    @Test
+    void updateDayStateOK1(){
+        //given
+        final HttpHeaders headers = new HttpHeaders();
+
+        final Map<String, Object> urlParams = new HashMap<>();
+        urlParams.put("dayId","J131G");
+        urlParams.put("newDayState","IN_PROGRESS");
+
+        DayEntity day= DayEntity.builder()
+                .state(DayState.PLANNED)
+                .reference("J131G")
+                .build();
+       dayRepository.save(day);
+
+
+        //when
+        ResponseEntity<Void> response=testRestTemplate.exchange("/api/v3.0/planner/days/{dayId}/updateState?newDayState={newDayState}", HttpMethod.PUT, new HttpEntity<>(null, headers), Void.class, urlParams);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(dayService,times(1)).updateDayState(day.getReference(),DayState.IN_PROGRESS);
+
+    }
+
+    @Test
+    void updateDayStateOK2() {
+        //given
+        final HttpHeaders headers = new HttpHeaders();
+
+        final Map<String, Object> urlParams = new HashMap<>();
+        urlParams.put("dayId", "J131G");
+        urlParams.put("newDayState", "COMPLETED");
+
+        TourEntity tour=TourEntity.builder()
+                .reference("J131G-A")
+                .state(TourState.COMPLETED)
+                .build();
+        tourRepository.save(tour);
+        DayEntity day = DayEntity.builder()
+                .state(DayState.IN_PROGRESS)
+                .tours(List.of(tour))
+                .reference("J131G")
+                .build();
+        dayRepository.save(day);
+
+
+        //when
+        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v3.0/planner/days/{dayId}/updateState?newDayState={newDayState}", HttpMethod.PUT, new HttpEntity<>(null, headers), Void.class, urlParams);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(dayService, times(1)).updateDayState(day.getReference(), DayState.COMPLETED);
+    }
+
+    @Test
+    void updateDayStateNotOK_BecauseOf_TourState() {
+        //given
+        final HttpHeaders headers = new HttpHeaders();
+
+        final Map<String, Object> urlParams = new HashMap<>();
+        urlParams.put("dayId", "J131G");
+        urlParams.put("newDayState", "COMPLETED");
+
+        TourEntity tour=TourEntity.builder()
+                .reference("J131G-A")
+                .state(TourState.CUSTOMER)
+                .build();
+        tourRepository.save(tour);
+        DayEntity day = DayEntity.builder()
+                .state(DayState.IN_PROGRESS)
+                .tours(List.of(tour))
+                .reference("J131G")
+                .build();
+        dayRepository.save(day);
+
+
+        //when
+        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v3.0/planner/days/{dayId}/updateState?newDayState={newDayState}", HttpMethod.PUT, new HttpEntity<>(null, headers), Void.class, urlParams);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        verify(dayService, times(1)).updateDayState(day.getReference(), DayState.COMPLETED);
+    }
+
+    @Test
+    void updateDayStateNotOK_BecauseOf_NotFoundDay() {
+        //given
+        final HttpHeaders headers = new HttpHeaders();
+
+        final Map<String, Object> urlParams = new HashMap<>();
+        urlParams.put("dayId", "J131G");
+        urlParams.put("newDayState", "COMPLETED");
+
+        //when
+        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v3.0/planner/days/{dayId}/updateState?newDayState={newDayState}", HttpMethod.PUT, new HttpEntity<>(null, headers), Void.class, urlParams);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        verify(dayService, times(1)).updateDayState("J131G", DayState.COMPLETED);
+    }
+
+    @Test
+    void updateDayStateNotOK_BecauseOfWrongState() {
+        //given
+        final HttpHeaders headers = new HttpHeaders();
+
+        final Map<String, Object> urlParams = new HashMap<>();
+        urlParams.put("dayId", "J131G");
+        urlParams.put("newDayState", "COMPLETED");
+        DayEntity day = DayEntity.builder()
+                .state(DayState.COMPLETED)
+                .reference("J131G")
+                .build();
+        dayRepository.save(day);
+
+
+        //when
+        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v3.0/planner/days/{dayId}/updateState?newDayState={newDayState}", HttpMethod.PUT, new HttpEntity<>(null, headers), Void.class, urlParams);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        verify(dayService, times(1)).updateDayState(day.getReference(), DayState.COMPLETED);
+    }
+
 }
