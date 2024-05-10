@@ -3,9 +3,7 @@ package fr.uga.l3miage.integrator.controllers;
 import fr.uga.l3miage.integrator.components.DayComponent;
 import fr.uga.l3miage.integrator.components.TourComponent;
 import fr.uga.l3miage.integrator.datatypes.Address;
-import fr.uga.l3miage.integrator.enums.CustomerState;
-import fr.uga.l3miage.integrator.enums.Job;
-import fr.uga.l3miage.integrator.enums.OrderState;
+import fr.uga.l3miage.integrator.enums.*;
 import fr.uga.l3miage.integrator.exceptions.NotFoundErrorResponse;
 import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
 import fr.uga.l3miage.integrator.models.*;
@@ -648,6 +646,535 @@ public class PlannerControllerTest {
 
         AssertionsForClassTypes.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         verify(dayService, times(2)).getSetUpBundle();
+    }
+
+
+    @Test
+    void editDayOK(){
+        //given
+        final HttpHeaders headers = new HttpHeaders();
+
+        final Map<String, Object> urlParams = new HashMap<>();
+        urlParams.put("dayId","J131G");
+
+        //IMPORTANT: do not forget the planner because as decided before, he is one to manage the warehouse and it is loaded in the DayPlannerMapper
+        WarehouseEntity grenis = WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
+                .address(new Address("21 rue des cafards", "65001", "San antonio")).trucks(Set.of()).build();
+        warehouseRepository.save(grenis);
+        EmployeeEntity planner = EmployeeEntity.builder().email("claudiatessiere@grenis.com").job(Job.PLANNER).photo("chris.png")
+                .lastName("TESSIERE").firstName("claudia").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
+        employeeRepository.save(planner);
+
+        List<TourCreationRequest> tourCreationRequestList= new ArrayList<>();
+        TruckEntity truck= TruckEntity.builder().immatriculation("AY-124-GF").build();
+        truckRepository.save(truck);
+        EmployeeEntity deliveryman1= EmployeeEntity.builder()
+                .email("samy@gmail.com")
+                .job(Job.DELIVERYMAN)
+                .trigram("SSA")
+                .firstName("Samy")
+                .lastName("Silva")
+                .mobilePhone("0654326754")
+                .photo("samy.png")
+                .build();
+        EmployeeEntity deliveryman2= EmployeeEntity.builder()
+                .email("jugurta@gmail.com")
+                .job(Job.DELIVERYMAN)
+                .trigram("JOK")
+                .firstName("Jugurta")
+                .lastName("Ourzik")
+                .mobilePhone("065432354")
+                .photo("juju.png")
+                .build();
+
+        employeeRepository.save(deliveryman1);
+        employeeRepository.save(deliveryman2);
+        CustomerEntity customer1= CustomerEntity.builder()
+                .email("claire@gmail.com")
+                .firstName("Claire")
+                .lastName("Wyz")
+                .address(new Address("2 Avenue des riches","75001","Paris"))
+                .state(CustomerState.DELIVERABLE)
+                .build();
+
+        CustomerEntity customer2= CustomerEntity.builder()
+                .email("caddy@gmail.com")
+                .firstName("wyz")
+                .lastName("Cyz")
+                .address(new Address("2 Avenue des riches","75001","Paris"))
+                .state(CustomerState.DELIVERABLE)
+                .build();
+        customerRepository.save(customer1);
+        customerRepository.save(customer2);
+        OrderEntity o1= OrderEntity.builder()
+                .reference("c001")
+                .creationDate(LocalDate.now())
+                .state(OrderState.OPENED)
+                .lines(Set.of())
+                .customer(customer1)
+                .build();
+        OrderEntity o2= OrderEntity.builder()
+                .reference("c002")
+                .creationDate(LocalDate.now())
+                .state(OrderState.OPENED)
+                .lines(Set.of())
+                .customer(customer1)
+                .build();
+
+        OrderEntity o3= OrderEntity.builder()
+                .reference("c003")
+                .creationDate(LocalDate.now())
+                .state(OrderState.OPENED)
+                .lines(Set.of())
+                .customer(customer2)
+                .build();
+        orderRepository.save(o1);
+        orderRepository.save(o2);
+        orderRepository.save(o3);
+        List<DeliveryCreationRequest> deliveryCreationRequestList=new ArrayList<>();
+        DeliveryCreationRequest d1= DeliveryCreationRequest.builder()
+                .distanceToCover(12)
+                .orders(Set.of(o1.getReference()))
+                .build();
+
+        DeliveryCreationRequest d2= DeliveryCreationRequest.builder()
+                .distanceToCover(12)
+                .orders(Set.of(o3.getReference()))
+                .build();
+        deliveryCreationRequestList.add(d1);
+        deliveryCreationRequestList.add(d2);
+        TourCreationRequest t1= TourCreationRequest.builder()
+                .distanceToCover(24)
+                .truck(truck.getImmatriculation())
+                .deliverymen(Set.of(deliveryman1.getTrigram(),deliveryman2.getTrigram()))
+                .deliveries(deliveryCreationRequestList)
+                .build();
+
+        tourCreationRequestList.add(t1);
+        LocalDate date= LocalDate.of(2024,05,10);
+
+        DayCreationRequest editDayRequest= DayCreationRequest.builder()
+                .date(date)
+                .tours(tourCreationRequestList)
+                .build();
+
+
+        //*************
+        DeliveryEntity delivery1=DeliveryEntity.builder()
+                .reference("J131G-A1")
+                .orders(Set.of(o1,o2))
+                .state(DeliveryState.PLANNED)
+                .build();
+        DeliveryEntity delivery2=DeliveryEntity.builder()
+                .reference("J131G-A2")
+                .orders(Set.of(o3))
+                .state(DeliveryState.PLANNED)
+                .build();
+        deliveryRepository.save(delivery1);
+        deliveryRepository.save(delivery2);
+        TourEntity tour1=TourEntity.builder()
+                .reference("J131G-A")
+                .state(TourState.PLANNED)
+                .truck(truck)
+                .deliveries(List.of(delivery1,delivery2))
+                .build();
+        tourRepository.save(tour1);
+        List<TourEntity> tours=new ArrayList<>();
+        tours.add(tour1);
+        DayEntity day=DayEntity.builder().date(date).reference("J131G")
+                .planner(planner)
+                .state(DayState.PLANNED)
+                .tours(tours)
+                .build();
+        dayRepository.save(day);
+
+        //*************
+
+        //when
+        ResponseEntity<Void> response=testRestTemplate.exchange("/api/v3.0/planner/day/{dayId}/edit", HttpMethod.PUT, new HttpEntity<>(editDayRequest, headers), Void.class, urlParams);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(dayService,times(1)).editDay(editDayRequest,day.getReference());
+
+
+
+    }
+
+    @Test  //simulating day plannification without any tour
+    void editDay_NotOK_BecauseOfMissedInputs(){
+        //given
+        final HttpHeaders headers = new HttpHeaders();
+
+        final Map<String, Object> urlParams = new HashMap<>();
+        urlParams.put("dayId","J131G");
+
+        WarehouseEntity grenis = WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
+                .address(new Address("21 rue des cafards", "65001", "San antonio")).trucks(Set.of()).build();
+        warehouseRepository.save(grenis);
+        EmployeeEntity planner = EmployeeEntity.builder().email("claudiatessiere@grenis.com").job(Job.PLANNER).photo("chris.png")
+                .lastName("TESSIERE").firstName("claudia").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
+        employeeRepository.save(planner);
+
+        List<TourCreationRequest> tourCreationRequestList= new ArrayList<>();
+        TruckEntity truck= TruckEntity.builder().immatriculation("AY-124-GF").build();
+        truckRepository.save(truck);
+        EmployeeEntity deliveryman1= EmployeeEntity.builder()
+                .email("samy@gmail.com")
+                .job(Job.DELIVERYMAN)
+                .trigram("SSA")
+                .firstName("Samy")
+                .lastName("Silva")
+                .mobilePhone("0654326754")
+                .photo("samy.png")
+                .build();
+        EmployeeEntity deliveryman2= EmployeeEntity.builder()
+                .email("jugurta@gmail.com")
+                .job(Job.DELIVERYMAN)
+                .trigram("JOK")
+                .firstName("Jugurta")
+                .lastName("Ourzik")
+                .mobilePhone("065432354")
+                .photo("juju.png")
+                .build();
+
+        employeeRepository.save(deliveryman1);
+        employeeRepository.save(deliveryman2);
+        CustomerEntity customer1= CustomerEntity.builder()
+                .email("claire@gmail.com")
+                .firstName("Claire")
+                .lastName("Wyz")
+                .address(new Address("2 Avenue des riches","75001","Paris"))
+                .state(CustomerState.DELIVERABLE)
+                .build();
+
+        CustomerEntity customer2= CustomerEntity.builder()
+                .email("caddy@gmail.com")
+                .firstName("wyz")
+                .lastName("Cyz")
+                .address(new Address("2 Avenue des riches","75001","Paris"))
+                .state(CustomerState.DELIVERABLE)
+                .build();
+        customerRepository.save(customer1);
+        customerRepository.save(customer2);
+        OrderEntity o1= OrderEntity.builder()
+                .reference("c001")
+                .creationDate(LocalDate.now())
+                .state(OrderState.OPENED)
+                .lines(Set.of())
+                .customer(customer1)
+                .build();
+        OrderEntity o2= OrderEntity.builder()
+                .reference("c002")
+                .creationDate(LocalDate.now())
+                .state(OrderState.OPENED)
+                .lines(Set.of())
+                .customer(customer1)
+                .build();
+
+        OrderEntity o3= OrderEntity.builder()
+                .reference("c003")
+                .creationDate(LocalDate.now())
+                .state(OrderState.OPENED)
+                .lines(Set.of())
+                .customer(customer2)
+                .build();
+        orderRepository.save(o1);
+        orderRepository.save(o2);
+        orderRepository.save(o3);
+
+
+
+
+        //*************
+        DeliveryEntity delivery1=DeliveryEntity.builder()
+                .reference("J131G-A1")
+                .orders(Set.of(o1,o2))
+                .state(DeliveryState.PLANNED)
+                .build();
+        DeliveryEntity delivery2=DeliveryEntity.builder()
+                .reference("J131G-A2")
+                .orders(Set.of(o3))
+                .state(DeliveryState.PLANNED)
+                .build();
+        deliveryRepository.save(delivery1);
+        deliveryRepository.save(delivery2);
+        TourEntity tour1=TourEntity.builder()
+                .reference("J131G-A")
+                .state(TourState.PLANNED)
+                .truck(truck)
+                .deliveries(List.of(delivery1,delivery2))
+                .build();
+        tourRepository.save(tour1);
+        List<TourEntity> tours=new ArrayList<>();
+        tours.add(tour1);
+        DayEntity day=DayEntity.builder().date(LocalDate.of(2024,05,10)).reference("J131G")
+                .planner(planner)
+                .state(DayState.PLANNED)
+                .tours(tours)
+                .build();
+        dayRepository.save(day);
+
+        DayCreationRequest editDayRequest= DayCreationRequest.builder()
+                .date(LocalDate.now())
+                .tours(new ArrayList<>())
+                .build();
+
+
+        //when
+        ResponseEntity<Void> response=testRestTemplate.exchange("/api/v3.0/planner/day/{dayId}/edit", HttpMethod.PUT, new HttpEntity<>(editDayRequest, headers), Void.class, urlParams);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
+        verify(dayService,times(1)).editDay(editDayRequest,day.getReference());
+
+
+
+    }
+
+    @Test  //simulating wrong deliveryman trigram input
+    void editDay_NotOK_BecauseOfWrongInputs1() {
+
+        //given
+        final HttpHeaders headers = new HttpHeaders();
+
+        final Map<String, Object> urlParams = new HashMap<>();
+        urlParams.put("dayId","J131G");
+
+        //IMPORTANT: do not forget the planner because as decided before, he is one to manage the warehouse and it is loaded in the DayPlannerMapper
+        WarehouseEntity grenis = WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
+                .address(new Address("21 rue des cafards", "65001", "San antonio")).trucks(Set.of()).build();
+        warehouseRepository.save(grenis);
+        EmployeeEntity planner = EmployeeEntity.builder().email("claudiatessiere@grenis.com").job(Job.PLANNER).photo("chris.png")
+                .lastName("TESSIERE").firstName("claudia").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
+        employeeRepository.save(planner);
+
+        List<TourCreationRequest> tourCreationRequestList= new ArrayList<>();
+        TruckEntity truck = TruckEntity.builder().immatriculation("AY-124-GF").build();
+        truckRepository.save(truck);
+        EmployeeEntity deliveryman1 = EmployeeEntity.builder()
+                .email("samy@gmail.com")
+                .job(Job.DELIVERYMAN)
+                .trigram("SSA")
+                .firstName("Samy")
+                .lastName("Silva")
+                .mobilePhone("0654326754")
+                .photo("samy.png")
+                .build();
+
+        employeeRepository.save(deliveryman1);
+        CustomerEntity customer1 = CustomerEntity.builder()
+                .email("claire@gmail.com")
+                .firstName("Claire")
+                .lastName("Wyz")
+                .address(new Address("2 Avenue des riches", "75001", "Paris"))
+                .state(CustomerState.DELIVERABLE)
+                .build();
+
+        CustomerEntity customer2 = CustomerEntity.builder()
+                .email("caddy@gmail.com")
+                .firstName("wyz")
+                .lastName("Cyz")
+                .address(new Address("2 Avenue des riches", "75001", "Paris"))
+                .state(CustomerState.DELIVERABLE)
+                .build();
+        customerRepository.save(customer1);
+        customerRepository.save(customer2);
+        OrderEntity o1 = OrderEntity.builder()
+                .reference("c001")
+                .creationDate(LocalDate.now())
+                .state(OrderState.OPENED)
+                .lines(Set.of())
+                .customer(customer1)
+                .build();
+        OrderEntity o2 = OrderEntity.builder()
+                .reference("c002")
+                .creationDate(LocalDate.now())
+                .state(OrderState.OPENED)
+                .lines(Set.of())
+                .customer(customer1)
+                .build();
+
+        OrderEntity o3 = OrderEntity.builder()
+                .reference("c003")
+                .creationDate(LocalDate.now())
+                .state(OrderState.OPENED)
+                .lines(Set.of())
+                .customer(customer2)
+                .build();
+        orderRepository.save(o1);
+        orderRepository.save(o2);
+        orderRepository.save(o3);
+        List<DeliveryCreationRequest> deliveryCreationRequestList = new ArrayList<>();
+        DeliveryCreationRequest d1 = DeliveryCreationRequest.builder()
+                .distanceToCover(12)
+                .orders(Set.of(o1.getReference(), o2.getReference()))
+                .build();
+
+        DeliveryCreationRequest d2 = DeliveryCreationRequest.builder()
+                .distanceToCover(12)
+                .orders(Set.of(o3.getReference()))
+                .build();
+        deliveryCreationRequestList.add(d1);
+        deliveryCreationRequestList.add(d2);
+        TourCreationRequest t1 = TourCreationRequest.builder()
+                .distanceToCover(24)
+                .truck(truck.getImmatriculation())
+                .deliverymen(Set.of(deliveryman1.getTrigram(), "YTR")) //no existing deliveryman with trigram 'YTR'
+                .deliveries(deliveryCreationRequestList)
+                .build();
+
+        tourCreationRequestList.add(t1);
+        DayCreationRequest editDayRequest = DayCreationRequest.builder()
+                .date(LocalDate.of(2024,05,10))
+                .tours(tourCreationRequestList)
+                .build();
+
+        //*************
+        DeliveryEntity delivery1=DeliveryEntity.builder()
+                .reference("J131G-A1")
+                .orders(Set.of(o1,o2))
+                .state(DeliveryState.PLANNED)
+                .build();
+        DeliveryEntity delivery2=DeliveryEntity.builder()
+                .reference("J131G-A2")
+                .orders(Set.of(o3))
+                .state(DeliveryState.PLANNED)
+                .build();
+        deliveryRepository.save(delivery1);
+        deliveryRepository.save(delivery2);
+        TourEntity tour1=TourEntity.builder()
+                .reference("J131G-A")
+                .state(TourState.PLANNED)
+                .truck(truck)
+                .deliveries(List.of(delivery1,delivery2))
+                .build();
+        tourRepository.save(tour1);
+        List<TourEntity> tours=new ArrayList<>();
+        tours.add(tour1);
+        DayEntity day=DayEntity.builder().date(LocalDate.of(2024,05,10)).reference("J131G")
+                .planner(planner)
+                .state(DayState.PLANNED)
+                .tours(tours)
+                .build();
+        dayRepository.save(day);
+
+        //when
+        //dayService.planDay(editDayRequest);  //Here dayService returns nothing but the call can help to verify others repositories, components or mappers apparences.
+        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v3.0/planner/day/{dayId}/edit", HttpMethod.PUT, new HttpEntity<>(editDayRequest, headers), Void.class, urlParams);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
+        verify(dayService, times(1)).editDay(editDayRequest,day.getReference());
+
+    }
+
+    @Test  //simulating not found day
+    void editDay_NotOK_BecauseOfNotFoundDay() {
+
+        //given
+        final HttpHeaders headers = new HttpHeaders();
+
+        final Map<String, Object> urlParams = new HashMap<>();
+        urlParams.put("dayId","J131G");
+
+        //IMPORTANT: do not forget the planner because as decided before, he is one to manage the warehouse and it is loaded in the DayPlannerMapper
+        WarehouseEntity grenis = WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
+                .address(new Address("21 rue des cafards", "65001", "San antonio")).trucks(Set.of()).build();
+        warehouseRepository.save(grenis);
+        EmployeeEntity planner = EmployeeEntity.builder().email("claudiatessiere@grenis.com").job(Job.PLANNER).photo("chris.png")
+                .lastName("TESSIERE").firstName("claudia").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
+        employeeRepository.save(planner);
+
+        List<TourCreationRequest> tourCreationRequestList= new ArrayList<>();
+        TruckEntity truck = TruckEntity.builder().immatriculation("AY-124-GF").build();
+        truckRepository.save(truck);
+        EmployeeEntity deliveryman1 = EmployeeEntity.builder()
+                .email("samy@gmail.com")
+                .job(Job.DELIVERYMAN)
+                .trigram("SSA")
+                .firstName("Samy")
+                .lastName("Silva")
+                .mobilePhone("0654326754")
+                .photo("samy.png")
+                .build();
+
+        employeeRepository.save(deliveryman1);
+        CustomerEntity customer1 = CustomerEntity.builder()
+                .email("claire@gmail.com")
+                .firstName("Claire")
+                .lastName("Wyz")
+                .address(new Address("2 Avenue des riches", "75001", "Paris"))
+                .state(CustomerState.DELIVERABLE)
+                .build();
+
+        CustomerEntity customer2 = CustomerEntity.builder()
+                .email("caddy@gmail.com")
+                .firstName("wyz")
+                .lastName("Cyz")
+                .address(new Address("2 Avenue des riches", "75001", "Paris"))
+                .state(CustomerState.DELIVERABLE)
+                .build();
+        customerRepository.save(customer1);
+        customerRepository.save(customer2);
+        OrderEntity o1 = OrderEntity.builder()
+                .reference("c001")
+                .creationDate(LocalDate.now())
+                .state(OrderState.OPENED)
+                .lines(Set.of())
+                .customer(customer1)
+                .build();
+        OrderEntity o2 = OrderEntity.builder()
+                .reference("c002")
+                .creationDate(LocalDate.now())
+                .state(OrderState.OPENED)
+                .lines(Set.of())
+                .customer(customer1)
+                .build();
+
+        OrderEntity o3 = OrderEntity.builder()
+                .reference("c003")
+                .creationDate(LocalDate.now())
+                .state(OrderState.OPENED)
+                .lines(Set.of())
+                .customer(customer2)
+                .build();
+        orderRepository.save(o1);
+        orderRepository.save(o2);
+        orderRepository.save(o3);
+        List<DeliveryCreationRequest> deliveryCreationRequestList = new ArrayList<>();
+        DeliveryCreationRequest d1 = DeliveryCreationRequest.builder()
+                .distanceToCover(12)
+                .orders(Set.of(o1.getReference(), o2.getReference()))
+                .build();
+
+        DeliveryCreationRequest d2 = DeliveryCreationRequest.builder()
+                .distanceToCover(12)
+                .orders(Set.of(o3.getReference()))
+                .build();
+        deliveryCreationRequestList.add(d1);
+        deliveryCreationRequestList.add(d2);
+        TourCreationRequest t1 = TourCreationRequest.builder()
+                .distanceToCover(24)
+                .truck(truck.getImmatriculation())
+                .deliverymen(Set.of(deliveryman1.getTrigram(), "YTR")) //no existing deliveryman with trigram 'YTR'
+                .deliveries(deliveryCreationRequestList)
+                .build();
+
+        tourCreationRequestList.add(t1);
+        DayCreationRequest editDayRequest = DayCreationRequest.builder()
+                .date(LocalDate.of(2024,05,10))
+                .tours(tourCreationRequestList)
+                .build();
+
+        //when
+        //dayService.planDay(editDayRequest);  //Here dayService returns nothing but the call can help to verify others repositories, components or mappers apparences.
+        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v3.0/planner/day/{dayId}/edit", HttpMethod.PUT, new HttpEntity<>(editDayRequest, headers), Void.class, urlParams);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        verify(dayService, times(1)).editDay(editDayRequest,"J131G");
+
     }
 
 }

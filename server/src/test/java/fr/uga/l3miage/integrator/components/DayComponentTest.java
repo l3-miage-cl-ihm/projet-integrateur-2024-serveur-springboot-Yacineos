@@ -166,4 +166,56 @@ public class DayComponentTest {
 
     }
 
+
+    @Test
+    void getDayByIdOK() throws DayNotFoundException {
+        //given
+        List<TourEntity> tours= new LinkedList<>();
+        Set<EmployeeEntity> deliverymen= new HashSet<>();
+        EmployeeEntity m1=EmployeeEntity.builder().email("jojo@gmail.com").build();
+        EmployeeEntity m2=EmployeeEntity.builder().email("axel@gmail.com").build();
+        deliverymen.add(m1);
+        deliverymen.add(m2);
+
+        TourEntity tour1= TourEntity.builder().reference("T238G-A").build();
+        tours.add(tour1);
+        tour1.setDeliverymen(deliverymen);
+        Set<EmployeeEntity> deliverymen2= new HashSet<>();
+        EmployeeEntity m3=EmployeeEntity.builder().email("juju@gmail.com").build();
+        EmployeeEntity m4=EmployeeEntity.builder().email("alexis@gmail.com").build();
+        deliverymen2.add(m3);
+        deliverymen2.add(m4);
+
+        TourEntity tour2= TourEntity.builder().reference("T238G-B").build();
+        tour2.setDeliverymen(deliverymen2);
+
+        tours.add(tour2);
+        DayEntity day = DayEntity.builder().reference("J238").date(LocalDate.of(2024,4,29)).build();
+        day.setTours(tours);
+
+        //when
+        when(dayRepository.findById(anyString())).thenReturn(Optional.of(day));
+        DayEntity response= dayComponent.getDayById(day.getReference());
+        //then
+        assertThat(response.getReference()).isEqualTo("J238");
+        assertThat(response.getDate()).isEqualTo(LocalDate.of(2024,4,29));
+        assertThat(response.getTours().stream().anyMatch(tour-> tour.getReference().equals("T238G-B"))).isEqualTo(true);
+        assertThat(response.getTours().stream().anyMatch(tour-> tour.getReference().equals("T238G-A"))).isEqualTo(true);
+        assertThat(response.getTours().stream().allMatch(tour-> tour.getDeliverymen().size()==2)).isEqualTo(true);
+
+
+
+    }
+
+
+    @Test
+    void getDayByIdNotFound(){
+        when(dayRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        //then
+        assertThrows(DayNotFoundException.class,()->dayComponent.getDayById("J131G"));
+
+
+    }
+
 }
