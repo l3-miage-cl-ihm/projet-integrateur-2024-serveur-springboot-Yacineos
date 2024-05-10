@@ -791,7 +791,7 @@ public class PlannerControllerTest {
         //*************
 
         //when
-        ResponseEntity<Void> response=testRestTemplate.exchange("/api/v3.0/planner/day/{dayId}/edit", HttpMethod.PUT, new HttpEntity<>(editDayRequest, headers), Void.class, urlParams);
+        ResponseEntity<Void> response=testRestTemplate.exchange("/api/v3.0/planner/days/{dayId}/edit", HttpMethod.PUT, new HttpEntity<>(editDayRequest, headers), Void.class, urlParams);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -922,7 +922,7 @@ public class PlannerControllerTest {
 
 
         //when
-        ResponseEntity<Void> response=testRestTemplate.exchange("/api/v3.0/planner/day/{dayId}/edit", HttpMethod.PUT, new HttpEntity<>(editDayRequest, headers), Void.class, urlParams);
+        ResponseEntity<Void> response=testRestTemplate.exchange("/api/v3.0/planner/days/{dayId}/edit", HttpMethod.PUT, new HttpEntity<>(editDayRequest, headers), Void.class, urlParams);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
@@ -1061,7 +1061,7 @@ public class PlannerControllerTest {
 
         //when
         //dayService.planDay(editDayRequest);  //Here dayService returns nothing but the call can help to verify others repositories, components or mappers apparences.
-        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v3.0/planner/day/{dayId}/edit", HttpMethod.PUT, new HttpEntity<>(editDayRequest, headers), Void.class, urlParams);
+        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v3.0/planner/days/{dayId}/edit", HttpMethod.PUT, new HttpEntity<>(editDayRequest, headers), Void.class, urlParams);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE);
@@ -1169,7 +1169,7 @@ public class PlannerControllerTest {
 
         //when
         //dayService.planDay(editDayRequest);  //Here dayService returns nothing but the call can help to verify others repositories, components or mappers apparences.
-        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v3.0/planner/day/{dayId}/edit", HttpMethod.PUT, new HttpEntity<>(editDayRequest, headers), Void.class, urlParams);
+        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v3.0/planner/days/{dayId}/edit", HttpMethod.PUT, new HttpEntity<>(editDayRequest, headers), Void.class, urlParams);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
