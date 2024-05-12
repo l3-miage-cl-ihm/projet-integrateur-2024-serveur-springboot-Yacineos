@@ -37,27 +37,25 @@ public class DeliveryServiceTest {
     private TourComponent tourComponent;
 
 
-
-
     @Test
-   void  updateDeliveryStateOK() throws DeliveryNotFoundException, UpdateDeliveryStateException, TourNotFoundException {
+    void updateDeliveryStateOK() throws DeliveryNotFoundException, UpdateDeliveryStateException, TourNotFoundException {
         //given
-        DeliveryEntity deliveryEntity=DeliveryEntity.builder()
+        DeliveryEntity deliveryEntity = DeliveryEntity.builder()
                 .reference("l120G-A1")
                 .state(DeliveryState.PLANNED)
                 .distanceToCover(3.9)
                 .orders(Set.of())
                 .build();
 
-        TourEntity tour=TourEntity.builder().reference("t120G-A").deliveries(List.of(deliveryEntity)).build();
+        TourEntity tour = TourEntity.builder().reference("t120G-A").deliveries(List.of(deliveryEntity)).build();
 
 
         //when
-        when(deliveryComponent.updateDeliveryState(anyString(),any(DeliveryState.class),anyString())).thenReturn(deliveryEntity);
+        when(deliveryComponent.updateDeliveryState(anyString(), any(DeliveryState.class), anyString())).thenReturn(deliveryEntity);
         when(tourComponent.findTourById(tour.getReference())).thenReturn(tour);
         deliveryEntity.setState(DeliveryState.IN_COURSE);
 
-        DeliveryEntity response = deliveryService.updateDeliveryState(DeliveryState.IN_COURSE,deliveryEntity.getReference(),tour.getReference());
+        DeliveryEntity response = deliveryService.updateDeliveryState(DeliveryState.IN_COURSE, deliveryEntity.getReference(), tour.getReference());
 
         //then
         assertThat(deliveryEntity).usingRecursiveComparison().isEqualTo(response);
@@ -65,27 +63,28 @@ public class DeliveryServiceTest {
 
 
     @Test
-    void  updateDeliveryState_NotOK_BecauseOfNotFoundDelivery() throws DeliveryNotFoundException, UpdateDeliveryStateException {
+    void updateDeliveryState_NotOK_BecauseOfNotFoundDelivery() throws DeliveryNotFoundException, UpdateDeliveryStateException {
         //given
-        String deliveryId="l130G-A1";
+        String deliveryId = "l130G-A1";
 
         //when
-        when(deliveryComponent.updateDeliveryState(anyString(),any(DeliveryState.class),anyString())).thenThrow(new DeliveryNotFoundException("No delivery was found with given reference <"+deliveryId+">"));
+        when(deliveryComponent.updateDeliveryState(anyString(), any(DeliveryState.class), anyString())).thenThrow(new DeliveryNotFoundException("No delivery was found with given reference <" + deliveryId + ">"));
 
         //then
-        assertThrows(DeliveryNotFoundRestException.class,()->deliveryService.updateDeliveryState(DeliveryState.IN_COURSE,deliveryId,"t130G-A"));
+        assertThrows(DeliveryNotFoundRestException.class, () -> deliveryService.updateDeliveryState(DeliveryState.IN_COURSE, deliveryId, "t130G-A"));
 
     }
 
     @Test
-    void  updateDeliveryState_NotOK_BecauseOfWrongState() throws DeliveryNotFoundException, UpdateDeliveryStateException {
+    void updateDeliveryState_NotOK_BecauseOfWrongState() throws DeliveryNotFoundException, UpdateDeliveryStateException {
         //given
-        DeliveryState state=DeliveryState.COMPLETED;
+        DeliveryState state = DeliveryState.COMPLETED;
         //when
-        when(deliveryComponent.updateDeliveryState(anyString(),any(DeliveryState.class),anyString())).thenThrow(new UpdateDeliveryStateException("Delivery is already Completed !",state));
+        when(deliveryComponent.updateDeliveryState(anyString(), any(DeliveryState.class), anyString())).thenThrow(new UpdateDeliveryStateException("Delivery is already Completed !", state));
 
         //then
-        assertThrows(UpdateDeliveryStateRestException.class,()->deliveryService.updateDeliveryState(DeliveryState.COMPLETED,"l130G-A1","t130G-A"));
+        assertThrows(UpdateDeliveryStateRestException.class, () -> deliveryService.updateDeliveryState(DeliveryState.COMPLETED, "l130G-A1", "t130G-A"));
 
     }
+
 }

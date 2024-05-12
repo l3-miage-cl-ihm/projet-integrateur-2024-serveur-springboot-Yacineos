@@ -297,4 +297,45 @@ void clear(){
 
 
     }
+
+    @Test
+    void updateTourInCourseOK() throws TourNotFoundException {
+        //given
+        final HttpHeaders headers = new HttpHeaders();
+
+        final Map<String, Object> urlParams = new HashMap<>();
+        urlParams.put("deliveryId", "l130G-A2");
+        urlParams.put("deliveryState", "IN_COURSE");
+        urlParams.put("tourId", "t130G-A");
+
+        DeliveryEntity deliveryEntity = DeliveryEntity.builder()
+                .reference("l130G-A1")
+                .state(DeliveryState.COMPLETED)
+                .distanceToCover(3.9)
+                .orders(Set.of())
+                .build();
+        deliveryRepository.save(deliveryEntity);
+
+        DeliveryEntity deliveryEntity1 = DeliveryEntity.builder()
+                .reference("l130G-A2")
+                .state(DeliveryState.PLANNED)
+                .distanceToCover(3.9)
+                .orders(Set.of())
+                .build();
+        deliveryRepository.save(deliveryEntity1);
+
+        TourEntity tour = TourEntity.builder().state(TourState.PLANNED).reference("t130G-A").deliveries(List.of(deliveryEntity,deliveryEntity1)).build();
+        tourRepository.save(tour);
+
+        //when
+        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v3.0/deliveryman/tours/{tourId}/deliveries/{deliveryId}/updateState?deliveryState={deliveryState}", HttpMethod.PUT, new HttpEntity<>(null, headers), Void.class, urlParams);
+
+        TourEntity tourAfterUpdating = tourRepository.findById(tour.getReference()).orElseThrow(() -> new TourNotFoundException("No tour was found "));
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(deliveryService, times(1)).updateDeliveryState(DeliveryState.IN_COURSE, deliveryEntity1.getReference(), tour.getReference());
+        assertThat(tourAfterUpdating.getState()).isEqualTo(TourState.IN_COURSE);
+    }
+
+
 }
