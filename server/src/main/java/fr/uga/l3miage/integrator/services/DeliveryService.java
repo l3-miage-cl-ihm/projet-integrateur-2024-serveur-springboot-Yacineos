@@ -23,24 +23,45 @@ public class DeliveryService {
 
     private final DeliveryComponent deliveryComponent;
     private final TourComponent tourComponent;
-    public DeliveryEntity updateDeliveryState(DeliveryState deliveryState, String deliveryId,String tourId) throws DeliveryNotFoundRestException,UpdateDeliveryStateRestException {
-        try {
-            DeliveryEntity deliveryEntity= deliveryComponent.updateDeliveryState(deliveryId, deliveryState,tourId);
-            TourEntity tourEntity= tourComponent.findTourById(tourId);
-            List<DeliveryEntity> deliveries = tourEntity.getDeliveries();
 
-            if(deliveries.stream().allMatch(delivery -> delivery.getState()==DeliveryState.COMPLETED)){
-                //update tour state
-                tourEntity.setState(TourState.COMPLETED);
-                tourComponent.saveTour(tourEntity);
+    public DeliveryEntity updateDeliveryState(DeliveryState deliveryState, String deliveryId, String tourId) throws DeliveryNotFoundRestException, UpdateDeliveryStateRestException {
+        try {
+            DeliveryEntity deliveryEntity = deliveryComponent.updateDeliveryState(deliveryId, deliveryState, tourId);
+            TourEntity tourEntity = tourComponent.findTourById(tourId);
+            List<DeliveryEntity> deliveries = tourEntity.getDeliveries();
+            switch (deliveryEntity.getState()) {
+                case IN_COURSE:
+                    tourEntity.setState(TourState.IN_COURSE);
+                    break;
+
+                case UNLOADING:
+                    tourEntity.setState(TourState.UNLOADING);
+                    break;
+
+                case WITH_CUSTOMER:
+                    tourEntity.setState(TourState.CUSTOMER);
+                    break;
+
+                case ASSEMBLY:
+                    tourEntity.setState(TourState.ASSEMBLY);
+                    break;
+
+                default:
+                    break;
             }
+
+            if (deliveries.stream().allMatch(delivery -> delivery.getState() == DeliveryState.COMPLETED)) {
+                tourEntity.setState(TourState.COMPLETED);
+
+            }
+            tourComponent.saveTour(tourEntity);
             return deliveryEntity;
-        }catch(DeliveryNotFoundException e){
-            throw  new DeliveryNotFoundRestException(e.getMessage());
-        }catch(TourNotFoundException e){
-            throw  new TourNotFoundRestException(e.getMessage());
-        }catch (UpdateDeliveryStateException e){
-            throw  new UpdateDeliveryStateRestException(e.getMessage(),e.getState());
+        } catch (DeliveryNotFoundException e) {
+            throw new DeliveryNotFoundRestException(e.getMessage());
+        } catch (TourNotFoundException e) {
+            throw new TourNotFoundRestException(e.getMessage());
+        } catch (UpdateDeliveryStateException e) {
+            throw new UpdateDeliveryStateRestException(e.getMessage(), e.getState());
         }
 
 
