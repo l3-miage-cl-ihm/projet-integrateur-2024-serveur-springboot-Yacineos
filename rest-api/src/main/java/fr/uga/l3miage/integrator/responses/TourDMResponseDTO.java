@@ -30,4 +30,8 @@ public class TourDMResponseDTO {
     @Schema(description = "Warehouse name ",example = "Grenis")
     private String warehouseName;
 
+    @Schema(description = "Warehouse coordinates ")
+    private List<Double> coordinates;
+
+
 }

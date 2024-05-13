@@ -2,6 +2,7 @@ package fr.uga.l3miage.integrator.services;
 
 
 import fr.uga.l3miage.integrator.components.TourComponent;
+import fr.uga.l3miage.integrator.datatypes.Coordinates;
 import fr.uga.l3miage.integrator.exceptions.rest.EntityNotFoundRestException;
 import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
 import fr.uga.l3miage.integrator.exceptions.technical.TourNotFoundException;
@@ -43,11 +44,9 @@ public class TourServiceTest {
         //given
         TourEntity tour= TourEntity.builder().reference("T238G-A").build();
         Set<EmployeeEntity> deliverymen= new HashSet<>();
-        EmployeeEntity m1=EmployeeEntity.builder().email("juju@gmail.com").build();
-        EmployeeEntity m2=EmployeeEntity.builder().email("axel@gmail.com").build();
-        WarehouseEntity w=WarehouseEntity.builder().name("Grenis").build();
-        m1.setWarehouse(w);
-        m2.setWarehouse(w);
+        WarehouseEntity w=WarehouseEntity.builder().name("Grenis").coordinates(new Coordinates(12.76,23.7)).build();
+        EmployeeEntity m1=EmployeeEntity.builder().email("juju@gmail.com").warehouse(w).build();
+        EmployeeEntity m2=EmployeeEntity.builder().email("axel@gmail.com").warehouse(w).build();
         deliverymen.add(m1);
         deliverymen.add(m2);
         tour.setDeliverymen(deliverymen);

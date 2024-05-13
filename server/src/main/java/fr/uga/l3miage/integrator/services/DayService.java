@@ -168,9 +168,7 @@ public class DayService {
 
         }catch (DayNotFoundException e) {
             throw new DayNotFoundRestException(e.getMessage());
-        } catch ( InvalidInputValueException e) {
-            throw new EditDayRestException(e.getMessage());
-        }catch (DayAlreadyPlannedException e){
+        } catch (InvalidInputValueException | DayAlreadyPlannedException e) {
             throw new EditDayRestException(e.getMessage());
         }
     }
@@ -179,11 +177,6 @@ public class DayService {
         SetUpBundleResponse setUpBundleResponse = new SetUpBundleResponse();
         LinkedHashSet<MultipleOrder> multipleOrder = new LinkedHashSet<>();
         multipleOrder = orderComponent.createMultipleOrders();
-//        Set<String> multipleOrderSet = new HashSet<>();
-//        for (MultipleOrder multipleOrder1 : multipleOrder){
-//            multipleOrderSet.add(multipleOrder1.toString());
-//        }
-
         Set<String> immatriculationTrucks = truckComponent.getAllTrucksImmatriculation();
         Set<String> idLivreurs = employeeComponent.getAllDeliveryMenID();
 
@@ -195,22 +188,19 @@ public class DayService {
     public DayResponseDTO getDay(LocalDate date){
         try {
             DayEntity day = dayComponent.getDay(date);
-
             DayResponseDTO dayResponseDTO = dayPlannerMapper.toResponse(day);
-
             List<TourPlannerResponseDTO> toursInDay = new ArrayList<>();
             for (TourEntity tourEntity : day.getTours()) {
                 TourPlannerResponseDTO tourPlannerResponseDTO = tourPlannerMapper.toResponse(tourEntity);
                 List<DeliveryPlannerResponseDTO> deliveriesInTour = new ArrayList<>();
-                tourEntity.getDeliveries().forEach(deliveryEntity -> {
+                for(DeliveryEntity deliveryEntity : tourEntity.getDeliveries()) {
                     DeliveryPlannerResponseDTO deliveryPlannerResponseDTO = deliveryPlannerMapper.toResponse(deliveryEntity);
                     deliveriesInTour.add(deliveryPlannerResponseDTO);
-                });
+                };
 
                 tourPlannerResponseDTO.setDeliveries(deliveriesInTour);
                 toursInDay.add(tourPlannerResponseDTO);
             }
-
 
             dayResponseDTO.setTours(toursInDay);
             return dayResponseDTO;

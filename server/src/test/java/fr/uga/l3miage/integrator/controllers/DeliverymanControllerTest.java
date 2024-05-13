@@ -85,7 +85,7 @@ void clear(){
         TourEntity tour = TourEntity.builder().reference("T123G-B").letter("G").distanceToCover(12.1).deliveries(new LinkedList<>()).build();
         EmployeeEntity man1 = EmployeeEntity.builder().email("antoinedupont@gmail.com").trigram("ant").photo(".png").lastName("okj").firstName("jd").mobilePhone("098Y5E").build();
         EmployeeEntity man2 = EmployeeEntity.builder().email("juju@gmail.com").trigram("jug").photo(".png").lastName("our").firstName("jug").mobilePhone("098YGED").build();
-        WarehouseEntity warehouse =WarehouseEntity.builder().name("Grenis").letter("G").build();
+        WarehouseEntity warehouse =WarehouseEntity.builder().name("Grenis").letter("G").coordinates(new Coordinates(23.8,15.8765)).build();
         warehouseRepository.save(warehouse);
         man1.setWarehouse(warehouse);
         man2.setWarehouse(warehouse);

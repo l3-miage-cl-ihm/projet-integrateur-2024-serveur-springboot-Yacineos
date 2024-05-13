@@ -2,8 +2,10 @@ package fr.uga.l3miage.integrator.mappers.utils;
 
 import fr.uga.l3miage.integrator.datatypes.Address;
 import fr.uga.l3miage.integrator.datatypes.Coordinates;
+import fr.uga.l3miage.integrator.exceptions.rest.EntityNotFoundRestException;
 import fr.uga.l3miage.integrator.models.EmployeeEntity;
 import fr.uga.l3miage.integrator.models.OrderEntity;
+import fr.uga.l3miage.integrator.models.WarehouseEntity;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Qualifier;
 import org.springframework.stereotype.Component;
@@ -37,6 +39,20 @@ public class TourDMMapperUtils {
 
     }
 
+    @GetWarehouseCoordinates
+    public List<Double> getWarehouseCoordinates(Set<EmployeeEntity> deliverymen){
+        List<Double> coord=new ArrayList<>();
+        EmployeeEntity deliveryman =deliverymen.stream().findFirst().orElseThrow(()-> new EntityNotFoundRestException("No deliveryman was found !"));
+       Coordinates coordinates =deliveryman.getWarehouse().getCoordinates();
+        coord.add(coordinates.getLat());
+        coord.add(coordinates.getLon());
+        return coord;
+    }
+
+    @Qualifier
+    @Retention(RetentionPolicy.CLASS)
+    @Target(ElementType.METHOD)
+    public @interface GetWarehouseCoordinates{}
 
 
     @Qualifier

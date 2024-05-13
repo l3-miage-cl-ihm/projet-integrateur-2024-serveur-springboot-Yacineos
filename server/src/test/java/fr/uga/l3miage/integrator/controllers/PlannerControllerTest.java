@@ -85,7 +85,7 @@ public class PlannerControllerTest {
 
         //IMPORTANT: do not forget the planner because as decided before, he is one to manage the warehouse and it is loaded in the DayPlannerMapper
         WarehouseEntity grenis = WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
-                .address(new Address("21 rue des cafards", "65001", "San antonio")).trucks(Set.of()).build();
+                .address(new Address("21 rue des cafards", "65001", "San antonio")).trucks(Set.of()).coordinates(new Coordinates(23.74,54.84)).build();
         warehouseRepository.save(grenis);
         EmployeeEntity planner = EmployeeEntity.builder().email("claudiatessiere@grenis.com").job(Job.PLANNER).photo("chris.png")
                 .lastName("TESSIERE").firstName("claudia").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
@@ -102,6 +102,7 @@ public class PlannerControllerTest {
                 .lastName("Silva")
                 .mobilePhone("0654326754")
                 .photo("samy.png")
+                .warehouse(grenis)
                 .build();
         EmployeeEntity deliveryman2= EmployeeEntity.builder()
                 .email("jugurta@gmail.com")
@@ -111,6 +112,7 @@ public class PlannerControllerTest {
                 .lastName("Ourzik")
                 .mobilePhone("065432354")
                 .photo("juju.png")
+                .warehouse(grenis)
                 .build();
 
         employeeRepository.save(deliveryman1);
@@ -232,7 +234,7 @@ public class PlannerControllerTest {
 
         //IMPORTANT: do not forget the planner because as decided before, he is one to manage the warehouse and it is loaded in the DayPlannerMapper
         WarehouseEntity grenis = WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
-                .address(new Address("21 rue des cafards", "65001", "San antonio")).trucks(Set.of()).build();
+                .address(new Address("21 rue des cafards", "65001", "San antonio")).trucks(Set.of()) .coordinates(new Coordinates(12.65,65.86201)).build();
         warehouseRepository.save(grenis);
         EmployeeEntity planner = EmployeeEntity.builder().email("claudiatessiere@grenis.com").job(Job.PLANNER).photo("chris.png")
                 .lastName("TESSIERE").firstName("claudia").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
@@ -249,6 +251,7 @@ public class PlannerControllerTest {
                 .lastName("Silva")
                 .mobilePhone("0654326754")
                 .photo("samy.png")
+                .warehouse(grenis)
                 .build();
 
         employeeRepository.save(deliveryman1);
@@ -341,7 +344,7 @@ public class PlannerControllerTest {
 
         //IMPORTANT: do not forget the planner because as decided before, he is one to manage the warehouse and it is created in the DayPlannerMapper
         WarehouseEntity grenis = WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
-                .address(new Address("21 rue des cafards", "65001", "San antonio")).trucks(Set.of()).build();
+                .address(new Address("21 rue des cafards", "65001", "San antonio")).coordinates(new Coordinates(12.65,65.86201)).trucks(Set.of()).build();
         warehouseRepository.save(grenis);
         EmployeeEntity planner = EmployeeEntity.builder().email("christian.paul@grenis.com").job(Job.PLANNER).photo("chris.png")
                 .lastName("Paul").firstName("Christian").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
@@ -358,6 +361,7 @@ public class PlannerControllerTest {
                 .lastName("Silva")
                 .mobilePhone("0654326754")
                 .photo("samy.png")
+                .warehouse(grenis)
                 .build();
         EmployeeEntity deliveryman2= EmployeeEntity.builder()
                 .email("jugurta@gmail.com")
@@ -365,6 +369,7 @@ public class PlannerControllerTest {
                 .trigram("JOK")
                 .firstName("Jugurta")
                 .lastName("Ourzik")
+                .warehouse(grenis)
                 .mobilePhone("065432354")
                 .photo("juju.png")
                 .build();
@@ -462,8 +467,11 @@ public class PlannerControllerTest {
         // creation deliveryMen 1
         List<TourEntity> tours= new ArrayList<>();
         Set<EmployeeEntity> deliverymen= new HashSet<>();
-        EmployeeEntity m1=EmployeeEntity.builder().trigram("jjo").email("jojo@gmail.com").build();
-        EmployeeEntity m2=EmployeeEntity.builder().trigram("axl").email("axel@gmail.com").build();
+        WarehouseEntity grenis = WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
+                .address(new Address("21 rue des cafards", "65001", "San antonio")).coordinates(new Coordinates(12.65,65.86201)).trucks(Set.of()).build();
+        warehouseRepository.save(grenis);
+        EmployeeEntity m1=EmployeeEntity.builder().trigram("jjo").warehouse(grenis).email("jojo@gmail.com").build();
+        EmployeeEntity m2=EmployeeEntity.builder().trigram("axl").warehouse(grenis).email("axel@gmail.com").build();
         employeeRepository.save(m1);
         employeeRepository.save(m2);
         deliverymen.add(m1);
@@ -510,8 +518,8 @@ public class PlannerControllerTest {
         tours.add(tour1);
         // creation deliveryMen 2
         Set<EmployeeEntity> deliverymen2= new HashSet<>();
-        EmployeeEntity m3=EmployeeEntity.builder().trigram("jju").email("juju@gmail.com").build();
-        EmployeeEntity m4=EmployeeEntity.builder().trigram("alx").email("alexis@gmail.com").build();
+        EmployeeEntity m3=EmployeeEntity.builder().trigram("jju").warehouse(grenis).email("juju@gmail.com").build();
+        EmployeeEntity m4=EmployeeEntity.builder().trigram("alx").warehouse(grenis).email("alexis@gmail.com").build();
         employeeRepository.save(m3);
         employeeRepository.save(m4);
         deliverymen2.add(m3);
@@ -663,7 +671,9 @@ public class PlannerControllerTest {
 
         //IMPORTANT: do not forget the planner because as decided before, he is one to manage the warehouse and it is loaded in the DayPlannerMapper
         WarehouseEntity grenis = WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
-                .address(new Address("21 rue des cafards", "65001", "San antonio")).trucks(Set.of()).build();
+                .address(new Address("21 rue des cafards", "65001", "San antonio")).trucks(Set.of())
+                .coordinates(new Coordinates(12.65,65.86201))
+                .build();
         warehouseRepository.save(grenis);
         EmployeeEntity planner = EmployeeEntity.builder().email("claudiatessiere@grenis.com").job(Job.PLANNER).photo("chris.png")
                 .lastName("TESSIERE").firstName("claudia").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
@@ -678,6 +688,7 @@ public class PlannerControllerTest {
                 .trigram("SSA")
                 .firstName("Samy")
                 .lastName("Silva")
+                .warehouse(grenis)
                 .mobilePhone("0654326754")
                 .photo("samy.png")
                 .build();
@@ -685,6 +696,7 @@ public class PlannerControllerTest {
                 .email("jugurta@gmail.com")
                 .job(Job.DELIVERYMAN)
                 .trigram("JOK")
+                .warehouse(grenis)
                 .firstName("Jugurta")
                 .lastName("Ourzik")
                 .mobilePhone("065432354")
@@ -818,7 +830,7 @@ public class PlannerControllerTest {
         urlParams.put("dayId","J131G");
 
         WarehouseEntity grenis = WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
-                .address(new Address("21 rue des cafards", "65001", "San antonio")).trucks(Set.of()).build();
+                .address(new Address("21 rue des cafards", "65001", "San antonio")).trucks(Set.of()) .coordinates(new Coordinates(12.65,65.86201)).build();
         warehouseRepository.save(grenis);
         EmployeeEntity planner = EmployeeEntity.builder().email("claudiatessiere@grenis.com").job(Job.PLANNER).photo("chris.png")
                 .lastName("TESSIERE").firstName("claudia").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
@@ -833,6 +845,7 @@ public class PlannerControllerTest {
                 .trigram("SSA")
                 .firstName("Samy")
                 .lastName("Silva")
+                .warehouse(grenis)
                 .mobilePhone("0654326754")
                 .photo("samy.png")
                 .build();
@@ -844,6 +857,7 @@ public class PlannerControllerTest {
                 .lastName("Ourzik")
                 .mobilePhone("065432354")
                 .photo("juju.png")
+                .warehouse(grenis)
                 .build();
 
         employeeRepository.save(deliveryman1);
@@ -952,7 +966,7 @@ public class PlannerControllerTest {
         urlParams.put("dayId","J131G");
 
         //IMPORTANT: do not forget the planner because as decided before, he is one to manage the warehouse and it is loaded in the DayPlannerMapper
-        WarehouseEntity grenis = WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
+        WarehouseEntity grenis = WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G") .coordinates(new Coordinates(12.65,65.86201))
                 .address(new Address("21 rue des cafards", "65001", "San antonio")).trucks(Set.of()).build();
         warehouseRepository.save(grenis);
         EmployeeEntity planner = EmployeeEntity.builder().email("claudiatessiere@grenis.com").job(Job.PLANNER).photo("chris.png")
@@ -968,6 +982,7 @@ public class PlannerControllerTest {
                 .trigram("SSA")
                 .firstName("Samy")
                 .lastName("Silva")
+                .warehouse(grenis)
                 .mobilePhone("0654326754")
                 .photo("samy.png")
                 .build();
@@ -1094,7 +1109,7 @@ public class PlannerControllerTest {
 
         //IMPORTANT: do not forget the planner because as decided before, he is one to manage the warehouse and it is loaded in the DayPlannerMapper
         WarehouseEntity grenis = WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
-                .address(new Address("21 rue des cafards", "65001", "San antonio")).trucks(Set.of()).build();
+                .address(new Address("21 rue des cafards", "65001", "San antonio")) .coordinates(new Coordinates(12.65,65.86201)).trucks(Set.of()).build();
         warehouseRepository.save(grenis);
         EmployeeEntity planner = EmployeeEntity.builder().email("claudiatessiere@grenis.com").job(Job.PLANNER).photo("chris.png")
                 .lastName("TESSIERE").firstName("claudia").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
@@ -1109,6 +1124,7 @@ public class PlannerControllerTest {
                 .trigram("SSA")
                 .firstName("Samy")
                 .lastName("Silva")
+                .warehouse(grenis)
                 .mobilePhone("0654326754")
                 .photo("samy.png")
                 .build();
