@@ -113,7 +113,7 @@ public class DeliveryComponentTest {
                 .orders(Set.of())
                 .build();
 
-        TourEntity tour=TourEntity.builder().state(TourState.IN_COURSE).reference("t120G-A").deliveries(List.of(deliveryEntity)).build();
+        TourEntity tour=TourEntity.builder().state(TourState.CUSTOMER).reference("t120G-A").deliveries(List.of(deliveryEntity)).build();
 
         //when
         when(deliveryRepository.findById(deliveryEntity.getReference())).thenReturn(Optional.of(deliveryEntity));
@@ -124,6 +124,54 @@ public class DeliveryComponentTest {
 
         //then
         assertThat(response.getState()).isEqualTo(DeliveryState.COMPLETED);
+
+    }
+    @Test
+    void updateDeliveryState_OK3() throws DeliveryNotFoundException, UpdateDeliveryStateException, TourNotFoundException {
+
+        //given
+        DeliveryEntity deliveryEntity=DeliveryEntity.builder()
+                .reference("l120G-A1")
+                .state(DeliveryState.IN_COURSE)
+                .distanceToCover(3.9)
+                .orders(Set.of())
+                .build();
+
+        TourEntity tour=TourEntity.builder().state(TourState.IN_COURSE).reference("t120G-A").deliveries(List.of(deliveryEntity)).build();
+
+        //when
+        when(deliveryRepository.findById(deliveryEntity.getReference())).thenReturn(Optional.of(deliveryEntity));
+        when(deliveryRepository.save(any(DeliveryEntity.class))).thenReturn(deliveryEntity);
+        when(tourRepository.findById(tour.getReference())).thenReturn(Optional.of(tour));
+
+        DeliveryEntity response=deliveryComponent.updateDeliveryState(deliveryEntity.getReference(),DeliveryState.PLANNED,tour.getReference());
+
+        //then
+        assertThat(response.getState()).isEqualTo(DeliveryState.PLANNED);
+
+    }
+    @Test
+    void updateDeliveryState_OK4() throws DeliveryNotFoundException, UpdateDeliveryStateException, TourNotFoundException {
+
+        //given
+        DeliveryEntity deliveryEntity=DeliveryEntity.builder()
+                .reference("l120G-A1")
+                .state(DeliveryState.ASSEMBLY)
+                .distanceToCover(3.9)
+                .orders(Set.of())
+                .build();
+
+        TourEntity tour=TourEntity.builder().state(TourState.ASSEMBLY).reference("t120G-A").deliveries(List.of(deliveryEntity)).build();
+
+        //when
+        when(deliveryRepository.findById(deliveryEntity.getReference())).thenReturn(Optional.of(deliveryEntity));
+        when(deliveryRepository.save(any(DeliveryEntity.class))).thenReturn(deliveryEntity);
+        when(tourRepository.findById(tour.getReference())).thenReturn(Optional.of(tour));
+
+        DeliveryEntity response=deliveryComponent.updateDeliveryState(deliveryEntity.getReference(),DeliveryState.WITH_CUSTOMER,tour.getReference());
+
+        //then
+        assertThat(response.getState()).isEqualTo(DeliveryState.WITH_CUSTOMER);
 
     }
     @Test
