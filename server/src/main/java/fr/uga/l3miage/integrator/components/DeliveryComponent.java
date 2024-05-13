@@ -43,14 +43,14 @@ public class DeliveryComponent {
 
 
             case IN_COURSE:
-                if( newState == DeliveryState.UNLOADING ){
+                if( newState == DeliveryState.UNLOADING || newState == DeliveryState.PLANNED){
                     deliveryEntity.setState(newState);
                 } else{
                     throw new UpdateDeliveryStateException("Cannot switch from "+currentState+ " into <" + newState+">", deliveryEntity.getState());
                 }
                 break;
 
-            case UNLOADING:
+            case UNLOADING, ASSEMBLY:
                 if( newState == DeliveryState.WITH_CUSTOMER ){
                     deliveryEntity.setState(newState);
                 } else{
@@ -61,15 +61,6 @@ public class DeliveryComponent {
             case WITH_CUSTOMER:
                 if( newState == DeliveryState.ASSEMBLY || newState == DeliveryState.COMPLETED  ){
                     deliveryEntity.setState(newState);
-                } else{
-                    throw new UpdateDeliveryStateException("Cannot switch from "+currentState+ "into <" + newState+">", deliveryEntity.getState());
-                }
-                break;
-
-            case ASSEMBLY:
-                if( newState == DeliveryState.COMPLETED  ){
-                    deliveryEntity.setState(newState);
-
                 } else{
                     throw new UpdateDeliveryStateException("Cannot switch from "+currentState+ "into <" + newState+">", deliveryEntity.getState());
                 }
