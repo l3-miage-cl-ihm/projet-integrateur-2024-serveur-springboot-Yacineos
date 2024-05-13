@@ -56,9 +56,9 @@ public class DayService {
             if(tours.isEmpty())
                 throw  new InvalidInputValueException("Invalid input values, need 1 tour at least !");
 
-            boolean anyInvalidTour= tours.stream().anyMatch(tour -> tour.getDeliveries().isEmpty() || (tour.getDeliverymen().size()!=2  && tour.getDeliverymen().size()!=1) || tour.getTruck().isEmpty() );
+            boolean anyInvalidTour= tours.stream().anyMatch(tour -> tour.getDeliveries().isEmpty() || (tour.getDeliverymen().size()!=2  && tour.getDeliverymen().size()!=1) || tour.getTruck().isEmpty() )  ;
             if(anyInvalidTour)
-                throw new InvalidInputValueException("Invalid inputs, need 1 truck, 1 or 2 deliverymen and at least one delivery !");
+                throw new InvalidInputValueException("Invalid inputs, need 1 truck, 1 or 2 deliverymen , at least one delivery and also make sure you didn't plan the same order in other tours !");
 
             //finally plan the day by adding to it its tours and to tours their deliveries
              DayEntity dayEntity = dayPlannerMapper.toEntity(dayCreationRequest);

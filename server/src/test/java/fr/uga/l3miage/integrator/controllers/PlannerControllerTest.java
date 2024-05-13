@@ -18,6 +18,7 @@ import fr.uga.l3miage.integrator.responses.TourDMResponseDTO;
 import fr.uga.l3miage.integrator.services.DayService;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -26,6 +27,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -62,6 +64,10 @@ public class PlannerControllerTest {
     @SpyBean
     private DayComponent dayComponent;
 
+    @BeforeEach
+    public void setup() {
+        testRestTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+    }
     @AfterEach
     void clear(){
         employeeRepository.findAll().forEach(employee -> {employee.setWarehouse(null); employeeRepository.save(employee);} );
@@ -1225,7 +1231,7 @@ public class PlannerControllerTest {
 
 
         //when
-        ResponseEntity<Void> response=testRestTemplate.exchange("/api/v3.0/planner/days/{dayId}/updateState?newDayState={newDayState}", HttpMethod.PUT, new HttpEntity<>(null, headers), Void.class, urlParams);
+        ResponseEntity<Void> response=testRestTemplate.exchange("/api/v3.0/planner/days/{dayId}/updateState?newDayState={newDayState}", HttpMethod.PATCH, new HttpEntity<>(null, headers), Void.class, urlParams);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -1256,7 +1262,7 @@ public class PlannerControllerTest {
 
 
         //when
-        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v3.0/planner/days/{dayId}/updateState?newDayState={newDayState}", HttpMethod.PUT, new HttpEntity<>(null, headers), Void.class, urlParams);
+        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v3.0/planner/days/{dayId}/updateState?newDayState={newDayState}", HttpMethod.PATCH, new HttpEntity<>(null, headers), Void.class, urlParams);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -1286,7 +1292,7 @@ public class PlannerControllerTest {
 
 
         //when
-        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v3.0/planner/days/{dayId}/updateState?newDayState={newDayState}", HttpMethod.PUT, new HttpEntity<>(null, headers), Void.class, urlParams);
+        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v3.0/planner/days/{dayId}/updateState?newDayState={newDayState}", HttpMethod.PATCH, new HttpEntity<>(null, headers), Void.class, urlParams);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
@@ -1303,7 +1309,7 @@ public class PlannerControllerTest {
         urlParams.put("newDayState", "COMPLETED");
 
         //when
-        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v3.0/planner/days/{dayId}/updateState?newDayState={newDayState}", HttpMethod.PUT, new HttpEntity<>(null, headers), Void.class, urlParams);
+        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v3.0/planner/days/{dayId}/updateState?newDayState={newDayState}", HttpMethod.PATCH, new HttpEntity<>(null, headers), Void.class, urlParams);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -1326,7 +1332,7 @@ public class PlannerControllerTest {
 
 
         //when
-        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v3.0/planner/days/{dayId}/updateState?newDayState={newDayState}", HttpMethod.PUT, new HttpEntity<>(null, headers), Void.class, urlParams);
+        ResponseEntity<Void> response = testRestTemplate.exchange("/api/v3.0/planner/days/{dayId}/updateState?newDayState={newDayState}", HttpMethod.PATCH, new HttpEntity<>(null, headers), Void.class, urlParams);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
