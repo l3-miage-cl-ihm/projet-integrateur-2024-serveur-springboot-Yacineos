@@ -2,6 +2,7 @@ package fr.uga.l3miage.integrator.controllers;
 
 import fr.uga.l3miage.integrator.components.TourComponent;
 import fr.uga.l3miage.integrator.datatypes.Address;
+import fr.uga.l3miage.integrator.datatypes.Coordinates;
 import fr.uga.l3miage.integrator.enums.DeliveryState;
 import fr.uga.l3miage.integrator.enums.TourState;
 import fr.uga.l3miage.integrator.exceptions.NotFoundErrorResponse;
@@ -106,7 +107,7 @@ void clear(){
         OrderEntity order1=OrderEntity.builder().reference("c23").customer(customer).build();
         orderRepository.save(order1);
 
-        DeliveryEntity d1=DeliveryEntity.builder().reference("L1").orders(Set.of(order1)).build();
+        DeliveryEntity d1=DeliveryEntity.builder().reference("L1").orders(Set.of(order1)).coordinates(new Coordinates()).build();
         deliveryRepository.save(d1);
         List<DeliveryEntity> s1= new LinkedList<>();
         s1.add(d1);
@@ -200,6 +201,7 @@ void clear(){
                 .state(DeliveryState.IN_COURSE)
                 .distanceToCover(3.9)
                 .orders(Set.of())
+                .coordinates(new Coordinates())
                 .build();
         deliveryRepository.save(deliveryEntity);
         TourEntity tour=TourEntity.builder().reference("t130G-A").deliveries(List.of(deliveryEntity)).build();
@@ -230,6 +232,7 @@ void clear(){
                 .state(DeliveryState.WITH_CUSTOMER)
                 .distanceToCover(3.9)
                 .orders(Set.of())
+                .coordinates(new Coordinates())
                 .build();
         deliveryRepository.save(deliveryEntity);
         TourEntity tour=TourEntity.builder().state(TourState.IN_COURSE).reference("t130G-A").deliveries(List.of(deliveryEntity)).build();
@@ -282,6 +285,7 @@ void clear(){
                 .state(DeliveryState.IN_COURSE)
                 .distanceToCover(3.9)
                 .orders(Set.of())
+                .coordinates(new Coordinates())
                 .build();
         deliveryRepository.save(deliveryEntity);
         TourEntity tour = TourEntity.builder().reference("t130G-A").deliveries(List.of(deliveryEntity)).build();
@@ -313,6 +317,7 @@ void clear(){
                 .state(DeliveryState.COMPLETED)
                 .distanceToCover(3.9)
                 .orders(Set.of())
+                .coordinates(new Coordinates())
                 .build();
         deliveryRepository.save(deliveryEntity);
 
@@ -321,6 +326,7 @@ void clear(){
                 .state(DeliveryState.PLANNED)
                 .distanceToCover(3.9)
                 .orders(Set.of())
+                .coordinates(new Coordinates())
                 .build();
         deliveryRepository.save(deliveryEntity1);
 

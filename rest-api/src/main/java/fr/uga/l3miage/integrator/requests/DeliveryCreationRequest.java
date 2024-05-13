@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -16,4 +17,7 @@ public class DeliveryCreationRequest {
 
     @Schema(description = "distance to cover ", example = "20.3")
     private final double distanceToCover;
+
+
+    private final List<Double> coordinates;
 }

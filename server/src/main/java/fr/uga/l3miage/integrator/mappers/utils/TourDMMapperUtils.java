@@ -1,6 +1,7 @@
 package fr.uga.l3miage.integrator.mappers.utils;
 
 import fr.uga.l3miage.integrator.datatypes.Address;
+import fr.uga.l3miage.integrator.datatypes.Coordinates;
 import fr.uga.l3miage.integrator.models.EmployeeEntity;
 import fr.uga.l3miage.integrator.models.OrderEntity;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,23 +37,6 @@ public class TourDMMapperUtils {
 
     }
 
-    @ExtractOrderReferences
-    public  Set<String> extractOrderReferences (Set<OrderEntity> orders){
-        return   orders.stream().map(OrderEntity::getReference).collect(Collectors.toSet());
-
-    }
-
-    @ExtractCustomerName
-    public String extractCustomerName (Set<OrderEntity> orders){
-        return   orders.stream().findFirst().get().getCustomer().getFirstName()+" "+orders.stream().findFirst().get().getCustomer().getLastName();
-    }
-
-    @ExtractCustomerAddress
-    public String extractCustomerAddress (Set<OrderEntity> orders){
-        Address customerAddress=orders.stream().findFirst().get().getCustomer().getAddress();
-        return   customerAddress.getAddress()+"|"+customerAddress.getPostalCode()+"|"+customerAddress.getCity();
-
-    }
 
 
     @Qualifier
@@ -70,22 +56,6 @@ public class TourDMMapperUtils {
     @Target(ElementType.METHOD)
     public @interface ExtractFirstAndLastName{}
 
-
-    @Qualifier
-    @Retention(RetentionPolicy.CLASS)
-    @Target(ElementType.METHOD)
-    public @interface ExtractOrderReferences{}
-
-
-    @Qualifier
-    @Retention(RetentionPolicy.CLASS)
-    @Target(ElementType.METHOD)
-    public @interface ExtractCustomerName{}
-
-    @Qualifier
-    @Retention(RetentionPolicy.CLASS)
-    @Target(ElementType.METHOD)
-    public @interface ExtractCustomerAddress{}
 
 
 

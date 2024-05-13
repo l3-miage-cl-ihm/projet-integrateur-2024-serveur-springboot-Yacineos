@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -32,7 +33,10 @@ public class DeliveryPlannerMapperTest {
         //given
         OrderEntity order1= OrderEntity.builder().state(OrderState.PLANNED).creationDate(LocalDate.now()).reference("c001").build();
         OrderEntity order2= OrderEntity.builder().state(OrderState.PLANNED).creationDate(LocalDate.now()).reference("c002").build();
-        DeliveryCreationRequest deliveryCreationRequest=DeliveryCreationRequest.builder().orders(Set.of(order1.getReference(),order2.getReference())).distanceToCover(23).build();
+        DeliveryCreationRequest deliveryCreationRequest=DeliveryCreationRequest.builder()
+                .orders(Set.of(order1.getReference(),order2.getReference()))
+                .coordinates(List.of(23.7,12.9))
+                .distanceToCover(23).build();
 
         //when
         when(orderRepository.findById(order1.getReference())).thenReturn(Optional.of(order1));

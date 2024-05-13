@@ -3,6 +3,7 @@ package fr.uga.l3miage.integrator.controllers;
 import fr.uga.l3miage.integrator.components.DayComponent;
 import fr.uga.l3miage.integrator.components.TourComponent;
 import fr.uga.l3miage.integrator.datatypes.Address;
+import fr.uga.l3miage.integrator.datatypes.Coordinates;
 import fr.uga.l3miage.integrator.enums.*;
 import fr.uga.l3miage.integrator.exceptions.NotFoundErrorResponse;
 import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
@@ -160,11 +161,13 @@ public class PlannerControllerTest {
         DeliveryCreationRequest d1= DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of(o1.getReference(),o2.getReference()))
+                .coordinates(List.of(12.7,34.8))
                 .build();
 
         DeliveryCreationRequest d2= DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of(o3.getReference()))
+                .coordinates(List.of(12.7,34.8))
                 .build();
         deliveryCreationRequestList.add(d1);
         deliveryCreationRequestList.add(d2);
@@ -413,11 +416,13 @@ public class PlannerControllerTest {
         DeliveryCreationRequest d1 = DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of(o1.getReference(), o2.getReference()))
+                .coordinates(List.of(12.6,12.7))
                 .build();
 
         DeliveryCreationRequest d2 = DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of("c900")) //no existing order with given reference c170
+                .coordinates(List.of(12.6,12.7))
                 .build();
         deliveryCreationRequestList.add(d1);
         deliveryCreationRequestList.add(d2);
@@ -479,7 +484,7 @@ public class PlannerControllerTest {
         OrderEntity order12=OrderEntity.builder().reference("c12").customer(customer1).build();
         orderRepository.save(order11);
         orderRepository.save(order12);
-        DeliveryEntity del1=DeliveryEntity.builder().reference("T238G-A1").build();
+        DeliveryEntity del1=DeliveryEntity.builder().reference("T238G-A1").coordinates(new Coordinates(12.5,34.8)).build();
         del1.setOrders(Set.of(order11,order12));
         deliveryRepository.save(del1);
         //Creation delivery
@@ -488,7 +493,7 @@ public class PlannerControllerTest {
         OrderEntity order22=OrderEntity.builder().reference("c22").customer(customer2).build();
         orderRepository.save(order21);
         orderRepository.save(order22);
-        DeliveryEntity del2=DeliveryEntity.builder().reference("T238G-A2").build();
+        DeliveryEntity del2=DeliveryEntity.builder().reference("T238G-A2").coordinates(new Coordinates(12.5,34.8)).build();
         del2.setOrders(Set.of(order21,order22));
         deliveryRepository.save(del2);
         List<DeliveryEntity> deliveries1=new ArrayList<>();
@@ -517,7 +522,7 @@ public class PlannerControllerTest {
         OrderEntity order32=OrderEntity.builder().reference("c32").customer(customer3).build();
         orderRepository.save(order31);
         orderRepository.save(order32);
-        DeliveryEntity del3=DeliveryEntity.builder().reference("T238G-B1").build();
+        DeliveryEntity del3=DeliveryEntity.builder().coordinates(new Coordinates(12.5,34.8)).reference("T238G-B1").build();
         del3.setOrders(Set.of(order31,order32));
         deliveryRepository.save(del3);
         //Creation delivery 4
@@ -527,8 +532,7 @@ public class PlannerControllerTest {
         orderRepository.save(order41);
         orderRepository.save(order42);
 
-        DeliveryEntity del4=DeliveryEntity.builder().reference("T238G-B2").build();
-        del4.setOrders(Set.of(order41,order42));
+        DeliveryEntity del4=DeliveryEntity.builder().reference("T238G-B2").orders(Set.of(order41,order42)).coordinates(new Coordinates(12.5,34.8)).build();
         deliveryRepository.save(del4);
         List<DeliveryEntity> deliveries2=new LinkedList<>();
         deliveries2.add(del3);
@@ -735,11 +739,13 @@ public class PlannerControllerTest {
         DeliveryCreationRequest d1= DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of(o1.getReference()))
+                .coordinates(List.of(12.6,12.7))
                 .build();
 
         DeliveryCreationRequest d2= DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of(o3.getReference()))
+                .coordinates(List.of(12.6,12.7))
                 .build();
         deliveryCreationRequestList.add(d1);
         deliveryCreationRequestList.add(d2);
@@ -764,11 +770,13 @@ public class PlannerControllerTest {
                 .reference("J131G-A1")
                 .orders(Set.of(o1,o2))
                 .state(DeliveryState.PLANNED)
+                .coordinates(new Coordinates(12.4,23))
                 .build();
         DeliveryEntity delivery2=DeliveryEntity.builder()
                 .reference("J131G-A2")
                 .orders(Set.of(o3))
                 .state(DeliveryState.PLANNED)
+                .coordinates(new Coordinates(12.4,23))
                 .build();
         deliveryRepository.save(delivery1);
         deliveryRepository.save(delivery2);
@@ -891,10 +899,12 @@ public class PlannerControllerTest {
                 .reference("J131G-A1")
                 .orders(Set.of(o1,o2))
                 .state(DeliveryState.PLANNED)
+                .coordinates(new Coordinates(12.4,12.876))
                 .build();
         DeliveryEntity delivery2=DeliveryEntity.builder()
                 .reference("J131G-A2")
                 .orders(Set.of(o3))
+                .coordinates(new Coordinates(12.4,12.876))
                 .state(DeliveryState.PLANNED)
                 .build();
         deliveryRepository.save(delivery1);
@@ -1009,11 +1019,13 @@ public class PlannerControllerTest {
         DeliveryCreationRequest d1 = DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of(o1.getReference(), o2.getReference()))
+                .coordinates(List.of(12.6,123.34))
                 .build();
 
         DeliveryCreationRequest d2 = DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of(o3.getReference()))
+                .coordinates(List.of(12.6,123.34))
                 .build();
         deliveryCreationRequestList.add(d1);
         deliveryCreationRequestList.add(d2);
@@ -1035,11 +1047,13 @@ public class PlannerControllerTest {
                 .reference("J131G-A1")
                 .orders(Set.of(o1,o2))
                 .state(DeliveryState.PLANNED)
+                .coordinates(new Coordinates(12.4,12.876))
                 .build();
         DeliveryEntity delivery2=DeliveryEntity.builder()
                 .reference("J131G-A2")
                 .orders(Set.of(o3))
                 .state(DeliveryState.PLANNED)
+                .coordinates(new Coordinates(12.4,12.876))
                 .build();
         deliveryRepository.save(delivery1);
         deliveryRepository.save(delivery2);

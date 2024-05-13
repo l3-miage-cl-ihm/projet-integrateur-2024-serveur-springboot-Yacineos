@@ -3,12 +3,9 @@ package fr.uga.l3miage.integrator.mappers.utils;
 import fr.uga.l3miage.integrator.datatypes.Address;
 import fr.uga.l3miage.integrator.datatypes.Coordinates;
 import fr.uga.l3miage.integrator.models.OrderEntity;
-import fr.uga.l3miage.integrator.models.TruckEntity;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.Named;
 import org.mapstruct.Qualifier;
 import org.springframework.stereotype.Component;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -18,26 +15,51 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
 @Component
 @RequiredArgsConstructor
-public class DeliveryPlannerMapperUtils {
+public class DeliveryDMMapperUtils {
 
     @Qualifier
     @Retention(RetentionPolicy.CLASS)
     @Target(ElementType.METHOD)
-    public @interface GetOrdersIDs{}
+    public @interface ExtractOrderReferences{}
 
 
     @Qualifier
     @Retention(RetentionPolicy.CLASS)
     @Target(ElementType.METHOD)
-    public @interface GetDeliveryAddress{}
+    public @interface ExtractCustomerName{}
+
+    @Qualifier
+    @Retention(RetentionPolicy.CLASS)
+    @Target(ElementType.METHOD)
+    public @interface ExtractCustomerAddress{}
 
 
     @Qualifier
     @Retention(RetentionPolicy.CLASS)
     @Target(ElementType.METHOD)
     public @interface GetCoord{}
+
+
+    @ExtractOrderReferences
+    public Set<String> extractOrderReferences (Set<OrderEntity> orders){
+        return   orders.stream().map(OrderEntity::getReference).collect(Collectors.toSet());
+
+    }
+
+    @ExtractCustomerName
+    public String extractCustomerName (Set<OrderEntity> orders){
+        return   orders.stream().findFirst().get().getCustomer().getFirstName()+" "+orders.stream().findFirst().get().getCustomer().getLastName();
+    }
+
+    @ExtractCustomerAddress
+    public String extractCustomerAddress (Set<OrderEntity> orders){
+        Address customerAddress=orders.stream().findFirst().get().getCustomer().getAddress();
+        return   customerAddress.getAddress()+"|"+customerAddress.getPostalCode()+"|"+customerAddress.getCity();
+
+    }
 
     @GetCoord
     public List<Double> getCord(Coordinates coordinates){
@@ -48,18 +70,5 @@ public class DeliveryPlannerMapperUtils {
         coord.add(lon);
         return coord;
     }
-
-    @GetOrdersIDs
-   public Set<String> getOrdersIDs(Set<OrderEntity> orders){
-        return   orders.stream().map(OrderEntity::getReference).collect(Collectors.toSet());
-
-    }
-
-    @GetDeliveryAddress
-    public String getDeliveryAddress(Set<OrderEntity> orderEntities){
-        Address customerAddress=orderEntities.stream().findFirst().get().getCustomer().getAddress();
-        return customerAddress.getAddress()+","+customerAddress.getCity();
-    }
-
 
 }
