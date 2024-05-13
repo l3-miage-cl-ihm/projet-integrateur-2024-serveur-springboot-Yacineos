@@ -557,8 +557,9 @@ public class DayServiceTest {
         // creation deliveryMen 1
         List<TourEntity> tours= new ArrayList<>();
         Set<EmployeeEntity> deliverymen= new HashSet<>();
-        EmployeeEntity m1=EmployeeEntity.builder().email("jojo@gmail.com").firstName("Jug").lastName("OURZIK").trigram("JOK").build();
-        EmployeeEntity m2=EmployeeEntity.builder().email("axel@gmail.com").firstName("Juju").lastName("LEROY").trigram("JLY").build();
+        WarehouseEntity warehouse=WarehouseEntity.builder().name("Grenis").coordinates(new Coordinates(23.8,15.8765)).build();
+        EmployeeEntity m1=EmployeeEntity.builder().email("jojo@gmail.com").firstName("Jug").lastName("OURZIK").warehouse(warehouse).trigram("JOK").build();
+        EmployeeEntity m2=EmployeeEntity.builder().email("axel@gmail.com").firstName("Juju").lastName("LEROY").warehouse(warehouse).trigram("JLY").build();
         deliverymen.add(m1);
         deliverymen.add(m2);
         //Creation delivery 1
@@ -596,8 +597,8 @@ public class DayServiceTest {
         tours.add(tour1);
         // creation deliveryMen 2
         Set<EmployeeEntity> deliverymen2= new HashSet<>();
-        EmployeeEntity m3=EmployeeEntity.builder().email("juju@gmail.com").firstName("Massi").lastName("GHER").trigram("MGR").build();
-        EmployeeEntity m4=EmployeeEntity.builder().email("alexis@gmail.com").firstName("Samy").lastName("SPINCER").trigram("SSR").build();
+        EmployeeEntity m3=EmployeeEntity.builder().email("juju@gmail.com").firstName("Massi").lastName("GHER").warehouse(warehouse).trigram("MGR").build();
+        EmployeeEntity m4=EmployeeEntity.builder().email("alexis@gmail.com").firstName("Samy").lastName("SPINCER").warehouse(warehouse).trigram("SSR").build();
         deliverymen2.add(m3);
         deliverymen2.add(m4);
         //Creation delivery 3

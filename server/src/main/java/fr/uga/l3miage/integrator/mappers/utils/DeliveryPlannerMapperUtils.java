@@ -58,7 +58,7 @@ public class DeliveryPlannerMapperUtils {
 
     @GetDeliveryAddress
     public String getDeliveryAddress(Set<OrderEntity> orderEntities){
-       OrderEntity order =orderEntities.stream().findFirst().orElseThrow(()-> new EntityNotFoundRestException("No Order was found !"));
+        OrderEntity order =orderEntities.stream().findFirst().orElseThrow(()-> new EntityNotFoundRestException("No Order was found , please make sure to not plan the same orders in other tours !"));
 
         Address customerAddress = order.getCustomer().getAddress();
         return customerAddress+","+customerAddress.getCity();

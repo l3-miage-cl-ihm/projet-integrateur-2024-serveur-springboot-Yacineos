@@ -24,4 +24,8 @@ public class TourPlannerResponseDTO {
     @Schema(description ="tour reference",example = "t135G-A")
     private String refTour;
 
+    @Schema(description ="Warehouse coordinates")
+    private List<Double> coordinates;
+
+
 }

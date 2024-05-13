@@ -2,6 +2,7 @@ package fr.uga.l3miage.integrator.feedb;
 
 
 import fr.uga.l3miage.integrator.datatypes.Address;
+import fr.uga.l3miage.integrator.datatypes.Coordinates;
 import fr.uga.l3miage.integrator.enums.CustomerState;
 import fr.uga.l3miage.integrator.enums.Job;
 import fr.uga.l3miage.integrator.enums.OrderState;
@@ -74,6 +75,11 @@ public class FeedDB implements CommandLineRunner {
                 String addressCsv = row[3];
                 String postalCode = row[4];
                 String city = row[5];
+                String  latCsv= row[6];
+                String lonCsv= row[7];
+                double lat=Double.parseDouble(latCsv);
+                double lon=Double.parseDouble(lonCsv);
+                Coordinates coordinates= new Coordinates(lat,lon);
                 Address address= new Address(addressCsv,postalCode,city);
                 WarehouseEntity warehouse = WarehouseEntity.builder()
                         .days(Set.of())
@@ -82,6 +88,7 @@ public class FeedDB implements CommandLineRunner {
                         .letter(letter)
                         .photo(photo)
                         .address(address)
+                        .coordinates(coordinates)
                         .build();
 
                 warehouseRepository.save(warehouse);

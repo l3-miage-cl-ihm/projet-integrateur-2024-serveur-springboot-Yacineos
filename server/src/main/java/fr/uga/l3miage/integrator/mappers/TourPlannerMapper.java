@@ -1,6 +1,7 @@
 package fr.uga.l3miage.integrator.mappers;
 
 import fr.uga.l3miage.integrator.exceptions.technical.InvalidInputValueException;
+import fr.uga.l3miage.integrator.mappers.utils.TourDMMapperUtils;
 import fr.uga.l3miage.integrator.mappers.utils.TourPlannerMapperUtils;
 import fr.uga.l3miage.integrator.models.DeliveryEntity;
 import fr.uga.l3miage.integrator.models.EmployeeEntity;
@@ -28,6 +29,7 @@ public interface TourPlannerMapper {
     @Mapping(source = "reference", target = "refTour")
     @Mapping(source= "deliverymen",target = "deliverymen", qualifiedBy=TourPlannerMapperUtils.GetDeliveryMenIDs.class)
     @Mapping(target = "deliveries",ignore = true)
+    @Mapping(source = "deliverymen" ,target = "coordinates",qualifiedBy = TourPlannerMapperUtils.GetWarehouseCoordinates.class)
     TourPlannerResponseDTO toResponse(TourEntity tourEntity);
 
 

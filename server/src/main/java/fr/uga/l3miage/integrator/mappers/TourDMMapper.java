@@ -14,6 +14,7 @@ public interface TourDMMapper {
     @Mapping(source = "reference", target = "refDay" , qualifiedBy = TourDMMapperUtils.ExtractDayReferenceFromTour.class)
     @Mapping(source = "deliverymen", target = "warehouseName",qualifiedBy=TourDMMapperUtils.ExtractWarehouseNameFromDeliveryMan.class)
     @Mapping(source = "deliverymen", target = "deliverymen",qualifiedBy=TourDMMapperUtils.ExtractFirstAndLastName.class)
+    @Mapping(source = "deliverymen",target = "coordinates",qualifiedBy = TourDMMapperUtils.GetWarehouseCoordinates.class)
     TourDMResponseDTO toResponse(TourEntity tourEntity);
 
 }

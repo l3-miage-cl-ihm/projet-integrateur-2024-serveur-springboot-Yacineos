@@ -2,6 +2,7 @@ package fr.uga.l3miage.integrator.models;
 
 
 import fr.uga.l3miage.integrator.datatypes.Address;
+import fr.uga.l3miage.integrator.datatypes.Coordinates;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,6 +36,9 @@ public class WarehouseEntity {
      @OneToMany
      @JoinColumn(name = "warehouseName", referencedColumnName = "name")
     private Set<TruckEntity> trucks;
+
+
+     private Coordinates coordinates;
 
 
 
