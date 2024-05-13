@@ -5,6 +5,7 @@ import fr.uga.l3miage.integrator.models.EmployeeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -12,4 +13,5 @@ import java.util.Set;
 public interface EmployeeRepository extends JpaRepository<EmployeeEntity,String> {
     Set<EmployeeEntity> findEmployeeEntitiesByJob(Job job);
 
+    Optional<EmployeeEntity> findByEmail(String email);
 }

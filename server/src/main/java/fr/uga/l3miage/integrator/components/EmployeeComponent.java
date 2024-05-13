@@ -22,4 +22,10 @@ public class EmployeeComponent {
         }
         return ids;
     }
+
+
+    public Job getEmployeeJobFromEmail(String email ){
+        EmployeeEntity employee = this.employeeRepository.findByEmail(email).orElseThrow();
+        return employee.getJob();
+    }
 }
