@@ -47,8 +47,6 @@ public class DeliveryPlannerMapperUtils {
         coord.add(lat);
         coord.add(lon);
         return coord;
-
-
     }
 
     @GetOrdersIDs

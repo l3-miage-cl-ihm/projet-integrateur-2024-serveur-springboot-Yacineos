@@ -25,7 +25,7 @@ public interface DeliveryPlannerMapper {
 
     @Mapping(source = "orders",target = "orders",qualifiedBy=DeliveryPlannerMapperUtils.GetOrdersIDs.class)
     @Mapping(source = "orders",target = "address",qualifiedBy = DeliveryPlannerMapperUtils.GetDeliveryAddress.class)
-    @Mapping(source = "coordinates", target="coordinates",qualifiedBy = DeliveryPlannerMapperUtils.GetCoord.class )
+    @Mapping(source = "coordinates", target="coordinates",qualifiedBy=DeliveryPlannerMapperUtils.GetCoord.class )
     DeliveryPlannerResponseDTO toResponse(DeliveryEntity deliveryEntity);
 
 

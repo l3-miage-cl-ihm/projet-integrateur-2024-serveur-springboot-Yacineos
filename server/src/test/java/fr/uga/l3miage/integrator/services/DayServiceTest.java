@@ -2,6 +2,7 @@ package fr.uga.l3miage.integrator.services;
 
 import fr.uga.l3miage.integrator.components.*;
 import fr.uga.l3miage.integrator.datatypes.Address;
+import fr.uga.l3miage.integrator.datatypes.Coordinates;
 import fr.uga.l3miage.integrator.enums.*;
 import fr.uga.l3miage.integrator.exceptions.rest.*;
 import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
@@ -149,11 +150,15 @@ public class DayServiceTest {
         DeliveryCreationRequest d1= DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of(o1.getReference(),o2.getReference()))
+                .coordinates(List.of())
+                .coordinates(List.of(23.8,23.7))
                 .build();
 
         DeliveryCreationRequest d2= DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of(o3.getReference()))
+                .coordinates(List.of())
+                .coordinates(List.of(23.8,23.7))
                 .build();
 
         deliveryCreationRequestList.add(d1);
@@ -183,7 +188,6 @@ public class DayServiceTest {
         when(employeeRepository.findById(deliveryman2.getTrigram())).thenReturn(Optional.of(deliveryman2));
         when(employeeRepository.findById(planner.getTrigram())).thenReturn(Optional.of(planner));
         when(warehouseRepository.findById(grenis.getName())).thenReturn(Optional.of(grenis));
-
         when(orderRepository.findById(o1.getReference())).thenReturn(Optional.of(o1));
         when(orderRepository.findById(o2.getReference())).thenReturn(Optional.of(o2));
         when(orderRepository.findById(o3.getReference())).thenReturn(Optional.of(o3));
@@ -569,7 +573,7 @@ public class DayServiceTest {
         Set<OrderEntity> orders1 = new HashSet<>();
         orders1.add(order11);
         orders1.add(order12);
-        DeliveryEntity del1=DeliveryEntity.builder().reference("l238G-A1").build();
+        DeliveryEntity del1=DeliveryEntity.builder().reference("l238G-A1").coordinates(new Coordinates(12.87,15.876)).build();
         del1.setOrders(orders1);
         //Creation delivery 2
         //creation order
@@ -578,7 +582,7 @@ public class DayServiceTest {
         Set<OrderEntity> orders2 = new HashSet<>();
         orders2.add(order11);
         orders2.add(order12);
-        DeliveryEntity del2=DeliveryEntity.builder().reference("l238G-A2").build();
+        DeliveryEntity del2=DeliveryEntity.builder().reference("l238G-A2").coordinates(new Coordinates(12.87,15.876)).build();
         del2.setOrders(orders2);
         List<DeliveryEntity> deliveries1=new ArrayList<>();
         deliveries1.add(del1);
@@ -603,7 +607,7 @@ public class DayServiceTest {
         Set<OrderEntity> orders3 = new HashSet<>();
         orders3.add(order31);
         orders3.add(order32);
-        DeliveryEntity del3=DeliveryEntity.builder().reference("l238G-B1").build();
+        DeliveryEntity del3=DeliveryEntity.builder().reference("l238G-B1").coordinates(new Coordinates(12.87,15.876)).build();
         del3.setOrders(orders3);
         //Creation delivery 4
         //creation order
@@ -612,7 +616,7 @@ public class DayServiceTest {
         Set<OrderEntity> orders4 = new HashSet<>();
         orders4.add(order11);
         orders4.add(order12);
-        DeliveryEntity del4=DeliveryEntity.builder().reference("l238G-B2").build();
+        DeliveryEntity del4=DeliveryEntity.builder().reference("l238G-B2").coordinates(new Coordinates(12.87,15.876)).build();
         del4.setOrders(orders4);
 
         List<DeliveryEntity> deliveries2=new ArrayList<>();
@@ -634,21 +638,26 @@ public class DayServiceTest {
         dp1.setAddress("2 rue de paris,Paris");
         dp1.setOrders(Set.of(order11.getReference(),order12.getReference()));
         dp1.setDistanceToCover(0.0);
+        dp1.setCoordinates(List.of(23.98,76.87));
+
 
         DeliveryPlannerResponseDTO dp2=new DeliveryPlannerResponseDTO();
         dp2.setAddress("16 rue de caen,Caen");
         dp2.setOrders(Set.of(order21.getReference(),order22.getReference()));
         dp2.setDistanceToCover(0.0);
+        dp2.setCoordinates(List.of(23.98,76.87));
 
         DeliveryPlannerResponseDTO dp3=new DeliveryPlannerResponseDTO();
         dp3.setAddress("02 rue de toulon,Toulon");
         dp3.setOrders(Set.of(order31.getReference(),order32.getReference()));
         dp3.setDistanceToCover(0.0);
+        dp3.setCoordinates(List.of(23.98,76.87));
 
         DeliveryPlannerResponseDTO dp4=new DeliveryPlannerResponseDTO();
         dp4.setAddress("02 rue de marseille,Marseille");
         dp4.setOrders(Set.of(order41.getReference(),order42.getReference()));
         dp4.setDistanceToCover(0.0);
+        dp4.setCoordinates(List.of(23.98,76.87));
         d1.add(dp1);
         d2.add(dp2);
 
@@ -849,11 +858,13 @@ public class DayServiceTest {
         DeliveryCreationRequest d1= DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of(o1.getReference(),o2.getReference()))
+                .coordinates(List.of(23.8,23.7))
                 .build();
 
         DeliveryCreationRequest d2= DeliveryCreationRequest.builder()
                 .distanceToCover(12)
                 .orders(Set.of(o3.getReference()))
+                .coordinates(List.of(23.8,23.7))
                 .build();
 
         deliveryCreationRequestList.add(d1);
@@ -877,16 +888,19 @@ public class DayServiceTest {
                 .reference("J131G-A1")
                 .orders(Set.of(o1,o2))
                 .state(DeliveryState.PLANNED)
+                .coordinates(new Coordinates(12.87,15.876))
                 .build();
         DeliveryEntity delivery2=DeliveryEntity.builder()
                 .reference("J131G-A2")
                 .orders(Set.of(o3))
                 .state(DeliveryState.PLANNED)
+                .coordinates(new Coordinates(12.87,15.876))
                 .build();
         DeliveryEntity delivery3=DeliveryEntity.builder()
                 .reference("J131G-A3")
                 .orders(Set.of(o4))
                 .state(DeliveryState.PLANNED)
+                .coordinates(new Coordinates(12.87,15.876))
                 .build();
 
         TourEntity tour1=TourEntity.builder()
@@ -917,6 +931,7 @@ public class DayServiceTest {
         when(tourComponent.generateTourReference(any(LocalDate.class),any(Integer.class))).thenReturn("t131G-A");
         when(deliveryComponent.generateDeliveryReference(editDayRequest.getDate(),1,"A")).thenReturn("t131G-A1");
         when(deliveryComponent.generateDeliveryReference(editDayRequest.getDate(),2,"A")).thenReturn("t131G-A2");
+
         when(truckRepository.findById(truck.getImmatriculation())).thenReturn(Optional.of(truck));
         when(employeeRepository.findById(deliveryman1.getTrigram())).thenReturn(Optional.of(deliveryman1));
         when(employeeRepository.findById(deliveryman2.getTrigram())).thenReturn(Optional.of(deliveryman2));

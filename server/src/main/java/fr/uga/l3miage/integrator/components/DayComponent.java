@@ -27,8 +27,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class DayComponent {
     private final DayRepository dayRepository;
-    private final TourRepository tourRepository;
-    private final DeliveryRepository deliveryRepository;
+
     public DayEntity getDay(LocalDate date) throws DayNotFoundException {
         Optional<DayEntity> day=dayRepository.findByDate(date);
         if(day.isPresent()) {

@@ -13,7 +13,7 @@ public interface DeliveryDMMapper {
     @Mapping(source = "orders", target = "orders",qualifiedBy= DeliveryDMMapperUtils.ExtractOrderReferences.class)
     @Mapping(source = "orders", target = "customer",qualifiedBy=DeliveryDMMapperUtils.ExtractCustomerName.class)
     @Mapping(source = "orders", target ="customerAddress",qualifiedBy=DeliveryDMMapperUtils.ExtractCustomerAddress.class)
-    @Mapping(source = "coordinates", target = "coordinates",qualifiedBy = DeliveryDMMapperUtils.GetCoord.class)
+    @Mapping(source = "coordinates", target = "coordinates",qualifiedBy=DeliveryDMMapperUtils.GetCoord.class)
     DeliveryDMResponseDTO toResponse(DeliveryEntity deliveryEntity);
 
 }

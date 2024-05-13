@@ -61,7 +61,6 @@ public class DeliveryDMMapperUtils {
 
     }
 
-
     @GetCoord
     public List<Double> getCord(Coordinates coordinates){
         double lat= coordinates.getLat();
@@ -70,8 +69,6 @@ public class DeliveryDMMapperUtils {
         coord.add(lat);
         coord.add(lon);
         return coord;
-
-
     }
 
 }
