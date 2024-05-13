@@ -4,9 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Schema(description = "Day representation")
