@@ -2,6 +2,7 @@ package fr.uga.l3miage.integrator.mappers.utils;
 
 import fr.uga.l3miage.integrator.datatypes.Address;
 import fr.uga.l3miage.integrator.datatypes.Coordinates;
+import fr.uga.l3miage.integrator.exceptions.rest.EntityNotFoundRestException;
 import fr.uga.l3miage.integrator.models.OrderEntity;
 import fr.uga.l3miage.integrator.models.TruckEntity;
 import lombok.RequiredArgsConstructor;
@@ -57,8 +58,10 @@ public class DeliveryPlannerMapperUtils {
 
     @GetDeliveryAddress
     public String getDeliveryAddress(Set<OrderEntity> orderEntities){
-        Address customerAddress=orderEntities.stream().findFirst().get().getCustomer().getAddress();
-        return customerAddress.getAddress()+","+customerAddress.getCity();
+       OrderEntity order =orderEntities.stream().findFirst().orElseThrow(()-> new EntityNotFoundRestException("No Order was found !"));
+
+        Address customerAddress = order.getCustomer().getAddress();
+        return customerAddress+","+customerAddress.getCity();
     }
 
 
