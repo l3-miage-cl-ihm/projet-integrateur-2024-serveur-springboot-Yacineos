@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -44,7 +45,14 @@ public class Interceptor implements HandlerInterceptor {
 
         //return true or false
         Interceptor.log.info("Request intercepted: " );
-        return ( userJob.equals(Job.PLANNER) && isPlannerEndpoint) || (userJob.equals(Job.DELIVERYMAN) && isDeliveryManEndpoint);
+
+        if(!(( userJob.equals(Job.PLANNER) && isPlannerEndpoint) || (userJob.equals(Job.DELIVERYMAN) && isDeliveryManEndpoint))) {
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            response.getWriter().write("You do not have the required role to access this resource.\n");
+            response.getWriter().flush();
+            return false ;
+        }
+        return true;
     }
 
     private String getUidFirebaseFromToken(String token) {
