@@ -14,7 +14,7 @@ public class DayResponseDTO {
     @Schema(description = "Tour list ")
     private List<TourPlannerResponseDTO> tours ;
 
-    @Schema(description = "date of the day date format : 'yyyy-MM-dd'")
+    @Schema(description = "date of the day date format : 'yyyy-MM-dd'",example = "2024-05-10")
     private LocalDate date ;
 
 }

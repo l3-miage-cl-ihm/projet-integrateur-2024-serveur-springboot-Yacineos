@@ -1,5 +1,6 @@
 package fr.uga.l3miage.integrator.mappers;
 
+import fr.uga.l3miage.integrator.datatypes.Coordinates;
 import fr.uga.l3miage.integrator.enums.DeliveryState;
 import fr.uga.l3miage.integrator.exceptions.rest.DayCreationRestException;
 import fr.uga.l3miage.integrator.exceptions.rest.DayNotFoundRestException;
@@ -11,7 +12,9 @@ import fr.uga.l3miage.integrator.requests.DeliveryCreationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 public abstract class DeliveryPlannerMapperDecorator implements DeliveryPlannerMapper{
     @Autowired
@@ -35,6 +38,10 @@ public abstract class DeliveryPlannerMapperDecorator implements DeliveryPlannerM
                     }
                 });
 
+        double lat= deliveryCreationRequest.getCoordinates().get(0);
+        double lon=deliveryCreationRequest.getCoordinates().get(1);
+        Coordinates coordinates= Coordinates.builder().lat(lat).lon(lon).build();
+        deliveryEntity.setCoordinates(coordinates);
         deliveryEntity.setOrders(orders);
         return deliveryEntity;
     };

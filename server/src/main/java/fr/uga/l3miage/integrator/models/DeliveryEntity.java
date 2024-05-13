@@ -1,5 +1,6 @@
 package fr.uga.l3miage.integrator.models;
 
+import fr.uga.l3miage.integrator.datatypes.Coordinates;
 import fr.uga.l3miage.integrator.enums.DeliveryState;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -33,5 +35,7 @@ public class DeliveryEntity {
     @OneToMany
     @JoinColumn(name = "refDelivery", referencedColumnName = "reference")
     private Set<OrderEntity> orders;
+
+    private Coordinates coordinates;
 
 }
