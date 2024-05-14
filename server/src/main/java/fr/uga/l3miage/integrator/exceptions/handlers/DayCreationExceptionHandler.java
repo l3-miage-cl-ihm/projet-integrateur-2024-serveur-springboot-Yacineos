@@ -1,6 +1,5 @@
 package fr.uga.l3miage.integrator.exceptions.handlers;
 
-import fr.uga.l3miage.integrator.exceptions.NotFoundErrorResponse;
 import fr.uga.l3miage.integrator.exceptions.PlanDayErrorResponse;
 import fr.uga.l3miage.integrator.exceptions.rest.DayCreationRestException;
 import lombok.extern.slf4j.Slf4j;

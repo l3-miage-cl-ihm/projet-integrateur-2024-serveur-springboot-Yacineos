@@ -31,8 +31,8 @@ public class DeliveryPlannerMapperTest {
     @Test
     void DeliveryCreationRequest_to_DeliveryEntityOK(){
         //given
-        OrderEntity order1= OrderEntity.builder().state(OrderState.PLANNED).creationDate(LocalDate.now()).reference("c001").build();
-        OrderEntity order2= OrderEntity.builder().state(OrderState.PLANNED).creationDate(LocalDate.now()).reference("c002").build();
+        OrderEntity order1= OrderEntity.builder().state(OrderState.PLANNED).reference("c001").build();
+        OrderEntity order2= OrderEntity.builder().state(OrderState.PLANNED).reference("c002").build();
         DeliveryCreationRequest deliveryCreationRequest=DeliveryCreationRequest.builder()
                 .orders(Set.of(order1.getReference(),order2.getReference()))
                 .coordinates(List.of(23.7,12.9))

@@ -4,7 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class DayAlreadyPlannedException extends Exception{
-
     public DayAlreadyPlannedException(String message){
         super(message);
     }

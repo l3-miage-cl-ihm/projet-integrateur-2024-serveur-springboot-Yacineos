@@ -24,16 +24,14 @@ public class DayRepositoryTest {
     void findByDate(){
         //Given
         LocalDate now=LocalDate.now();
-        DayEntity day1= DayEntity.builder().date(now).reference("J124G").tours(new LinkedList<>()).build();
-        DayEntity day2= DayEntity.builder().date(now.plusDays(23)).reference("J057G").tours(new LinkedList<>()).build();
+        DayEntity day1= DayEntity.builder().date(now).reference("J124G").build();
+        DayEntity day2= DayEntity.builder().date(now.plusDays(23)).reference("J057G").build();
         dayRepository.save(day1);
         dayRepository.save(day2);
 
         //when
-
         Optional<DayEntity> response1= dayRepository.findByDate(now);
         Optional<DayEntity> response2= dayRepository.findByDate(LocalDate.now().plusDays(2));
-
 
         //then
         assertThat(response1.isPresent()).isEqualTo(true);

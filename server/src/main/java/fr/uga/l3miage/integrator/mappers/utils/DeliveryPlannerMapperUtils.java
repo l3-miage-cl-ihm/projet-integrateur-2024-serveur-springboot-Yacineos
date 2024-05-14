@@ -4,9 +4,7 @@ import fr.uga.l3miage.integrator.datatypes.Address;
 import fr.uga.l3miage.integrator.datatypes.Coordinates;
 import fr.uga.l3miage.integrator.exceptions.rest.EntityNotFoundRestException;
 import fr.uga.l3miage.integrator.models.OrderEntity;
-import fr.uga.l3miage.integrator.models.TruckEntity;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.Named;
 import org.mapstruct.Qualifier;
 import org.springframework.stereotype.Component;
 

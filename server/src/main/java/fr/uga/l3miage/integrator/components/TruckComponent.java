@@ -4,7 +4,6 @@ import fr.uga.l3miage.integrator.models.TruckEntity;
 import fr.uga.l3miage.integrator.repositories.TruckRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

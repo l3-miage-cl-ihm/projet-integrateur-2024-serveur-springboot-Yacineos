@@ -2,8 +2,6 @@ package fr.uga.l3miage.integrator.exceptions.rest;
 
 
 import fr.uga.l3miage.integrator.enums.DayState;
-import fr.uga.l3miage.integrator.exceptions.technical.UpdateDayStateException;
-import fr.uga.l3miage.integrator.exceptions.technical.UpdateDeliveryStateException;
 import lombok.Getter;
 
 @Getter

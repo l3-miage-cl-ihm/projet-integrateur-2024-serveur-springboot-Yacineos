@@ -5,7 +5,6 @@ import fr.uga.l3miage.integrator.exceptions.rest.EntityNotFoundRestException;
 import fr.uga.l3miage.integrator.models.EmployeeEntity;
 import fr.uga.l3miage.integrator.models.TruckEntity;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.Named;
 import org.mapstruct.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +12,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;

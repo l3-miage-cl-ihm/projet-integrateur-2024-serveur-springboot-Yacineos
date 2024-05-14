@@ -2,7 +2,6 @@ package fr.uga.l3miage.integrator.exceptions.handlers;
 
 import fr.uga.l3miage.integrator.exceptions.DeliveryStatusNotUpdatedResponse;
 import fr.uga.l3miage.integrator.exceptions.rest.UpdateDeliveryStateRestException;
-import fr.uga.l3miage.integrator.exceptions.technical.UpdateDeliveryStateException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

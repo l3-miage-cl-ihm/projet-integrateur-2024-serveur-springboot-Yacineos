@@ -102,9 +102,9 @@ public class DayService {
     }
     public void editDay(DayCreationRequest dayEditRequest, String dayId){
         try {
-            //check wether the day to edit exist in the db
+            //check wether the day to edit exists in the db
             DayEntity day = dayComponent.getDayById(dayId);
-            //clean existing day
+            //clean existing day by removing its relations
             day.getTours().forEach(tour -> tour.getDeliveries().forEach(deliveryEntity -> deliveryComponent.deleteDelivery(deliveryEntity.getReference())));
             day.getTours().forEach(tour -> tourComponent.deleteTour(tour.getReference()));
             dayComponent.deleteDay(dayId);

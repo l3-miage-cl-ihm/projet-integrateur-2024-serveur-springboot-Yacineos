@@ -50,16 +50,6 @@ public class EmployeeComponentTest {
                 .trigram("GHI")
                 .warehouse(warehouse)
                 .build();
-        EmployeeEntity e4 = EmployeeEntity.builder()
-                .job(Job.PRODUCTOR)
-                .trigram("JKL")
-                .warehouse(warehouse)
-                .build();
-
-        Set<EmployeeEntity> employeeEntities = new HashSet<>();
-        employeeEntities.add(e1);
-        employeeEntities.add(e2);
-        employeeEntities.add(e3);
 
         Set<String> employeeID = new HashSet<>();
         employeeID.add(e1.getTrigram());
@@ -67,9 +57,8 @@ public class EmployeeComponentTest {
         employeeID.add(e3.getTrigram());
 
         when(warehouseRepository.findById(warehouse.getName())).thenReturn(Optional.of(warehouse));
-        when(employeeRepository.findEmployeeEntitiesByJobAndWarehouse(Job.DELIVERYMAN,warehouse)).thenReturn(employeeEntities);
+        when(employeeRepository.findEmployeeEntitiesByJobAndWarehouse(Job.DELIVERYMAN,warehouse)).thenReturn(Set.of(e1,e2,e3));
         Set<String> stringSet = employeeComponent.getAllDeliveryMenID(warehouse.getName());
-
         assertThat(stringSet.size()).isEqualTo(3);
         assertThat(stringSet.stream().findFirst()).isEqualTo(employeeID.stream().findFirst());
 

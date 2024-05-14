@@ -37,13 +37,12 @@ public class TourPlannerMapperTest {
     void TourCreationRequest_to_tourEntityOK() throws InvalidInputValueException {
         //given
         TruckEntity truck = TruckEntity.builder().immatriculation("WT-543-TR").build();
-        EmployeeEntity deliveryman1=EmployeeEntity.builder().job(Job.DELIVERYMAN).email("john@gmail.com").lastName("Leroy").firstName("John").trigram("JLY").mobilePhone("0876342324").build();
-        EmployeeEntity deliveryman2=EmployeeEntity.builder().job(Job.DELIVERYMAN).email("paul@gmail.com").lastName("Love").firstName("Paul").trigram("PLE").mobilePhone("0876342654").build();
+        EmployeeEntity deliveryman1=EmployeeEntity.builder().job(Job.DELIVERYMAN).trigram("JLY").mobilePhone("0876342324").build();
+        EmployeeEntity deliveryman2=EmployeeEntity.builder().job(Job.DELIVERYMAN).trigram("PLE").mobilePhone("0876342654").build();
         TourCreationRequest tourCreationRequest = TourCreationRequest.builder()
                 .distanceToCover(49)
                 .truck(truck.getImmatriculation())
                 .deliverymen(Set.of(deliveryman1.getTrigram(),deliveryman2.getTrigram()))
-                .deliveries(new ArrayList<>())
                 .build();
 
         //when
@@ -63,13 +62,12 @@ public class TourPlannerMapperTest {
     @Test
     void TourCreationRequest_to_tourEntity_NotOK_BecauseOfNotFoundTruck() {
         //given
-        EmployeeEntity deliveryman1=EmployeeEntity.builder().job(Job.DELIVERYMAN).email("john@gmail.com").lastName("Leroy").firstName("John").trigram("JLY").mobilePhone("0876342324").build();
-        EmployeeEntity deliveryman2=EmployeeEntity.builder().job(Job.DELIVERYMAN).email("paul@gmail.com").lastName("Love").firstName("Paul").trigram("PLE").mobilePhone("0876342654").build();
+        EmployeeEntity deliveryman1=EmployeeEntity.builder().job(Job.DELIVERYMAN).trigram("JLY").mobilePhone("0876342324").build();
+        EmployeeEntity deliveryman2=EmployeeEntity.builder().job(Job.DELIVERYMAN).trigram("PLE").mobilePhone("0876342654").build();
         TourCreationRequest tourCreationRequest = TourCreationRequest.builder()
                 .distanceToCover(49)
                 .truck("TR-123-XS")
                 .deliverymen(Set.of(deliveryman1.getTrigram(),deliveryman2.getTrigram()))
-                .deliveries(new ArrayList<>())
                 .build();
 
         //when
@@ -91,7 +89,6 @@ public class TourPlannerMapperTest {
                 .distanceToCover(49)
                 .truck(truck.getImmatriculation())
                 .deliverymen(Set.of(deliveryman1.getTrigram(),"PLE"))
-                .deliveries(new ArrayList<>())
                 .build();
 
         //when

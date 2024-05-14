@@ -19,47 +19,31 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 
 public class TruckComponentTest {
-
     @Autowired
     private TruckComponent truckComponent;
-
     @MockBean
     private TruckRepository truckRepository;
 
     @Test
-    void getAllTrucksImmatriculation(){
-
-        TruckEntity t1 = TruckEntity.builder()
-                .immatriculation("ABC")
-                .build();
-        TruckEntity t2 = TruckEntity.builder()
-                .immatriculation("DEF")
-                .build();
-        TruckEntity t3 = TruckEntity.builder()
-                .immatriculation("GHI")
-                .build();
-        TruckEntity t4 = TruckEntity.builder()
-                .immatriculation("JKL")
-                .build();
-
-        List<TruckEntity> truckEntities = new ArrayList<>();
-        truckEntities.add(t1);
-        truckEntities.add(t2);
-        truckEntities.add(t3);
-        truckEntities.add(t4);
+    void getAllTrucksImmatriculation() {
+        //given
+        TruckEntity t1 = TruckEntity.builder().immatriculation("ABC").build();
+        TruckEntity t2 = TruckEntity.builder().immatriculation("DEF").build();
+        TruckEntity t3 = TruckEntity.builder().immatriculation("GHI").build();
+        TruckEntity t4 = TruckEntity.builder().immatriculation("JKL").build();
 
         Set<String> truckImmat = new HashSet<>();
         truckImmat.add(t1.getImmatriculation());
         truckImmat.add(t2.getImmatriculation());
         truckImmat.add(t3.getImmatriculation());
         truckImmat.add(t4.getImmatriculation());
-
-        when(truckRepository.findAll()).thenReturn(truckEntities);
+        //when
+        when(truckRepository.findAll()).thenReturn(List.of(t1, t2, t3, t4));
         Set<String> stringSet = truckComponent.getAllTrucksImmatriculation();
 
+        //then
         assertThat(stringSet.size()).isEqualTo(4);
         assertThat(stringSet.stream().findFirst()).isEqualTo(truckImmat.stream().findFirst());
-
 
 
     }
