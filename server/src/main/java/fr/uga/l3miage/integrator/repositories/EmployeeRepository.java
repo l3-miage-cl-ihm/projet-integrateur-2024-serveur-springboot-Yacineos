@@ -6,6 +6,7 @@ import fr.uga.l3miage.integrator.models.WarehouseEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -13,4 +14,5 @@ import java.util.Set;
 public interface EmployeeRepository extends JpaRepository<EmployeeEntity,String> {
     Set<EmployeeEntity> findEmployeeEntitiesByJobAndWarehouse(Job job, WarehouseEntity warehouse);
 
+    Optional<EmployeeEntity> findByEmail(String email);
 }

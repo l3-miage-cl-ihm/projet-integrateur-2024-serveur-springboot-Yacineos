@@ -16,17 +16,17 @@ import java.util.stream.Collectors;
 public class WarehouseComponent {
     private final WarehouseRepository warehouseRepository;
 
-    public WarehouseEntity getWarehouse(String id){
+    public WarehouseEntity getWarehouse(String id) throws WarehouseNotFoundException{
         return warehouseRepository.findById(id).orElseThrow(() -> new WarehouseNotFoundException("entrepot non trouvé"));
     }
 
-    public Set<String> getAllTrucks(String id){
+    public Set<String> getAllTrucks(String id) throws WarehouseNotFoundException{
         WarehouseEntity warehouseEntity =  this.getWarehouse(id);
         Set<TruckEntity> truckEntities = warehouseEntity.getTrucks();
         return truckEntities.stream().map(TruckEntity::getImmatriculation).collect(Collectors.toSet());
     }
 
-    public Coordinates getWarehouseCoordinates(String id){
+    public Coordinates getWarehouseCoordinates(String id)throws WarehouseNotFoundException{
         return this.getWarehouse(id).getCoordinates();
     }
 }
