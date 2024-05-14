@@ -8,5 +8,4 @@ import java.util.Set;
 
 @Repository
 public interface TruckRepository extends JpaRepository<TruckEntity,String> {
-
 }

@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 @Data
 public class NotFoundErrorResponse {
-    @Schema(description = "end point call", example = "/api/v2.0/")
+    @Schema(description = "end point call", example = "/api/v3.0/")
     private final String uri;
     @Schema(description = "error message", example = "Entity not found ")
     private final String errorMessage;

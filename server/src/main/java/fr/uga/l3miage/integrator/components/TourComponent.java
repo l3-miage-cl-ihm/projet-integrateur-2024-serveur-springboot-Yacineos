@@ -3,16 +3,15 @@ package fr.uga.l3miage.integrator.components;
 import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
 import fr.uga.l3miage.integrator.exceptions.technical.TourNotFoundException;
 import fr.uga.l3miage.integrator.models.DayEntity;
+import fr.uga.l3miage.integrator.models.DeliveryEntity;
 import fr.uga.l3miage.integrator.models.TourEntity;
 import fr.uga.l3miage.integrator.repositories.DayRepository;
 import fr.uga.l3miage.integrator.repositories.TourRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Hibernate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.Optional;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -42,6 +41,15 @@ public class TourComponent {
         String dayNumber = String.format("%03d", date.getDayOfYear());
         char letter = (char) ('A' + tourIndex);
         return "t" + dayNumber + "G-" + letter;
+    }
+
+    public TourEntity findTourById(String tourId) throws TourNotFoundException {
+        return tourRepository.findById(tourId).orElseThrow(()-> new TourNotFoundException("No tour was found !"));
+    }
+
+
+    public void deleteTour(String tourId){
+        tourRepository.deleteById(tourId);
     }
 
 

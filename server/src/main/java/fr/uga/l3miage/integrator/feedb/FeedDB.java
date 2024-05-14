@@ -2,6 +2,7 @@ package fr.uga.l3miage.integrator.feedb;
 
 
 import fr.uga.l3miage.integrator.datatypes.Address;
+import fr.uga.l3miage.integrator.datatypes.Coordinates;
 import fr.uga.l3miage.integrator.enums.CustomerState;
 import fr.uga.l3miage.integrator.enums.Job;
 import fr.uga.l3miage.integrator.enums.OrderState;
@@ -15,6 +16,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 @Component
@@ -67,23 +70,37 @@ public class FeedDB implements CommandLineRunner {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
             reader.readLine(); //skip the header (column names)
             while ((line = reader.readLine()) !=null){
-                String  [] row=line.split(",");
+                String  [] row=line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
                 String name=row[0];
                 String letter = row[1];
                 String photo = row[2];
                 String addressCsv = row[3];
                 String postalCode = row[4];
                 String city = row[5];
+                String  latCsv= row[6];
+                String lonCsv= row[7];
+                String truckCsv=row[8].replaceAll("\"", "");
+                String[] references = truckCsv.split(",");
+
+                Set<TruckEntity> trucks=new HashSet<>();
+                for (String reference : references) {
+                    TruckEntity truck=truckRepository.findById(reference.trim()).get();
+                    trucks.add(truck);
+                }
+                double lat=Double.parseDouble(latCsv);
+                double lon=Double.parseDouble(lonCsv);
+                Coordinates coordinates= new Coordinates(lat,lon);
+
                 Address address= new Address(addressCsv,postalCode,city);
                 WarehouseEntity warehouse = WarehouseEntity.builder()
                         .days(Set.of())
-                        .trucks(Set.of())
+                        .trucks(trucks)
                         .name(name)
                         .letter(letter)
                         .photo(photo)
                         .address(address)
+                        .coordinates(coordinates)
                         .build();
-
                 warehouseRepository.save(warehouse);
                 i++;
             }

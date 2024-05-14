@@ -1,8 +1,11 @@
 package fr.uga.l3miage.integrator.mappers.utils;
 
 import fr.uga.l3miage.integrator.datatypes.Address;
+import fr.uga.l3miage.integrator.datatypes.Coordinates;
+import fr.uga.l3miage.integrator.exceptions.rest.EntityNotFoundRestException;
 import fr.uga.l3miage.integrator.models.EmployeeEntity;
 import fr.uga.l3miage.integrator.models.OrderEntity;
+import fr.uga.l3miage.integrator.models.WarehouseEntity;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Qualifier;
 import org.springframework.stereotype.Component;
@@ -12,6 +15,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,23 +39,20 @@ public class TourDMMapperUtils {
 
     }
 
-    @ExtractOrderReferences
-    public  Set<String> extractOrderReferences (Set<OrderEntity> orders){
-        return   orders.stream().map(OrderEntity::getReference).collect(Collectors.toSet());
-
+    @GetWarehouseCoordinates
+    public List<Double> getWarehouseCoordinates(Set<EmployeeEntity> deliverymen){
+        List<Double> coord=new ArrayList<>();
+        EmployeeEntity deliveryman =deliverymen.stream().findFirst().orElseThrow(()-> new EntityNotFoundRestException("No deliveryman was found !"));
+       Coordinates coordinates =deliveryman.getWarehouse().getCoordinates();
+        coord.add(coordinates.getLat());
+        coord.add(coordinates.getLon());
+        return coord;
     }
 
-    @ExtractCustomerName
-    public String extractCustomerName (Set<OrderEntity> orders){
-        return   orders.stream().findFirst().get().getCustomer().getFirstName()+" "+orders.stream().findFirst().get().getCustomer().getLastName();
-    }
-
-    @ExtractCustomerAddress
-    public String extractCustomerAddress (Set<OrderEntity> orders){
-        Address customerAddress=orders.stream().findFirst().get().getCustomer().getAddress();
-        return   customerAddress.getAddress()+"|"+customerAddress.getPostalCode()+"|"+customerAddress.getCity();
-
-    }
+    @Qualifier
+    @Retention(RetentionPolicy.CLASS)
+    @Target(ElementType.METHOD)
+    public @interface GetWarehouseCoordinates{}
 
 
     @Qualifier
@@ -70,22 +72,6 @@ public class TourDMMapperUtils {
     @Target(ElementType.METHOD)
     public @interface ExtractFirstAndLastName{}
 
-
-    @Qualifier
-    @Retention(RetentionPolicy.CLASS)
-    @Target(ElementType.METHOD)
-    public @interface ExtractOrderReferences{}
-
-
-    @Qualifier
-    @Retention(RetentionPolicy.CLASS)
-    @Target(ElementType.METHOD)
-    public @interface ExtractCustomerName{}
-
-    @Qualifier
-    @Retention(RetentionPolicy.CLASS)
-    @Target(ElementType.METHOD)
-    public @interface ExtractCustomerAddress{}
 
 
 

@@ -18,16 +18,20 @@ public class TourDMResponseDTO {
     @Schema(description = "Deliverymen ids list")
     private Set<String> deliverymen;
 
-    @Schema(description = "Truck id")
+    @Schema(description = "Truck id", example = "XY-423-TR")
     private String truck;
 
-    @Schema(description = "Tour reference")
+    @Schema(description = "Tour reference",example = "t135G-B")
     private String refTour;
 
-    @Schema(description = "Day reference")
+    @Schema(description = "Day reference",example = "J135G")
     private String refDay;
 
-    @Schema(description = "Warehouse name ")
+    @Schema(description = "Warehouse name ",example = "Grenis")
     private String warehouseName;
+
+    @Schema(description = "Warehouse coordinates ")
+    private List<Double> coordinates;
+
 
 }

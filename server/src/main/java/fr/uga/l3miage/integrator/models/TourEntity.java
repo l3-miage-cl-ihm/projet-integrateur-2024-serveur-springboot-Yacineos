@@ -1,5 +1,6 @@
 package fr.uga.l3miage.integrator.models;
 
+import fr.uga.l3miage.integrator.datatypes.Coordinates;
 import fr.uga.l3miage.integrator.enums.TourState;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
