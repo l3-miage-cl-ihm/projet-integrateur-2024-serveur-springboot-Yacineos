@@ -107,69 +107,19 @@ public class DayService {
 
     }
     public void editDay(DayCreationRequest dayEditRequest, String dayId){
-        try{
-           //check wether the day to edit exist in the db
+        try {
+            //check wether the day to edit exist in the db
             DayEntity day = dayComponent.getDayById(dayId);
+            //clean existing day
+            day.getTours().forEach(tour -> tour.getDeliveries().forEach(deliveryEntity -> deliveryComponent.deleteDelivery(deliveryEntity.getReference())));
+            day.getTours().forEach(tour -> tourComponent.deleteTour(tour.getReference()));
+            dayComponent.deleteDay(dayId);
+            //Then plan it
+            this.planDay(dayEditRequest);
 
-            //check wether the new given date of new day is different of the existent day
-            if( ! day.getDate().equals(dayEditRequest.getDate()))
-                throw new DayAlreadyPlannedException("Cannot update to the new given date, please give the same date as the one you planned  !");
-
-            // At this level we can check input validity and then edit the requested day
-            List<TourCreationRequest> tours = dayEditRequest.getTours();
-            if(tours.isEmpty())
-                throw  new InvalidInputValueException("Invalid input values, need 1 tour at least !");
-
-            boolean anyInvalidTour= tours.stream().anyMatch(tour -> tour.getDeliveries().isEmpty() || (tour.getDeliverymen().size()!=2  && tour.getDeliverymen().size()!=1) || tour.getTruck().isEmpty() );
-            if(anyInvalidTour)
-                throw new InvalidInputValueException("Invalid inputs, need 1 truck, 1 or 2 deliverymen and at least one delivery !");
-
-
-            //finally edit the day by adding to it its tours and to tours their deliveries
-            DayEntity dayEntity = dayPlannerMapper.toEntity(dayEditRequest);
-
-            //add tours to day
-            int tourIndex= 0;
-            List<TourEntity> dayTours = new ArrayList<>();
-            for(TourCreationRequest tourCreationRequest : dayEditRequest.getTours() ) {
-                try {
-                    String refTour=tourComponent.generateTourReference(dayEditRequest.getDate(),tourIndex);
-                    String tourLetter=Character.toString(refTour.charAt(refTour.length()-1));
-                    TourEntity tourEntity = tourPlannerMapper.toEntity(tourCreationRequest,refTour);
-
-                    //add deliveries to tour
-                    int deliveryIndex= 1;
-                    List<DeliveryEntity> tourDeliveries= new ArrayList<>();
-                    for(DeliveryCreationRequest deliveryCreationRequest: tourCreationRequest.getDeliveries() ) {
-                        DeliveryEntity deliveryEntity = deliveryPlannerMapper.toEntity(deliveryCreationRequest,deliveryComponent.generateDeliveryReference(dayEditRequest.getDate(),deliveryIndex,tourLetter));
-                        //save delivery and add it to tourDeliveries
-                        deliveryComponent.saveDelivery(deliveryEntity);
-                        tourDeliveries.add(deliveryEntity);
-                        deliveryIndex++;
-                    }
-
-                    tourEntity.setLetter(tourLetter);
-                    tourEntity.setDeliveries(tourDeliveries);
-                    //save tour and add it to dayTours
-                    tourComponent.saveTour(tourEntity);
-                    dayTours.add(tourEntity);
-                    tourIndex++;
-
-                } catch (InvalidInputValueException e) {
-                    throw new DayCreationRestException(e.getMessage());
-                }
-
-            }
-            //add tours into day and save it.
-            dayEntity.setTours(dayTours);
-            day.setTours(dayEntity.getTours());
-            day.setPlanner(dayEntity.getPlanner());
-            dayComponent.planDay(day);
-
-        }catch (DayNotFoundException e) {
+        }
+         catch (DayNotFoundException e) {
             throw new DayNotFoundRestException(e.getMessage());
-        } catch (InvalidInputValueException | DayAlreadyPlannedException e) {
-            throw new EditDayRestException(e.getMessage());
         }
     }
     public SetUpBundleResponse getSetUpBundle(){

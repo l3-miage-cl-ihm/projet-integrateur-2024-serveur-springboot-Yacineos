@@ -1068,7 +1068,7 @@ public class DayServiceTest {
         Mockito.doNothing().when(tourComponent).saveTour(any(TourEntity.class));
 
         //then
-        assertThrows(EditDayRestException.class,()->dayService.editDay(editDayRequest,day.getReference()));
+        assertThrows(DayCreationRestException.class,()->dayService.editDay(editDayRequest,day.getReference()));
         verify(dayPlannerMapper,times(0)).toEntity(any(DayCreationRequest.class));
         verify(tourPlannerMapper,times(0)).toEntity(any(TourCreationRequest.class),anyString());
         verify(deliveryPlannerMapper,times(0)).toEntity(any(DeliveryCreationRequest.class),anyString());
@@ -1189,7 +1189,7 @@ public class DayServiceTest {
         Mockito.doNothing().when(tourComponent).saveTour(any(TourEntity.class));
 
         //then
-        assertThrows(EditDayRestException.class,()->dayService.editDay(editDayRequest,day.getReference()));
+        assertThrows(DayCreationRestException.class,()->dayService.editDay(editDayRequest,day.getReference()));
         verify(dayPlannerMapper,times(0)).toEntity(any(DayCreationRequest.class));
         verify(tourPlannerMapper,times(0)).toEntity(any(TourCreationRequest.class),anyString());
         verify(deliveryPlannerMapper,times(0)).toEntity(any(DeliveryCreationRequest.class),anyString());
