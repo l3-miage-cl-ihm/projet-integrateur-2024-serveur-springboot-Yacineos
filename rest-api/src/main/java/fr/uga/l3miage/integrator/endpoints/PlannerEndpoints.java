@@ -27,8 +27,8 @@ public interface PlannerEndpoints {
     @Operation(description = "Get set up bundle  (orders, deliverymen,trucks) ")
     @ApiResponse(responseCode= "200", description = "Bundle sent  ")
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/bundle")
-    SetUpBundleResponse getSetUpBundle();
+    @GetMapping("/bundle/{idWarehouse}")
+    SetUpBundleResponse getSetUpBundle(@RequestParam String idWarehouse);
 
 
     @Operation(description = "Get planned day ")

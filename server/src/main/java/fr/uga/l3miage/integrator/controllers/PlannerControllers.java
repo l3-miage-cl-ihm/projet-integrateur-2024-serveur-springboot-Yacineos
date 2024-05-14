@@ -42,8 +42,8 @@ public class PlannerControllers implements PlannerEndpoints {
     }
 
     @Override
-    public SetUpBundleResponse getSetUpBundle() {
-        return dayService.getSetUpBundle();
+    public SetUpBundleResponse getSetUpBundle(String idWarehouse) {
+        return dayService.getSetUpBundle(idWarehouse);
     }
 
 

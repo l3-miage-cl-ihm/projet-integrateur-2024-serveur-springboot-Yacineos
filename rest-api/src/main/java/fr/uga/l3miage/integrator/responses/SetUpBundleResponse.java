@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -18,4 +19,7 @@ public class SetUpBundleResponse {
 
     @Schema(description = "Trucks ids")
     private Set<String> trucks;
+
+    @Schema(description = "Warehouse coordinates")
+    private List<Double> coordinates;
 }
