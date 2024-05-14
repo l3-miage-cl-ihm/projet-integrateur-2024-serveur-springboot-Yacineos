@@ -598,7 +598,7 @@ public class PlannerControllerTest {
 
         final HttpHeaders headers = new HttpHeaders();
         final Map<String, Object> urlParams = new HashMap<>();
-        urlParams.put("idWarehouse", "Grenis");
+        urlParams.put("warehouseId", "Grenis");
 
         Address a1 = new Address("21 rue de la paix", "38000", "Grenoble");
         Address a2 = new Address("azeazeazed", "38000", "Grenoble");
@@ -676,8 +676,7 @@ public class PlannerControllerTest {
         employeeRepository.save(e3);
 
         SetUpBundleResponse expectedResponse = dayService.getSetUpBundle(warehouse.getName());
-        ResponseEntity<SetUpBundleResponse> response = testRestTemplate.exchange("/api/v3.0/planner/{idWarehouse}/bundle", HttpMethod.GET, new HttpEntity<>(null, headers), SetUpBundleResponse.class,urlParams);
-
+        ResponseEntity<SetUpBundleResponse> response = testRestTemplate.exchange("/api/v3.0/planner/{warehouseId}/bundle", HttpMethod.GET, new HttpEntity<>(null, headers), SetUpBundleResponse.class,urlParams);
         AssertionsForClassTypes.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         verify(dayService, times(2)).getSetUpBundle(warehouse.getName());
     }
