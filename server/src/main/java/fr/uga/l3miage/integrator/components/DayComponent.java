@@ -83,4 +83,8 @@ public class DayComponent {
         return dayRepository.save(dayEntity);
     }
 
+    public void deleteDay(String dayRef){
+        dayRepository.deleteById(dayRef);
+    }
+
 }
