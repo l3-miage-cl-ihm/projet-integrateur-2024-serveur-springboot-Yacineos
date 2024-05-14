@@ -62,7 +62,7 @@ public interface PlannerEndpoints {
     @ApiResponse(responseCode = "404" ,description = "No day  was found !", content = @Content(schema = @Schema(implementation = NotFoundErrorResponse.class),mediaType = MediaType.APPLICATION_JSON_VALUE))
     @ApiResponse(responseCode = "409" ,description = "Cannot update day state", content = @Content(schema = @Schema(implementation = DayStateNotUpdatedResponse.class),mediaType = MediaType.APPLICATION_JSON_VALUE))
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping("/days/{dayId}/updateState")
+    @PatchMapping("/days/{dayId}/updateState")
     void updateDayState(@PathVariable String dayId,@RequestParam DayState newDayState);
 
 

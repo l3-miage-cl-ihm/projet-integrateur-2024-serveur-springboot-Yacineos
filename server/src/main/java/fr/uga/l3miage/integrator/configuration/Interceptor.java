@@ -26,6 +26,12 @@ public class Interceptor implements HandlerInterceptor {
 
     private final EmployeeComponent employeeComponent ;
 
+    /*
+    *  method that check the role of the authentificated user via his email, and grant him access to his specefic endpoints
+    *
+    *  planner -> acces autorized to /api/v3.0/planner
+    *  deliveryman -> access autorized to /api/v3.0/deliveryman
+    * */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //get endpoint

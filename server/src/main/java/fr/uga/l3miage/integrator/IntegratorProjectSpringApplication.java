@@ -1,5 +1,6 @@
 package fr.uga.l3miage.integrator;
 
+import fr.uga.l3miage.integrator.configuration.TokenRetriever;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +22,6 @@ public class IntegratorProjectSpringApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(IntegratorProjectSpringApplication.class,args);
-
     }
 
     @Bean
