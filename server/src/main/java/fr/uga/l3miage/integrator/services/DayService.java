@@ -119,7 +119,6 @@ public class DayService {
     public SetUpBundleResponse getSetUpBundle(String idWarehouse){
 
         try {
-
             SetUpBundleResponse setUpBundleResponse = new SetUpBundleResponse();
             LinkedHashSet<MultipleOrder> multipleOrder = orderComponent.createMultipleOrders();
             Set<String> immatriculationTrucks = warehouseComponent.getAllTrucks(idWarehouse);
