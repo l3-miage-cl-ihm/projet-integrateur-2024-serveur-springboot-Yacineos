@@ -62,11 +62,11 @@ public class DeliverymanControllerTest {
     @SpyBean
     private TourComponent tourComponent;
 
+
     @BeforeEach
     public void setup() {
         testRestTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
     }
-
 
 @AfterEach
 void clear(){

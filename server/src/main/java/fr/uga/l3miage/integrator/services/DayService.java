@@ -1,17 +1,10 @@
 package fr.uga.l3miage.integrator.services;
 
-import fr.uga.l3miage.integrator.components.DayComponent;
-import fr.uga.l3miage.integrator.components.EmployeeComponent;
-import fr.uga.l3miage.integrator.components.OrderComponent;
-import fr.uga.l3miage.integrator.components.TruckComponent;
-import fr.uga.l3miage.integrator.components.DeliveryComponent;
-import fr.uga.l3miage.integrator.components.TourComponent;
+import fr.uga.l3miage.integrator.components.*;
+import fr.uga.l3miage.integrator.datatypes.Coordinates;
 import fr.uga.l3miage.integrator.enums.DayState;
 import fr.uga.l3miage.integrator.exceptions.rest.*;
-import fr.uga.l3miage.integrator.exceptions.technical.DayAlreadyPlannedException;
-import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
-import fr.uga.l3miage.integrator.exceptions.technical.InvalidInputValueException;
-import fr.uga.l3miage.integrator.exceptions.technical.UpdateDayStateException;
+import fr.uga.l3miage.integrator.exceptions.technical.*;
 import fr.uga.l3miage.integrator.mappers.*;
 import fr.uga.l3miage.integrator.models.DayEntity;
 import fr.uga.l3miage.integrator.models.DeliveryEntity;
@@ -44,6 +37,7 @@ public class DayService {
     private final TruckComponent truckComponent;
     private final EmployeeComponent employeeComponent;
     private final OrderComponent orderComponent;
+    private final WarehouseComponent warehouseComponent;
     public void planDay(DayCreationRequest dayCreationRequest){
         try {
             //check wether the day is not already planned
@@ -122,18 +116,23 @@ public class DayService {
             throw new DayNotFoundRestException(e.getMessage());
         }
     }
-    public SetUpBundleResponse getSetUpBundle(){
+    public SetUpBundleResponse getSetUpBundle(String idWarehouse){
 
-        SetUpBundleResponse setUpBundleResponse = new SetUpBundleResponse();
-        LinkedHashSet<MultipleOrder> multipleOrder = new LinkedHashSet<>();
-        multipleOrder = orderComponent.createMultipleOrders();
-        Set<String> immatriculationTrucks = truckComponent.getAllTrucksImmatriculation();
-        Set<String> idLivreurs = employeeComponent.getAllDeliveryMenID();
+        try {
 
-        setUpBundleResponse.setMultipleOrders(multipleOrder);
-        setUpBundleResponse.setDeliverymen(idLivreurs);
-        setUpBundleResponse.setTrucks(immatriculationTrucks);
-        return setUpBundleResponse ;
+            SetUpBundleResponse setUpBundleResponse = new SetUpBundleResponse();
+            LinkedHashSet<MultipleOrder> multipleOrder = orderComponent.createMultipleOrders();
+            Set<String> immatriculationTrucks = warehouseComponent.getAllTrucks(idWarehouse);
+            Set<String> idLivreurs = employeeComponent.getAllDeliveryMenID(idWarehouse);
+            Coordinates warehouseCoordinates = warehouseComponent.getWarehouseCoordinates(idWarehouse);
+            setUpBundleResponse.setMultipleOrders(multipleOrder);
+            setUpBundleResponse.setDeliverymen(idLivreurs);
+            setUpBundleResponse.setTrucks(immatriculationTrucks);
+            setUpBundleResponse.setCoordinates(List.of(warehouseCoordinates.getLat(), warehouseCoordinates.getLon()));
+            return setUpBundleResponse;
+        }catch (WarehouseNotFoundException e){
+            throw new WarehouseNotFoundRestException(e.getMessage());
+        }
     }
     public DayResponseDTO getDay(LocalDate date){
         try {
