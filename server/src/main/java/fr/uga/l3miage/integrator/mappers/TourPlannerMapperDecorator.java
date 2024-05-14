@@ -1,5 +1,6 @@
 package fr.uga.l3miage.integrator.mappers;
 
+import fr.uga.l3miage.integrator.datatypes.Coordinates;
 import fr.uga.l3miage.integrator.enums.TourState;
 import fr.uga.l3miage.integrator.exceptions.rest.DayCreationRestException;
 import fr.uga.l3miage.integrator.exceptions.technical.InvalidInputValueException;

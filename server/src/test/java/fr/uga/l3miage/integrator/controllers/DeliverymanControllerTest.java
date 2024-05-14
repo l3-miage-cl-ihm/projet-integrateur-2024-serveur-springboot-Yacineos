@@ -68,8 +68,6 @@ public class DeliverymanControllerTest {
     public void setup() {
         testRestTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
     }
-
-
     @AfterEach
     void clear(){
         employeeRepository.findAll().forEach(employee -> {employee.setWarehouse(null); employeeRepository.save(employee);} );

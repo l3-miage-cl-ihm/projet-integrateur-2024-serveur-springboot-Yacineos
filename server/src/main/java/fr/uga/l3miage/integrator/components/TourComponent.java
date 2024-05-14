@@ -48,5 +48,9 @@ public class TourComponent {
     }
 
 
+    public void deleteTour(String tourId){
+        tourRepository.deleteById(tourId);
+    }
+
 
 }

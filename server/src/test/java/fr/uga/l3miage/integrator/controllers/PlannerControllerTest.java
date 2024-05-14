@@ -620,6 +620,9 @@ public class PlannerControllerTest {
         final HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
 
+        final Map<String, Object> urlParams = new HashMap<>();
+        urlParams.put("warehouseId", "Grenis");
+
         Address a1 = new Address("21 rue de la paix", "38000", "Grenoble");
         Address a2 = new Address("azeazeazed", "38000", "Grenoble");
         CustomerEntity c1 = CustomerEntity.builder()
@@ -654,24 +657,6 @@ public class PlannerControllerTest {
                 .build();
         orderRepository.save(o3);
 
-
-        EmployeeEntity e1 = EmployeeEntity.builder()
-                .job(Job.DELIVERYMAN)
-                .trigram("abc")
-                .build();
-        EmployeeEntity e2 = EmployeeEntity.builder()
-                .job(Job.DELIVERYMAN)
-                .trigram("def")
-                .build();
-        EmployeeEntity e3 = EmployeeEntity.builder()
-                .job(Job.DELIVERYMAN)
-                .trigram("ghi")
-                .build();
-
-        employeeRepository.save(e1);
-        employeeRepository.save(e2);
-        employeeRepository.save(e3);
-
         TruckEntity t1 = TruckEntity.builder()
                 .immatriculation("ABC")
                 .build();
@@ -681,11 +666,42 @@ public class PlannerControllerTest {
         truckRepository.save(t1);
         truckRepository.save(t2);
 
-        SetUpBundleResponse expectedResponse = dayService.getSetUpBundle();
-        ResponseEntity<SetUpBundleResponse> response = testRestTemplate.exchange("/api/v3.0/planner/bundle", HttpMethod.GET, new HttpEntity<>(null, headers), SetUpBundleResponse.class);
+        WarehouseEntity warehouse=WarehouseEntity.builder()
+                .name("Grenis")
+                .photo(".png")
+                .coordinates(new Coordinates(23.87,30.442))
+                .address(new Address("22 rue des rats","75033","Nice"))
+                .days(Set.of())
+                .trucks(Set.of(t1,t2))
+                .letter("G")
+                .build();
 
+        warehouseRepository.save(warehouse);
+
+        EmployeeEntity e1 = EmployeeEntity.builder()
+                .job(Job.DELIVERYMAN)
+                .trigram("abc")
+                .warehouse(warehouse)
+                .build();
+        EmployeeEntity e2 = EmployeeEntity.builder()
+                .job(Job.DELIVERYMAN)
+                .trigram("def")
+                .warehouse(warehouse)
+                .build();
+        EmployeeEntity e3 = EmployeeEntity.builder()
+                .job(Job.DELIVERYMAN)
+                .trigram("ghi")
+                .warehouse(warehouse)
+                .build();
+
+        employeeRepository.save(e1);
+        employeeRepository.save(e2);
+        employeeRepository.save(e3);
+
+        SetUpBundleResponse expectedResponse = dayService.getSetUpBundle(warehouse.getName());
+        ResponseEntity<SetUpBundleResponse> response = testRestTemplate.exchange("/api/v3.0/planner/{warehouseId}/bundle", HttpMethod.GET, new HttpEntity<>(null, headers), SetUpBundleResponse.class,urlParams);
         AssertionsForClassTypes.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        verify(dayService, times(2)).getSetUpBundle();
+        verify(dayService, times(2)).getSetUpBundle(warehouse.getName());
     }
 
 

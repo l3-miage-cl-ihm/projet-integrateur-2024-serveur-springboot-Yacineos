@@ -77,4 +77,8 @@ public class DeliveryComponent {
     }
 
 
+
+    public void deleteDelivery(String deliveryId){
+        deliveryRepository.deleteById(deliveryId);
+    }
 }

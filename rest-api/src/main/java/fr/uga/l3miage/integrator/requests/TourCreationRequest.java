@@ -22,4 +22,5 @@ public class TourCreationRequest {
     @Schema(description = "Distance to cover", example = "12")
     private final double distanceToCover;
 
+
 }

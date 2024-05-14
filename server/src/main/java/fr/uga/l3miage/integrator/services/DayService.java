@@ -1,17 +1,10 @@
 package fr.uga.l3miage.integrator.services;
 
-import fr.uga.l3miage.integrator.components.DayComponent;
-import fr.uga.l3miage.integrator.components.EmployeeComponent;
-import fr.uga.l3miage.integrator.components.OrderComponent;
-import fr.uga.l3miage.integrator.components.TruckComponent;
-import fr.uga.l3miage.integrator.components.DeliveryComponent;
-import fr.uga.l3miage.integrator.components.TourComponent;
+import fr.uga.l3miage.integrator.components.*;
+import fr.uga.l3miage.integrator.datatypes.Coordinates;
 import fr.uga.l3miage.integrator.enums.DayState;
 import fr.uga.l3miage.integrator.exceptions.rest.*;
-import fr.uga.l3miage.integrator.exceptions.technical.DayAlreadyPlannedException;
-import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
-import fr.uga.l3miage.integrator.exceptions.technical.InvalidInputValueException;
-import fr.uga.l3miage.integrator.exceptions.technical.UpdateDayStateException;
+import fr.uga.l3miage.integrator.exceptions.technical.*;
 import fr.uga.l3miage.integrator.mappers.*;
 import fr.uga.l3miage.integrator.models.DayEntity;
 import fr.uga.l3miage.integrator.models.DeliveryEntity;
@@ -44,6 +37,7 @@ public class DayService {
     private final TruckComponent truckComponent;
     private final EmployeeComponent employeeComponent;
     private final OrderComponent orderComponent;
+    private final WarehouseComponent warehouseComponent;
     public void planDay(DayCreationRequest dayCreationRequest){
         try {
             //check wether the day is not already planned
@@ -56,9 +50,9 @@ public class DayService {
             if(tours.isEmpty())
                 throw  new InvalidInputValueException("Invalid input values, need 1 tour at least !");
 
-            boolean anyInvalidTour= tours.stream().anyMatch(tour -> tour.getDeliveries().isEmpty() || (tour.getDeliverymen().size()!=2  && tour.getDeliverymen().size()!=1) || tour.getTruck().isEmpty() );
+            boolean anyInvalidTour= tours.stream().anyMatch(tour -> tour.getDeliveries().isEmpty() || (tour.getDeliverymen().size()!=2  && tour.getDeliverymen().size()!=1) || tour.getTruck().isEmpty() )  ;
             if(anyInvalidTour)
-                throw new InvalidInputValueException("Invalid inputs, need 1 truck, 1 or 2 deliverymen and at least one delivery !");
+                throw new InvalidInputValueException("Invalid inputs, need 1 truck, 1 or 2 deliverymen , at least one delivery and also make sure you didn't plan the same order in other tours !");
 
             //finally plan the day by adding to it its tours and to tours their deliveries
              DayEntity dayEntity = dayPlannerMapper.toEntity(dayCreationRequest);
@@ -107,83 +101,37 @@ public class DayService {
 
     }
     public void editDay(DayCreationRequest dayEditRequest, String dayId){
-        try{
-           //check wether the day to edit exist in the db
+        try {
+            //check wether the day to edit exist in the db
             DayEntity day = dayComponent.getDayById(dayId);
+            //clean existing day
+            day.getTours().forEach(tour -> tour.getDeliveries().forEach(deliveryEntity -> deliveryComponent.deleteDelivery(deliveryEntity.getReference())));
+            day.getTours().forEach(tour -> tourComponent.deleteTour(tour.getReference()));
+            dayComponent.deleteDay(dayId);
+            //Then plan it
+            this.planDay(dayEditRequest);
 
-            //check wether the new given date of new day is different of the existent day
-            if( ! day.getDate().equals(dayEditRequest.getDate()))
-                throw new DayAlreadyPlannedException("Cannot update to the new given date, please give the same date as the one you planned  !");
-
-            // At this level we can check input validity and then edit the requested day
-            List<TourCreationRequest> tours = dayEditRequest.getTours();
-            if(tours.isEmpty())
-                throw  new InvalidInputValueException("Invalid input values, need 1 tour at least !");
-
-            boolean anyInvalidTour= tours.stream().anyMatch(tour -> tour.getDeliveries().isEmpty() || (tour.getDeliverymen().size()!=2  && tour.getDeliverymen().size()!=1) || tour.getTruck().isEmpty() );
-            if(anyInvalidTour)
-                throw new InvalidInputValueException("Invalid inputs, need 1 truck, 1 or 2 deliverymen and at least one delivery !");
-
-
-            //finally edit the day by adding to it its tours and to tours their deliveries
-            DayEntity dayEntity = dayPlannerMapper.toEntity(dayEditRequest);
-
-            //add tours to day
-            int tourIndex= 0;
-            List<TourEntity> dayTours = new ArrayList<>();
-            for(TourCreationRequest tourCreationRequest : dayEditRequest.getTours() ) {
-                try {
-                    String refTour=tourComponent.generateTourReference(dayEditRequest.getDate(),tourIndex);
-                    String tourLetter=Character.toString(refTour.charAt(refTour.length()-1));
-                    TourEntity tourEntity = tourPlannerMapper.toEntity(tourCreationRequest,refTour);
-
-                    //add deliveries to tour
-                    int deliveryIndex= 1;
-                    List<DeliveryEntity> tourDeliveries= new ArrayList<>();
-                    for(DeliveryCreationRequest deliveryCreationRequest: tourCreationRequest.getDeliveries() ) {
-                        DeliveryEntity deliveryEntity = deliveryPlannerMapper.toEntity(deliveryCreationRequest,deliveryComponent.generateDeliveryReference(dayEditRequest.getDate(),deliveryIndex,tourLetter));
-                        //save delivery and add it to tourDeliveries
-                        deliveryComponent.saveDelivery(deliveryEntity);
-                        tourDeliveries.add(deliveryEntity);
-                        deliveryIndex++;
-                    }
-
-                    tourEntity.setLetter(tourLetter);
-                    tourEntity.setDeliveries(tourDeliveries);
-                    //save tour and add it to dayTours
-                    tourComponent.saveTour(tourEntity);
-                    dayTours.add(tourEntity);
-                    tourIndex++;
-
-                } catch (InvalidInputValueException e) {
-                    throw new DayCreationRestException(e.getMessage());
-                }
-
-            }
-            //add tours into day and save it.
-            dayEntity.setTours(dayTours);
-            day.setTours(dayEntity.getTours());
-            day.setPlanner(dayEntity.getPlanner());
-            dayComponent.planDay(day);
-
-        }catch (DayNotFoundException e) {
+        }
+         catch (DayNotFoundException e) {
             throw new DayNotFoundRestException(e.getMessage());
-        } catch (InvalidInputValueException | DayAlreadyPlannedException e) {
-            throw new EditDayRestException(e.getMessage());
         }
     }
-    public SetUpBundleResponse getSetUpBundle(){
+    public SetUpBundleResponse getSetUpBundle(String idWarehouse){
 
-        SetUpBundleResponse setUpBundleResponse = new SetUpBundleResponse();
-        LinkedHashSet<MultipleOrder> multipleOrder = new LinkedHashSet<>();
-        multipleOrder = orderComponent.createMultipleOrders();
-        Set<String> immatriculationTrucks = truckComponent.getAllTrucksImmatriculation();
-        Set<String> idLivreurs = employeeComponent.getAllDeliveryMenID();
-
-        setUpBundleResponse.setMultipleOrders(multipleOrder);
-        setUpBundleResponse.setDeliverymen(idLivreurs);
-        setUpBundleResponse.setTrucks(immatriculationTrucks);
-        return setUpBundleResponse ;
+        try {
+            SetUpBundleResponse setUpBundleResponse = new SetUpBundleResponse();
+            LinkedHashSet<MultipleOrder> multipleOrder = orderComponent.createMultipleOrders();
+            Set<String> immatriculationTrucks = warehouseComponent.getAllTrucks(idWarehouse);
+            Set<String> idLivreurs = employeeComponent.getAllDeliveryMenID(idWarehouse);
+            Coordinates warehouseCoordinates = warehouseComponent.getWarehouseCoordinates(idWarehouse);
+            setUpBundleResponse.setMultipleOrders(multipleOrder);
+            setUpBundleResponse.setDeliverymen(idLivreurs);
+            setUpBundleResponse.setTrucks(immatriculationTrucks);
+            setUpBundleResponse.setCoordinates(List.of(warehouseCoordinates.getLat(), warehouseCoordinates.getLon()));
+            return setUpBundleResponse;
+        }catch (WarehouseNotFoundException e){
+            throw new WarehouseNotFoundRestException(e.getMessage());
+        }
     }
     public DayResponseDTO getDay(LocalDate date){
         try {

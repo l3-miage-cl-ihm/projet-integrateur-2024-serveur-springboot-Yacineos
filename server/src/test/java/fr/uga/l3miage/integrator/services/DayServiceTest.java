@@ -8,6 +8,7 @@ import fr.uga.l3miage.integrator.exceptions.rest.*;
 import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
 import fr.uga.l3miage.integrator.exceptions.technical.InvalidInputValueException;
 import fr.uga.l3miage.integrator.exceptions.technical.UpdateDayStateException;
+import fr.uga.l3miage.integrator.exceptions.technical.WarehouseNotFoundException;
 import fr.uga.l3miage.integrator.mappers.DayPlannerMapper;
 import fr.uga.l3miage.integrator.mappers.DeliveryPlannerMapper;
 import fr.uga.l3miage.integrator.mappers.TourPlannerMapper;
@@ -63,8 +64,9 @@ public class DayServiceTest {
     private EmployeeComponent employeeComponent;
     @MockBean
     private OrderComponent orderComponent;
+
     @MockBean
-    private TruckComponent truckComponent;
+    private WarehouseComponent warehouseComponent;
     @SpyBean
     private DayPlannerMapper dayPlannerMapper;
     @SpyBean
@@ -700,6 +702,7 @@ public class DayServiceTest {
 
         Address a1 = new Address("21 rue de la paix","38000","Grenoble");
         Address a2 = new Address("21 rue de la joie","38000","Grenoble");
+        WarehouseEntity warehouse=WarehouseEntity.builder().name("Grenis").coordinates(new Coordinates(12.76,14.874)).build();
         CustomerEntity c1 = CustomerEntity.builder()
                 .address(a1)
                 .build();
@@ -729,14 +732,17 @@ public class DayServiceTest {
         EmployeeEntity e1 = EmployeeEntity.builder()
                 .job(Job.DELIVERYMAN)
                 .trigram("abc")
+                .warehouse(warehouse)
                 .build();
         EmployeeEntity e2 = EmployeeEntity.builder()
                 .job(Job.DELIVERYMAN)
                 .trigram("def")
+                .warehouse(warehouse)
                 .build();
         EmployeeEntity e3 = EmployeeEntity.builder()
                 .job(Job.DELIVERYMAN)
                 .trigram("ghi")
+                .warehouse(warehouse)
                 .build();
 
         TruckEntity t1 = TruckEntity.builder()
@@ -746,6 +752,7 @@ public class DayServiceTest {
                 .immatriculation("DEF")
                 .build();
 
+        warehouse.setTrucks(Set.of(t1,t2));
         Set<String> ref = new LinkedHashSet<>();
         ref.add(o1.getReference());
         ref.add(o2.getReference());
@@ -755,19 +762,16 @@ public class DayServiceTest {
         m3.add(m1);
         m3.add(m2);
 
-        Set<String> truckImmatriculations = new HashSet<>();
-        truckImmatriculations.add(t1.getImmatriculation());
-        truckImmatriculations.add(t2.getImmatriculation());
-
         Set<String> employeeIds = new HashSet<>();
         employeeIds.add(e1.getTrigram());
         employeeIds.add(e2.getTrigram());
         employeeIds.add(e3.getTrigram());
 
-        when(employeeComponent.getAllDeliveryMenID()).thenReturn(employeeIds);
-        when(truckComponent.getAllTrucksImmatriculation()).thenReturn(truckImmatriculations);
+        when(employeeComponent.getAllDeliveryMenID((warehouse.getName()))).thenReturn(employeeIds);
+        when(warehouseComponent.getAllTrucks(warehouse.getName())).thenReturn(Set.of(t1.getImmatriculation(),t2.getImmatriculation()));
+        when(warehouseComponent.getWarehouseCoordinates(warehouse.getName())).thenReturn(warehouse.getCoordinates());
         when(orderComponent.createMultipleOrders()).thenReturn(m3);
-        SetUpBundleResponse response = dayService.getSetUpBundle();
+        SetUpBundleResponse response = dayService.getSetUpBundle(warehouse.getName());
 
         assertThat(response.getDeliverymen().size()).isEqualTo(3);
         assertThat(response.getMultipleOrders().size()).isEqualTo(2);
@@ -1068,7 +1072,7 @@ public class DayServiceTest {
         Mockito.doNothing().when(tourComponent).saveTour(any(TourEntity.class));
 
         //then
-        assertThrows(EditDayRestException.class,()->dayService.editDay(editDayRequest,day.getReference()));
+        assertThrows(DayCreationRestException.class,()->dayService.editDay(editDayRequest,day.getReference()));
         verify(dayPlannerMapper,times(0)).toEntity(any(DayCreationRequest.class));
         verify(tourPlannerMapper,times(0)).toEntity(any(TourCreationRequest.class),anyString());
         verify(deliveryPlannerMapper,times(0)).toEntity(any(DeliveryCreationRequest.class),anyString());
@@ -1189,7 +1193,7 @@ public class DayServiceTest {
         Mockito.doNothing().when(tourComponent).saveTour(any(TourEntity.class));
 
         //then
-        assertThrows(EditDayRestException.class,()->dayService.editDay(editDayRequest,day.getReference()));
+        assertThrows(DayCreationRestException.class,()->dayService.editDay(editDayRequest,day.getReference()));
         verify(dayPlannerMapper,times(0)).toEntity(any(DayCreationRequest.class));
         verify(tourPlannerMapper,times(0)).toEntity(any(TourCreationRequest.class),anyString());
         verify(deliveryPlannerMapper,times(0)).toEntity(any(DeliveryCreationRequest.class),anyString());
@@ -1366,6 +1370,84 @@ public class DayServiceTest {
         //then
         assertThrows(UpdateDayStateRestException.class,()->dayService.updateDayState(day.getReference(),DayState.COMPLETED));
 
+    }
+
+    @Test
+    void getSetUpBundleNotOK(){
+        Address a1 = new Address("21 rue de la paix","38000","Grenoble");
+        Address a2 = new Address("21 rue de la joie","38000","Grenoble");
+        WarehouseEntity warehouse=WarehouseEntity.builder().name("Grenis").coordinates(new Coordinates(12.76,14.874)).build();
+        CustomerEntity c1 = CustomerEntity.builder()
+                .address(a1)
+                .build();
+        CustomerEntity c2 = CustomerEntity.builder()
+                .address(a2)
+                .build();
+        OrderEntity o1 = OrderEntity.builder()
+                .reference("c01")
+                .creationDate(LocalDate.of(2020, 1, 7))
+                .state(OrderState.OPENED)
+                .customer(c1)
+                .build();
+        OrderEntity o2 = OrderEntity.builder()
+                .reference("c02")
+                .creationDate(LocalDate.of(2023, 1, 9))
+                .customer(c1)
+                .state(OrderState.OPENED)
+                .build();
+        OrderEntity o3 = OrderEntity.builder()
+                .reference("c03")
+                .creationDate(LocalDate.of(2024, 1, 8))
+                .customer(c2)
+                .state(OrderState.OPENED)
+                .build();
+
+
+        EmployeeEntity e1 = EmployeeEntity.builder()
+                .job(Job.DELIVERYMAN)
+                .trigram("abc")
+                .warehouse(warehouse)
+                .build();
+        EmployeeEntity e2 = EmployeeEntity.builder()
+                .job(Job.DELIVERYMAN)
+                .trigram("def")
+                .warehouse(warehouse)
+                .build();
+        EmployeeEntity e3 = EmployeeEntity.builder()
+                .job(Job.DELIVERYMAN)
+                .trigram("ghi")
+                .warehouse(warehouse)
+                .build();
+
+        TruckEntity t1 = TruckEntity.builder()
+                .immatriculation("ABC")
+                .build();
+        TruckEntity t2 = TruckEntity.builder()
+                .immatriculation("DEF")
+                .build();
+
+        warehouse.setTrucks(Set.of(t1,t2));
+        Set<String> ref = new LinkedHashSet<>();
+        ref.add(o1.getReference());
+        ref.add(o2.getReference());
+        MultipleOrder m1 = new MultipleOrder(ref,a1.toString());
+        MultipleOrder m2 = new MultipleOrder(Set.of(o3.getReference()),a2.toString());
+        LinkedHashSet<MultipleOrder> m3 = new LinkedHashSet<>();
+        m3.add(m1);
+        m3.add(m2);
+
+        Set<String> employeeIds = new HashSet<>();
+        employeeIds.add(e1.getTrigram());
+        employeeIds.add(e2.getTrigram());
+        employeeIds.add(e3.getTrigram());
+
+        when(employeeComponent.getAllDeliveryMenID((warehouse.getName()))).thenReturn(employeeIds);
+        when(warehouseComponent.getAllTrucks("Paris")).thenThrow(new WarehouseNotFoundException(""));
+        when(warehouseComponent.getWarehouseCoordinates(warehouse.getName())).thenReturn(warehouse.getCoordinates());
+        when(orderComponent.createMultipleOrders()).thenReturn(m3);
+
+
+        assertThrows(WarehouseNotFoundRestException.class,()->dayService.getSetUpBundle("Paris"));
     }
 }
 
