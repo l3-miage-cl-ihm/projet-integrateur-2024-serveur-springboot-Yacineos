@@ -10,7 +10,7 @@ services:
       - ./postgres-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=IntegratorUser1*
+      - POSTGRES_PASSWORD=postgres
     ports:
       - "5432:5432"
   pgadmin:
