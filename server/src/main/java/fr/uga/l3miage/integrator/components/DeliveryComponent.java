@@ -1,12 +1,9 @@
 package fr.uga.l3miage.integrator.components;
 
 import fr.uga.l3miage.integrator.enums.DeliveryState;
-import fr.uga.l3miage.integrator.enums.TourState;
 import fr.uga.l3miage.integrator.exceptions.technical.DeliveryNotFoundException;
-import fr.uga.l3miage.integrator.exceptions.technical.TourNotFoundException;
 import fr.uga.l3miage.integrator.exceptions.technical.UpdateDeliveryStateException;
 import fr.uga.l3miage.integrator.models.DeliveryEntity;
-import fr.uga.l3miage.integrator.models.TourEntity;
 import fr.uga.l3miage.integrator.repositories.DeliveryRepository;
 import fr.uga.l3miage.integrator.repositories.TourRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +15,6 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class DeliveryComponent {
     private final DeliveryRepository deliveryRepository;
-    private final TourRepository tourRepository;
     public String generateDeliveryReference(LocalDate date, int deliveryIndex ,String tourLetter) {
         String dayNumber = String.format("%03d", date.getDayOfYear());
         return 'l' + dayNumber+'G'+'-'+tourLetter+deliveryIndex;
@@ -70,8 +66,6 @@ public class DeliveryComponent {
                 throw new UpdateDeliveryStateException("Delivery is already completed !", deliveryEntity.getState());
 
         }
-
-
 
         return deliveryRepository.save(deliveryEntity);
     }

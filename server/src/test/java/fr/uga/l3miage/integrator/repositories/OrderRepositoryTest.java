@@ -21,9 +21,7 @@ public class OrderRepositoryTest {
 
     @Test
     void findOrderEntitiesByStateOrderByCreationDateAsc(){
-
         //given
-
         OrderEntity o1 = OrderEntity.builder()
                 .reference("c01")
                 .creationDate(LocalDate.of(2020, 1, 9))
@@ -49,10 +47,8 @@ public class OrderRepositoryTest {
         orderRepository.save(o3);
         orderRepository.save(o4);
 
-
         //when
         Set<OrderEntity> response = orderRepository.findOrderEntitiesByStateOrderByCreationDateAsc(OrderState.OPENED);
-
 
         //then
         assertThat(response.stream().findFirst().get().getReference()).isEqualTo("c03");

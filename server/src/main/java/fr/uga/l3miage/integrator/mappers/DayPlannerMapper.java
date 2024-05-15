@@ -8,7 +8,7 @@ import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(uses = {TourPlannerMapper.class,DayPlannerMapperUtils.class})
+@Mapper(uses = {TourPlannerMapper.class,DeliveryPlannerMapper.class,DayPlannerMapperUtils.class})
 @DecoratedWith(DayPlannerMapperDecorator.class)
 public interface DayPlannerMapper {
 
@@ -20,5 +20,7 @@ public interface DayPlannerMapper {
 
     @Mapping(target = "tours", ignore=true)
     DayResponseDTO toResponse(DayEntity dayEntity);
+
+
 
 }

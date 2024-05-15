@@ -1,7 +1,5 @@
 package fr.uga.l3miage.integrator.components;
 
-
-
 import fr.uga.l3miage.integrator.enums.TourState;
 import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
 import fr.uga.l3miage.integrator.exceptions.technical.TourNotFoundException;
@@ -25,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class TourComponentTest {
 
@@ -36,30 +33,20 @@ public class TourComponentTest {
     @MockBean
     private TourRepository tourRepository;
 
-
-
-
     @Test
     void getTourOfTheDayDayNotFound (){
-
         //when
         when(dayRepository.findByDate(any())).thenReturn(Optional.empty());
-
         //then
         assertThrows(DayNotFoundException.class,()->tourComponent.getTourOfTheDay("jojo@gmail.fr"));
     }
 
-
     @Test
     void getTourOfTheDayTourNotFound (){
-
-
         //given
         DayEntity day = DayEntity.builder().tours(new LinkedList<>()).reference("J238").build();
-
         //when
         when(dayRepository.findByDate(any())).thenReturn(Optional.of(day));
-
         //then
         assertThrows(TourNotFoundException.class,()->tourComponent.getTourOfTheDay("jojo@gmail.fr"));
     }
@@ -69,24 +56,15 @@ public class TourComponentTest {
     @Test
     void getTourOfTheDayTourWithoutTargetedDeliveryman(){
 
-
         //given
-        Set<TourEntity> tours= new HashSet<>();
-        Set<EmployeeEntity> deliverymen= new HashSet<>();
         EmployeeEntity m1=EmployeeEntity.builder().email("jojo@gmail.com").build();
         EmployeeEntity m2=EmployeeEntity.builder().email("axel@gmail.com").build();
-        deliverymen.add(m1);
-        deliverymen.add(m2);
-
         TourEntity tour= TourEntity.builder().reference("T238G-A").build();
-        tour.setDeliverymen(deliverymen);
+        tour.setDeliverymen(Set.of(m1,m2));
 
-        tours.add(tour);
-        DayEntity day = DayEntity.builder().tours(new LinkedList<>()).reference("J238").build();
-
+        DayEntity day = DayEntity.builder().tours(List.of(tour)).reference("J238").build();
         //when
         when(dayRepository.findByDate(any())).thenReturn(Optional.of(day));
-
         //then
         assertThrows(TourNotFoundException.class,()->tourComponent.getTourOfTheDay("dumas@gmail.fr"));
     }
@@ -94,31 +72,19 @@ public class TourComponentTest {
     @Test
     void getTourOfTheDayOK() throws TourNotFoundException, DayNotFoundException {
 
-
         //given
-        List<TourEntity> tours= new LinkedList<>();
-        Set<EmployeeEntity> deliverymen= new HashSet<>();
         EmployeeEntity m1=EmployeeEntity.builder().email("jojo@gmail.com").build();
         EmployeeEntity m2=EmployeeEntity.builder().email("axel@gmail.com").build();
-        deliverymen.add(m1);
-        deliverymen.add(m2);
 
-        TourEntity tour= TourEntity.builder().reference("T238G-A").build();
-        tours.add(tour);
-        tour.setDeliverymen(deliverymen);
-        Set<EmployeeEntity> deliverymen2= new HashSet<>();
+        TourEntity tour1= TourEntity.builder().reference("T238G-A").build();
+        tour1.setDeliverymen(Set.of(m1,m2));
         EmployeeEntity m3=EmployeeEntity.builder().email("juju@gmail.com").build();
         EmployeeEntity m4=EmployeeEntity.builder().email("alexis@gmail.com").build();
-        deliverymen2.add(m3);
-        deliverymen2.add(m4);
 
         TourEntity tour2= TourEntity.builder().reference("T238G-B").build();
-        tour2.setDeliverymen(deliverymen2);
+        tour2.setDeliverymen(Set.of(m3,m4));
 
-        tours.add(tour2);
-        DayEntity day = DayEntity.builder().reference("J238").build();
-        day.setTours(tours);
-
+        DayEntity day = DayEntity.builder().reference("J238").tours(List.of(tour1,tour2)).build();
         //when
         when(dayRepository.findByDate(any())).thenReturn(Optional.of(day));
         TourEntity response= tourComponent.getTourOfTheDay("jojo@gmail.com");
@@ -133,19 +99,10 @@ public class TourComponentTest {
     @Test
     void saveTour(){
         //given
-        TruckEntity truck = TruckEntity.builder()
-                .immatriculation("ZT-876-VG")
-                .build();
         TourEntity tourEntity=TourEntity.builder()
                 .reference("t123G-A")
-                .letter("A")
                 .state(TourState.PLANNED)
-                .deliveries(new LinkedList<>())
-                .deliverymen(Set.of())
-                .truck(truck)
-                .distanceToCover(34)
                 .build();
-
         tourComponent.saveTour(tourEntity);
 
         //when

@@ -1,8 +1,6 @@
 package fr.uga.l3miage.integrator.exceptions.handlers;
 
 import fr.uga.l3miage.integrator.exceptions.EditDayErrorResponse;
-import fr.uga.l3miage.integrator.exceptions.PlanDayErrorResponse;
-import fr.uga.l3miage.integrator.exceptions.rest.DayCreationRestException;
 import fr.uga.l3miage.integrator.exceptions.rest.EditDayRestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

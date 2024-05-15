@@ -21,8 +21,7 @@ public class WarehouseComponent {
     }
 
     public Set<String> getAllTrucks(String id) throws WarehouseNotFoundException{
-        WarehouseEntity warehouseEntity =  this.getWarehouse(id);
-        Set<TruckEntity> truckEntities = warehouseEntity.getTrucks();
+        Set<TruckEntity> truckEntities = this.getWarehouse(id).getTrucks();
         return truckEntities.stream().map(TruckEntity::getImmatriculation).collect(Collectors.toSet());
     }
 

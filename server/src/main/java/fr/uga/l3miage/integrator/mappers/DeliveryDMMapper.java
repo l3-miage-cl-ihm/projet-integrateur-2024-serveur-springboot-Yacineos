@@ -1,7 +1,6 @@
 package fr.uga.l3miage.integrator.mappers;
 
 import fr.uga.l3miage.integrator.mappers.utils.DeliveryDMMapperUtils;
-import fr.uga.l3miage.integrator.mappers.utils.TourDMMapperUtils;
 import fr.uga.l3miage.integrator.models.DeliveryEntity;
 import fr.uga.l3miage.integrator.responses.DeliveryDMResponseDTO;
 import org.mapstruct.Mapper;

@@ -1,17 +1,13 @@
 package fr.uga.l3miage.integrator.datatypes;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 
 import javax.persistence.Embeddable;
 
 @Embeddable
 @Getter
-@SuperBuilder
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Address {

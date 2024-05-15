@@ -1,7 +1,6 @@
 package fr.uga.l3miage.integrator.exceptions.rest;
 
 import fr.uga.l3miage.integrator.enums.DeliveryState;
-import fr.uga.l3miage.integrator.exceptions.technical.UpdateDeliveryStateException;
 import lombok.Getter;
 
 @Getter

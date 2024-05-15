@@ -1,9 +1,11 @@
 package fr.uga.l3miage.integrator.controllers;
 
 import fr.uga.l3miage.integrator.components.TourComponent;
+import fr.uga.l3miage.integrator.configuration.TokenRetriever;
 import fr.uga.l3miage.integrator.datatypes.Address;
 import fr.uga.l3miage.integrator.datatypes.Coordinates;
 import fr.uga.l3miage.integrator.enums.DeliveryState;
+import fr.uga.l3miage.integrator.enums.Job;
 import fr.uga.l3miage.integrator.enums.TourState;
 import fr.uga.l3miage.integrator.exceptions.NotFoundErrorResponse;
 import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
@@ -62,31 +64,34 @@ public class DeliverymanControllerTest {
     @SpyBean
     private TourComponent tourComponent;
 
+    private String token = TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456");
 
     @BeforeEach
     public void setup() {
         testRestTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        EmployeeEntity anais = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.DELIVERYMAN).lastName("okj").firstName("jd").mobilePhone("098").build();
+        employeeRepository.save(anais);
     }
-
-@AfterEach
-void clear(){
-    employeeRepository.findAll().forEach(employee -> {employee.setWarehouse(null); employeeRepository.save(employee);} );
-    warehouseRepository.deleteAll();
-    dayRepository.deleteAll();
-    tourRepository.deleteAll();
-    deliveryRepository.deleteAll();
-    orderRepository.deleteAll();
-    truckRepository.deleteAll();
-    employeeRepository.deleteAll();
-    customerRepository.deleteAll();
-
-}
+    @AfterEach
+    void clear(){
+        employeeRepository.findAll().forEach(employee -> {employee.setWarehouse(null); employeeRepository.save(employee);} );
+        warehouseRepository.deleteAll();
+        dayRepository.deleteAll();
+        tourRepository.deleteAll();
+        deliveryRepository.deleteAll();
+        orderRepository.deleteAll();
+        truckRepository.deleteAll();
+        employeeRepository.deleteAll();
+        customerRepository.deleteAll();
+    }
 
     @Test
     void getTourOK() throws TourNotFoundException, DayNotFoundException {
-        //given
-        final HttpHeaders headers = new HttpHeaders();
 
+        final HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.token);
+
+        //given
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("email", "juju@gmail.com");
 
@@ -149,9 +154,11 @@ void clear(){
 
     @Test
     void getTourNotFoundBecauseOfNotFoundDay() throws TourNotFoundException, DayNotFoundException {
-        //given
-        final HttpHeaders headers = new HttpHeaders();
 
+        final HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.token);
+
+        //given
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("email", "hola@gmail.com");
 
@@ -171,8 +178,9 @@ void clear(){
 
     @Test
     void getTourNotFoundBecauseOfNotFoundDeliveryman() throws TourNotFoundException, DayNotFoundException {
-        //given
+
         final HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("email", "hola@gmail.com");
@@ -198,7 +206,9 @@ void clear(){
     @Test
     void updateDeliveryStateOK(){
         //given
+
         final HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("deliveryId", "l130G-A1");
@@ -229,7 +239,9 @@ void clear(){
     @Test
     void updateDeliveryStateAndTourOK() throws TourNotFoundException {
         //given
+
         final HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("deliveryId", "l130G-A1");
@@ -262,7 +274,9 @@ void clear(){
     @Test
     void updateDeliveryStateNotOK_BecauseOfNotFoundDelivery(){
         //given
+
         final HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("deliveryId", "l130G-A1");
@@ -283,6 +297,7 @@ void clear(){
     void updateDeliveryStateNotOK_BecauseOfWrongState(){
         //given
         final HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("deliveryId", "l130G-A1");
@@ -315,6 +330,7 @@ void clear(){
     void updateTourInCourseOK() throws TourNotFoundException {
         //given
         final HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("deliveryId", "l130G-A2");

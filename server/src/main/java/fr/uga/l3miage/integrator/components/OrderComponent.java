@@ -9,11 +9,11 @@ import fr.uga.l3miage.integrator.responses.datatypes.MultipleOrder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.groupingBy;
 
 
 @Component
@@ -23,11 +23,11 @@ public class OrderComponent {
 
 
     public LinkedHashSet<MultipleOrder> createMultipleOrders() {
-        // Récupérer toutes les commandes ouvertes
+        // Find all opened orders
         Set<OrderEntity> allOrder = orderRepository.findOrderEntitiesByStateOrderByCreationDateAsc(OrderState.OPENED);
         LinkedHashSet<OrderEntity> allOrders = new LinkedHashSet<>();
         allOrder.stream().limit(30).forEach(allOrders::add);
-        // Regrouper les commandes par client
+        // group orders by customer
         Map<CustomerEntity, List<OrderEntity>> ordersByCustomer = allOrders.stream()
                 .collect(Collectors.groupingBy(OrderEntity::getCustomer));
 
@@ -38,20 +38,24 @@ public class OrderComponent {
             CustomerEntity customer = entry.getKey();
             List<OrderEntity> orders = entry.getValue();
 
-            // Créer une nouvelle liste de références de commandes pour chaque client
+            // Create a new List reference of orders of the customer
             Set<String> references = orders.stream()
                     .map(OrderEntity::getReference)
                     .collect(Collectors.toSet());
 
-            // Créer un MultipleOrder pour ce client avec ses commandes et son adresse
+            // Create a Multiple order to that customer with its orders and address
             MultipleOrder multipleOrder = new MultipleOrder(references, customer.getAddress().toString());
 
-            // Ajouter le MultipleOrder à la liste
+            // Add the previous multiple order to the list
             multipleOrders.add(multipleOrder);
         }
 
         return multipleOrders;
     }
 
+
+    public void saveOrder(OrderEntity orderEntity){
+        orderRepository.save(orderEntity);
+    };
 
     }
