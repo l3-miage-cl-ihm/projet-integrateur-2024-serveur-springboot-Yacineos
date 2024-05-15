@@ -14,7 +14,7 @@ public class TokenRetriever {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        String API_KEY = "AIzaSyAnkwJizb7F39gUEbgdGrJXpMmnFb0kY0A";
+        String API_KEY = "AIzaSyBmdkFsMV3403xQd17RVHZcBPzeWt7YISA";
 
         // Set the URL of the signInWithPassword endpoint along with the API key
         String url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key="+API_KEY;
