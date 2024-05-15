@@ -15,10 +15,12 @@ import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 @Component
 @Profile({"prod","dev"})
@@ -40,6 +42,12 @@ public class FeedDB implements CommandLineRunner {
         saveCustomersFromCsv(dirPath + "/server/src/main/java/fr/uga/l3miage/integrator/utils/data/customers.csv");
         saveOrdersFromCsv(dirPath + "/server/src/main/java/fr/uga/l3miage/integrator/utils/data/orders.csv");
 
+    }
+
+    public static String removeAccents(String input) {
+        String normalizedString = Normalizer.normalize(input, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(normalizedString).replaceAll("");
     }
 
     public void saveTrucksFromCsv(String filePath) {
@@ -121,7 +129,8 @@ public class FeedDB implements CommandLineRunner {
                 String trigram=row[0];
                 String firstName=row[1];
                 String lastName=row[2];
-                String email=firstName.toLowerCase()+lastName.toLowerCase()+"@gmail.com";
+                String email=removeAccents(firstName.toLowerCase())+removeAccents(lastName.toLowerCase())+"@gmail.com";
+
                 String photo = row[3];
                 String mobilePhone=row[4];
                 String jobCsv=row[5];
