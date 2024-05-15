@@ -423,9 +423,9 @@ public class DayServiceTest {
         //then
         assertThat(response.getDate()).isEqualTo(expectedResponse.getDate());
         verify(dayPlannerMapper,times(2)).toResponse(day);
-        verify(tourPlannerMapper,times(2)).toResponse(any());
-        verify(deliveryPlannerMapper,times(4)).toResponse(any());
-        verify(dayComponent,times(1)).getDay(LocalDate.of(2024,4,29));
+        verify(tourPlannerMapper,times(4)).toResponse(any());
+        verify(deliveryPlannerMapper,times(8)).toResponse(any());
+       verify(dayComponent,times(1)).getDay(LocalDate.of(2024,4,29));
 
 
     }

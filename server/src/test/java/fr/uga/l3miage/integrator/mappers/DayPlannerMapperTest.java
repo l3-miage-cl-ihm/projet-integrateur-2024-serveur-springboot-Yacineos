@@ -1,13 +1,17 @@
 package fr.uga.l3miage.integrator.mappers;
 
+import fr.uga.l3miage.integrator.components.DeliveryComponent;
+import fr.uga.l3miage.integrator.components.TourComponent;
 import fr.uga.l3miage.integrator.datatypes.Address;
 
-import fr.uga.l3miage.integrator.enums.DayState;
-import fr.uga.l3miage.integrator.enums.Job;
+import fr.uga.l3miage.integrator.datatypes.Coordinates;
+import fr.uga.l3miage.integrator.enums.*;
+import fr.uga.l3miage.integrator.exceptions.technical.InvalidInputValueException;
 import fr.uga.l3miage.integrator.mappers.utils.DayPlannerMapperUtils;
 import fr.uga.l3miage.integrator.models.*;
 import fr.uga.l3miage.integrator.repositories.*;
 import fr.uga.l3miage.integrator.requests.DayCreationRequest;
+import fr.uga.l3miage.integrator.requests.DeliveryCreationRequest;
 import fr.uga.l3miage.integrator.requests.TourCreationRequest;
 import fr.uga.l3miage.integrator.responses.DayResponseDTO;
 import fr.uga.l3miage.integrator.responses.DeliveryPlannerResponseDTO;
@@ -21,6 +25,9 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -30,34 +37,62 @@ public class DayPlannerMapperTest {
     private  DayPlannerMapper dayPlannerMapper;
     @MockBean
     private EmployeeRepository employeeRepository;
+    @MockBean
+    private TourPlannerMapper tourPlannerMapper;
+    @MockBean
+    private DeliveryPlannerMapper deliveryPlannerMapper;
+    @MockBean
+    private TourComponent tourComponent;
+    @MockBean
+    private DeliveryComponent deliveryComponent;
 
     @Autowired
     private DayPlannerMapperUtils dayPlannerMapperUtils;
 
     @Test
-    void dayCreationRequest_To_DayEntity(){
+    void dayCreationRequest_To_DayEntity() throws InvalidInputValueException {
         //given
-        LocalDate now = LocalDate.now();
-        TourCreationRequest tour1 = TourCreationRequest.builder().distanceToCover(40).build();
-        List<TourCreationRequest> l=new ArrayList<>();
-        l.add(tour1);
-        DayCreationRequest dayCreationRequest = DayCreationRequest.builder().date(LocalDate.now()).tours(l).build();
+        LocalDate now=LocalDate.of(2024,05,15);
+        TruckEntity truck = TruckEntity.builder().immatriculation("WT-543-TR").build();
+        OrderEntity order1= OrderEntity.builder().state(OrderState.PLANNED).reference("c001").build();
+        OrderEntity order2= OrderEntity.builder().state(OrderState.PLANNED).reference("c002").build();
+        DeliveryCreationRequest deliveryCreationRequest=DeliveryCreationRequest.builder()
+                .orders(Set.of(order1.getReference(),order2.getReference()))
+                .coordinates(List.of(23.7,12.9))
+                .distanceToCover(23).build();
+        EmployeeEntity deliveryman1=EmployeeEntity.builder().job(Job.DELIVERYMAN).trigram("JLY").mobilePhone("0876342324").build();
+        EmployeeEntity deliveryman2=EmployeeEntity.builder().job(Job.DELIVERYMAN).trigram("PLE").mobilePhone("0876342654").build();
+        TourCreationRequest tourCreationRequest = TourCreationRequest.builder()
+                .distanceToCover(49)
+                .truck(truck.getImmatriculation())
+                .deliverymen(Set.of(deliveryman1.getTrigram(),deliveryman2.getTrigram()))
+                .deliveries(List.of(deliveryCreationRequest))
+                .build();
 
 
         WarehouseEntity grenis =WarehouseEntity.builder().days(Set.of()).photo("grenis.png").name("Grenis").letter("G")
-                .address(new Address("21 rue des cafards","65001","San antonio")).trucks(Set.of()).build();
+                .address(new Address("21 rue des cafards","65001","San antonio")).trucks(Set.of(truck)).build();
 
         EmployeeEntity planner = EmployeeEntity.builder().email("claudiatessier@gmail.com").job(Job.PLANNER).photo("chris.png")
                 .lastName("TESSIERE").firstName("claudia").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
 
+        DayCreationRequest dayCreationRequest = DayCreationRequest.builder().date(LocalDate.now()).tours(List.of(tourCreationRequest)).build();
+        TourEntity expectedResponse= TourEntity.builder().reference("t136G-A").state(TourState.PLANNED).distanceToCover(49).letter("A").deliveries(new LinkedList<>()).deliverymen(Set.of(deliveryman1,deliveryman2)).truck(truck).build();
+        DeliveryEntity  expectedDeliveryResponse= DeliveryEntity.builder().state(DeliveryState.PLANNED).orders(Set.of(order1,order2)).reference("l136G-A1").build();
         //when
         when(employeeRepository.findById(planner.getTrigram())).thenReturn(Optional.of(planner));
-        DayEntity expectedResponse= DayEntity.builder().reference(dayPlannerMapperUtils.generateDayReference(LocalDate.now())).state(DayState.PLANNED).date(now).planner(planner).tours(new LinkedList<>()).build();
+        when(tourComponent.generateTourReference(any(LocalDate.class),any(Integer.class))).thenReturn(expectedResponse.getReference());
+        when(tourPlannerMapper.toEntity(any(TourCreationRequest.class),anyString())).thenReturn(expectedResponse);
+        when(deliveryPlannerMapper.toEntity(any(DeliveryCreationRequest.class),anyString())).thenReturn(expectedDeliveryResponse);
+        doNothing().when(deliveryComponent).saveDelivery(any(DeliveryEntity.class));
+        doNothing().when(tourComponent).saveTour(any(TourEntity.class));
+
+        DayEntity expectedDayResponse= DayEntity.builder().reference(dayPlannerMapperUtils.generateDayReference(now)).state(DayState.PLANNED).date(now).planner(planner).tours(List.of(expectedResponse)).build();
         DayEntity dayEntityResponse=dayPlannerMapper.toEntity(dayCreationRequest);
 
         //then
-        assertThat(dayEntityResponse.getReference()).isEqualTo(expectedResponse.getReference());
-        assertThat(dayEntityResponse.getPlanner().getEmail()).isEqualTo(expectedResponse.getPlanner().getEmail());
+        assertThat(dayEntityResponse.getReference()).isEqualTo(expectedDayResponse.getReference());
+        assertThat(dayEntityResponse.getPlanner().getEmail()).isEqualTo(expectedDayResponse.getPlanner().getEmail());
     }
 
     @Test
@@ -65,8 +100,9 @@ public class DayPlannerMapperTest {
         // creation deliveryMen 1
         List<TourEntity> tours= new LinkedList<>();
         Set<EmployeeEntity> deliverymen= new HashSet<>();
-        EmployeeEntity m1=EmployeeEntity.builder().trigram("jjo").email("jojo@gmail.com").build();
-        EmployeeEntity m2=EmployeeEntity.builder().trigram("axl").email("axel@gmail.com").build();
+        WarehouseEntity warehouse=WarehouseEntity.builder().coordinates(new Coordinates(23.74,34.8)).days(Set.of()).address(new Address("23 rue","34000","Londre")).build();
+        EmployeeEntity m1=EmployeeEntity.builder().trigram("jjo").warehouse(warehouse).email("jojo@gmail.com").build();
+        EmployeeEntity m2=EmployeeEntity.builder().trigram("axl").warehouse(warehouse).email("axel@gmail.com").build();
 
         deliverymen.add(m1);
         deliverymen.add(m2);
@@ -80,7 +116,7 @@ public class DayPlannerMapperTest {
 
         OrderEntity order11=OrderEntity.builder().reference("c11").customer(customer1).build();
         OrderEntity order12=OrderEntity.builder().reference("c12").customer(customer1).build();
-        DeliveryEntity del1=DeliveryEntity.builder().reference("T238G-A1").distanceToCover(1.0).build();
+        DeliveryEntity del1=DeliveryEntity.builder().coordinates(new Coordinates(23.74,34.8)).reference("T238G-A1").distanceToCover(1.0).build();
         del1.setOrders(Set.of(order11,order12));
 
         //Creation delivery 2
@@ -88,7 +124,7 @@ public class DayPlannerMapperTest {
         OrderEntity order21=OrderEntity.builder().reference("c21").customer(customer2).build();
         OrderEntity order22=OrderEntity.builder().reference("c22").customer(customer2).build();
 
-        DeliveryEntity del2=DeliveryEntity.builder().reference("T238G-A2").distanceToCover(2.0).build();
+        DeliveryEntity del2=DeliveryEntity.builder().coordinates(new Coordinates(23.74,34.8)).reference("T238G-A2").distanceToCover(2.0).build();
         del2.setOrders(Set.of(order21,order22));
 
         List<DeliveryEntity> deliveries1=new LinkedList<>();
@@ -96,17 +132,14 @@ public class DayPlannerMapperTest {
         deliveries1.add(del2);
         //creation tour 1
         TruckEntity truck1=TruckEntity.builder().immatriculation("EV-666-IL").build();
+        TourEntity tour1= TourEntity.builder().reference("T238G-A").distanceToCover(0.0).truck(truck1).deliveries(deliveries1).deliverymen(deliverymen).build();
 
-        TourEntity tour1= TourEntity.builder().reference("T238G-A").distanceToCover(0.0).build();
-        tour1.setDeliverymen(deliverymen);
-        tour1.setTruck(truck1);
-        tour1.setDeliveries(deliveries1);
 
         tours.add(tour1);
         // creation deliveryMen 2
         Set<EmployeeEntity> deliverymen2= new HashSet<>();
-        EmployeeEntity m3=EmployeeEntity.builder().trigram("jju").email("juju@gmail.com").build();
-        EmployeeEntity m4=EmployeeEntity.builder().trigram("alx").email("alexis@gmail.com").build();
+        EmployeeEntity m3=EmployeeEntity.builder().trigram("jju").warehouse(warehouse).email("juju@gmail.com").build();
+        EmployeeEntity m4=EmployeeEntity.builder().trigram("alx").warehouse(warehouse).email("alexis@gmail.com").build();
 
         deliverymen2.add(m3);
         deliverymen2.add(m4);
@@ -115,7 +148,7 @@ public class DayPlannerMapperTest {
         OrderEntity order31=OrderEntity.builder().reference("c31").customer(customer3).build();
         OrderEntity order32=OrderEntity.builder().reference("c32").customer(customer3).build();
 
-        DeliveryEntity del3=DeliveryEntity.builder().reference("T238G-B1").distanceToCover(3.0).build();
+        DeliveryEntity del3=DeliveryEntity.builder().coordinates(new Coordinates(23.74,34.8)).reference("T238G-B1").distanceToCover(3.0).build();
         del3.setOrders(Set.of(order31,order32));
 
         //Creation delivery 4
@@ -124,7 +157,7 @@ public class DayPlannerMapperTest {
         OrderEntity order42=OrderEntity.builder().reference("c42").customer(customer4).build();
 
 
-        DeliveryEntity del4=DeliveryEntity.builder().reference("T238G-B2").distanceToCover(4.0).build();
+        DeliveryEntity del4=DeliveryEntity.builder().coordinates(new Coordinates(23.74,34.8)).reference("T238G-B2").distanceToCover(4.0).build();
         del4.setOrders(Set.of(order41,order42));
 
         List<DeliveryEntity> deliveries2=new LinkedList<>();
@@ -193,6 +226,14 @@ public class DayPlannerMapperTest {
         s.add(tDTO1);
         s.add(tDTO2);
         expectedResponse.setTours(s);
+
+        //when
+        when(tourPlannerMapper.toResponse(tour1)).thenReturn(tDTO1);
+        when(tourPlannerMapper.toResponse(tour2)).thenReturn(tDTO2);
+        when(deliveryPlannerMapper.toResponse(del1)).thenReturn(dDTO1);
+        when(deliveryPlannerMapper.toResponse(del2)).thenReturn(dDTO2);
+        when(deliveryPlannerMapper.toResponse(del3)).thenReturn(dDTO3);
+        when(deliveryPlannerMapper.toResponse(del4)).thenReturn(dDTO4);
 
         DayResponseDTO response = dayPlannerMapper.toResponse(day);
 

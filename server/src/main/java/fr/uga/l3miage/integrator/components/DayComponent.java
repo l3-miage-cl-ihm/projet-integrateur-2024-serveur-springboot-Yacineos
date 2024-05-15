@@ -19,12 +19,7 @@ public class DayComponent {
     private final DayRepository dayRepository;
 
     public DayEntity getDay(LocalDate date) throws DayNotFoundException {
-        Optional<DayEntity> day = dayRepository.findByDate(date);
-        if (day.isPresent()) {
-            return day.get();
-        } else {
-            throw new DayNotFoundException("No day found for the " + date.toString());
-        }
+        return dayRepository.findByDate(date).orElseThrow(()-> new DayNotFoundException("No day found for the " + date.toString()));
     }
 
 

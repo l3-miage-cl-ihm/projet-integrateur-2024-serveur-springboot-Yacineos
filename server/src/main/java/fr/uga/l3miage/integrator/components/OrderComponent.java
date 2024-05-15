@@ -54,4 +54,8 @@ public class OrderComponent {
     }
 
 
+    public void saveOrder(OrderEntity orderEntity){
+        orderRepository.save(orderEntity);
+    };
+
     }

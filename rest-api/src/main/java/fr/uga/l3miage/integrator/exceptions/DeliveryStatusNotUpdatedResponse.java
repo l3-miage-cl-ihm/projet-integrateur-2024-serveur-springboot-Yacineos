@@ -1,6 +1,5 @@
 package fr.uga.l3miage.integrator.exceptions;
 
-import fr.uga.l3miage.integrator.enums.DeliveryState;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;

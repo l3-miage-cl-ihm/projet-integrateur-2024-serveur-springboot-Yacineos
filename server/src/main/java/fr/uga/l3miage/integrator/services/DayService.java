@@ -3,6 +3,7 @@ package fr.uga.l3miage.integrator.services;
 import fr.uga.l3miage.integrator.components.*;
 import fr.uga.l3miage.integrator.datatypes.Coordinates;
 import fr.uga.l3miage.integrator.enums.DayState;
+import fr.uga.l3miage.integrator.enums.OrderState;
 import fr.uga.l3miage.integrator.exceptions.rest.*;
 import fr.uga.l3miage.integrator.exceptions.technical.*;
 import fr.uga.l3miage.integrator.mappers.*;
@@ -22,8 +23,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-
 @Service
 @RequiredArgsConstructor
 public class DayService {
@@ -32,9 +31,6 @@ public class DayService {
     private final TourComponent tourComponent;
     private final DeliveryComponent deliveryComponent;
     private final DayPlannerMapper dayPlannerMapper;
-    private  final TourPlannerMapper tourPlannerMapper;
-    private final  DeliveryPlannerMapper deliveryPlannerMapper;
-    private final TruckComponent truckComponent;
     private final EmployeeComponent employeeComponent;
     private final OrderComponent orderComponent;
     private final WarehouseComponent warehouseComponent;
@@ -57,40 +53,13 @@ public class DayService {
             //finally plan the day by adding to it its tours and to tours their deliveries
              DayEntity dayEntity = dayPlannerMapper.toEntity(dayCreationRequest);
 
-             //add tours to day
-            AtomicInteger tourIndex= new AtomicInteger(0);
-            List<TourEntity> dayTours = new ArrayList<>();
-            for(TourCreationRequest tourCreationRequest : dayCreationRequest.getTours() ) {
-                try {
-                    String refTour=tourComponent.generateTourReference(dayCreationRequest.getDate(),tourIndex.get());
-                    String tourLetter=Character.toString(refTour.charAt(refTour.length()-1));
-                    TourEntity tourEntity = tourPlannerMapper.toEntity(tourCreationRequest,refTour);
-
-                    //add deliveries to tour
-                    AtomicInteger deliveryIndex= new AtomicInteger(1);
-                    List<DeliveryEntity> tourDeliveries= new ArrayList<>();
-                    for(DeliveryCreationRequest deliveryCreationRequest: tourCreationRequest.getDeliveries() ) {
-                        DeliveryEntity deliveryEntity = deliveryPlannerMapper.toEntity(deliveryCreationRequest,deliveryComponent.generateDeliveryReference(dayCreationRequest.getDate(),deliveryIndex.get(),tourLetter));
-                        //save delivery and add it to tourDeliveries
-                        deliveryComponent.saveDelivery(deliveryEntity);
-                        tourDeliveries.add(deliveryEntity);
-                        deliveryIndex.getAndIncrement();
-                    }
-
-                    tourEntity.setLetter(tourLetter);
-                    tourEntity.setDeliveries(tourDeliveries);
-                    //save tour and add it to dayTours
-                    tourComponent.saveTour(tourEntity);
-                    dayTours.add(tourEntity);
-                    tourIndex.getAndIncrement();
-
-                } catch (InvalidInputValueException e) {
-                    throw new DayCreationRestException(e.getMessage());
-                }
-
-            }
-            //add tours into day and save it.
-            dayEntity.setTours(dayTours);
+             //here swtich orders state into PLANNED so as to not get the same orders the next day
+            dayEntity.getTours().forEach(tour ->
+                    tour.getDeliveries().forEach(deliveryEntity ->
+                            deliveryEntity.getOrders().forEach(orderEntity -> {
+                                orderEntity.setState(OrderState.PLANNED);
+                                orderComponent.saveOrder(orderEntity);
+                            }))   );
             dayComponent.planDay(dayEntity);
 
 
@@ -104,6 +73,15 @@ public class DayService {
         try {
             //check wether the day to edit exists in the db
             DayEntity day = dayComponent.getDayById(dayId);
+
+            //Switch orders state into OPENNED so as to consider the new dayEditDay with the right orders.
+            day.getTours().forEach(tour ->
+                    tour.getDeliveries().forEach(deliveryEntity ->
+                            deliveryEntity.getOrders().forEach(orderEntity -> {
+                                orderEntity.setState(OrderState.OPENED);
+                                orderComponent.saveOrder(orderEntity);
+                            }))   );
+
             //clean existing day by removing its relations
             day.getTours().forEach(tour -> tour.getDeliveries().forEach(deliveryEntity -> deliveryComponent.deleteDelivery(deliveryEntity.getReference())));
             day.getTours().forEach(tour -> tourComponent.deleteTour(tour.getReference()));
@@ -136,22 +114,7 @@ public class DayService {
     public DayResponseDTO getDay(LocalDate date){
         try {
             DayEntity day = dayComponent.getDay(date);
-            DayResponseDTO dayResponseDTO = dayPlannerMapper.toResponse(day);
-            List<TourPlannerResponseDTO> toursInDay = new ArrayList<>();
-            for (TourEntity tourEntity : day.getTours()) {
-                TourPlannerResponseDTO tourPlannerResponseDTO = tourPlannerMapper.toResponse(tourEntity);
-                List<DeliveryPlannerResponseDTO> deliveriesInTour = new ArrayList<>();
-                for(DeliveryEntity deliveryEntity : tourEntity.getDeliveries()) {
-                    DeliveryPlannerResponseDTO deliveryPlannerResponseDTO = deliveryPlannerMapper.toResponse(deliveryEntity);
-                    deliveriesInTour.add(deliveryPlannerResponseDTO);
-                };
-
-                tourPlannerResponseDTO.setDeliveries(deliveriesInTour);
-                toursInDay.add(tourPlannerResponseDTO);
-            }
-
-            dayResponseDTO.setTours(toursInDay);
-            return dayResponseDTO;
+            return dayPlannerMapper.toResponse(day);
 
         } catch (DayNotFoundException e) {
             throw new EntityNotFoundRestException(e.getMessage());
