@@ -26,81 +26,64 @@ public class WarehouseComponentTest {
 
     @Autowired
     private WarehouseComponent warehouseComponent;
-
     @MockBean
     private WarehouseRepository warehouseRepository;
 
     @Test
-    void getWarehouseOK(){
-        TourEntity tour = TourEntity.builder().reference("sdfze").build();
-        TourEntity tour2 = TourEntity.builder().reference("sdfze").build();
-        DayEntity day = DayEntity.builder().reference("zeefz").tours(List.of(tour)).build();
-        DayEntity day1 = DayEntity.builder().reference("zeeEfz").tours(List.of(tour2)).build();
+    void getWarehouseOK() {
         WarehouseEntity warehouseEntity = WarehouseEntity.builder()
                 .name("Grenis")
                 .letter("G")
-                .days(Set.of(day))
-                .address(new Address("Avenue Oukkaly","33434","hmmmmm"))
-                .coordinates(new Coordinates(12,21))
-                .photo("oukkal.png")
-                .build();
-        WarehouseEntity warehouseEntity2 = WarehouseEntity.builder()
-                .name("Paris")
-                .letter("P")
-                .days(Set.of(day1))
-                .trucks(Set.of())
-                .address(new Address("Avenue Oukkaly","33434","hmmmmmm"))
-                .coordinates(new Coordinates(21,21))
-                .photo("oukkal.png")
+                .address(new Address("Avenue Oukkaly", "33434", "hmmmmm"))
+                .coordinates(new Coordinates(12, 21))
                 .build();
 
-        when(warehouseRepository.findById("Grenis")).thenReturn(Optional.ofNullable(warehouseEntity));
+        when(warehouseRepository.findById("Grenis")).thenReturn(Optional.of(warehouseEntity));
         WarehouseEntity warehouse = warehouseComponent.getWarehouse("Grenis");
 
+        //then
         assertThat(warehouse).isEqualTo(warehouseEntity);
     }
-    @Test
-    void getWarehouseNotOK(){
-        when(warehouseRepository.findById("Grenis")).thenReturn(Optional.empty());
 
-        assertThrows(WarehouseNotFoundException.class,()-> warehouseComponent.getWarehouse("Grenis"));
+    @Test
+    void getWarehouseNotOK() {
+        when(warehouseRepository.findById("Grenis")).thenReturn(Optional.empty());
+        assertThrows(WarehouseNotFoundException.class, () -> warehouseComponent.getWarehouse("Grenis"));
     }
 
     @Test
-    void getAllTrucks(){
+    void getAllTrucks() {
+        //given
         TruckEntity truck = TruckEntity.builder().immatriculation("zefzefzefze").build();
-        TourEntity tour = TourEntity.builder().reference("sdfze").build();
-        DayEntity day = DayEntity.builder().reference("zeefz").tours(List.of(tour)).build();
         WarehouseEntity warehouseEntity = WarehouseEntity.builder()
                 .name("Grenis")
                 .letter("G")
-                .days(Set.of(day))
                 .trucks(Set.of(truck))
-                .address(new Address("Avenue Oukkaly","33434","hmmmmm"))
-                .coordinates(new Coordinates(12,21))
-                .photo("oukkal.png")
+                .address(new Address("Avenue Oukkaly", "33434", "hmmmmm"))
+                .coordinates(new Coordinates(12, 21))
                 .build();
-        when(warehouseRepository.findById("Grenis")).thenReturn(Optional.ofNullable(warehouseEntity));
+        //when
+        when(warehouseRepository.findById("Grenis")).thenReturn(Optional.of(warehouseEntity));
         Set<String> response = warehouseComponent.getAllTrucks("Grenis");
 
+        //when
         assertThat(response.stream().findFirst().get()).isEqualTo(truck.getImmatriculation());
     }
+
     @Test
-    void getWarehouseCoordinates(){
-        TruckEntity truck = TruckEntity.builder().immatriculation("zefzefzefze").build();
-        TourEntity tour = TourEntity.builder().reference("sdfze").build();
-        DayEntity day = DayEntity.builder().reference("zeefz").tours(List.of(tour)).build();
+    void getWarehouseCoordinates() {
+        //given
         WarehouseEntity warehouseEntity = WarehouseEntity.builder()
                 .name("Grenis")
                 .letter("G")
-                .days(Set.of(day))
-                .trucks(Set.of(truck))
-                .address(new Address("Avenue Oukkaly","33434","hmmmmm"))
-                .coordinates(new Coordinates(12,21))
-                .photo("oukkal.png")
+                .address(new Address("Avenue Oukkaly", "33434", "hmmmmm"))
+                .coordinates(new Coordinates(12, 21))
                 .build();
+        //when
         when(warehouseRepository.findById("Grenis")).thenReturn(Optional.ofNullable(warehouseEntity));
         Coordinates coordinates = warehouseComponent.getWarehouseCoordinates("Grenis");
+
+        //when
         assertThat(coordinates).isEqualTo(warehouseEntity.getCoordinates());
     }
 

@@ -38,28 +38,10 @@ public class EmployeeRepositoryTest {
                 .build();
         warehouseRepository.save(warehouse);
 
-
-        EmployeeEntity e1 = EmployeeEntity.builder()
-                .trigram("abc")
-                .job(Job.DELIVERYMAN)
-                .warehouse(warehouse)
-                .build();
-        EmployeeEntity e2 = EmployeeEntity.builder()
-                .trigram("cde")
-                .job(Job.DELIVERYMAN)
-                .warehouse(warehouse)
-                .build();
-        EmployeeEntity e3 = EmployeeEntity.builder()
-                .trigram("fgh")
-                .job(Job.DELIVERYMAN)
-                .warehouse(warehouse)
-                .build();
-        EmployeeEntity e4 = EmployeeEntity.builder()
-                .trigram("ijk")
-                .job(Job.PRODUCTOR)
-                .warehouse(warehouse)
-                .build();
-
+        EmployeeEntity e1 = EmployeeEntity.builder().trigram("abc").job(Job.DELIVERYMAN).warehouse(warehouse).build();
+        EmployeeEntity e2 = EmployeeEntity.builder().trigram("cde").job(Job.DELIVERYMAN).warehouse(warehouse).build();
+        EmployeeEntity e3 = EmployeeEntity.builder().trigram("fgh").job(Job.DELIVERYMAN).warehouse(warehouse).build();
+        EmployeeEntity e4 = EmployeeEntity.builder().trigram("ijk").job(Job.PRODUCTOR).warehouse(warehouse).build();
         employeeRepository.save(e1);
         employeeRepository.save(e2);
         employeeRepository.save(e3);

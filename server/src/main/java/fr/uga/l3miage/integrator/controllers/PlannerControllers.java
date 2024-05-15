@@ -2,17 +2,14 @@ package fr.uga.l3miage.integrator.controllers;
 
 import fr.uga.l3miage.integrator.endpoints.PlannerEndpoints;
 import fr.uga.l3miage.integrator.enums.DayState;
-import fr.uga.l3miage.integrator.exceptions.technical.DayNotFoundException;
 import fr.uga.l3miage.integrator.requests.DayCreationRequest;
-import fr.uga.l3miage.integrator.responses.*;
+import fr.uga.l3miage.integrator.responses.DayResponseDTO;
+import fr.uga.l3miage.integrator.responses.SetUpBundleResponse;
 import fr.uga.l3miage.integrator.services.DayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor

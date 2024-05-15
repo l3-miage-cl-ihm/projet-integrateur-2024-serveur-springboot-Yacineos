@@ -1,25 +1,13 @@
 package fr.uga.l3miage.integrator.mappers;
 
 import fr.uga.l3miage.integrator.exceptions.technical.InvalidInputValueException;
-import fr.uga.l3miage.integrator.mappers.utils.TourDMMapperUtils;
 import fr.uga.l3miage.integrator.mappers.utils.TourPlannerMapperUtils;
-import fr.uga.l3miage.integrator.models.DeliveryEntity;
-import fr.uga.l3miage.integrator.models.EmployeeEntity;
 import fr.uga.l3miage.integrator.models.TourEntity;
-import fr.uga.l3miage.integrator.models.TruckEntity;
 import fr.uga.l3miage.integrator.requests.TourCreationRequest;
-import fr.uga.l3miage.integrator.responses.DeliveryPlannerResponseDTO;
 import fr.uga.l3miage.integrator.responses.TourPlannerResponseDTO;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jmx.export.annotation.ManagedOperationParameter;
-
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Mapper(uses = {DeliveryPlannerMapper.class, TourPlannerMapperUtils.class})
 @DecoratedWith(TourPlannerMapperDecorator.class)

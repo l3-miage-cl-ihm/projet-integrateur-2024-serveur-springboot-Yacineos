@@ -12,11 +12,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,7 +30,6 @@ public class FeedDB implements CommandLineRunner {
     private final EmployeeRepository employeeRepository;
     private final WarehouseRepository warehouseRepository;
     private final CustomerRepository customerRepository;
-    private final ProductRepository productRepository;
 
     @Override
     public void run(String... args) throws Exception {

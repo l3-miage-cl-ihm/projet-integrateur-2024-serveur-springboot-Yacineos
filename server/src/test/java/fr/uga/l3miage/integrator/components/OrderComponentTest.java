@@ -7,15 +7,15 @@ import fr.uga.l3miage.integrator.models.CustomerEntity;
 import fr.uga.l3miage.integrator.models.OrderEntity;
 import fr.uga.l3miage.integrator.repositories.OrderRepository;
 import fr.uga.l3miage.integrator.responses.datatypes.MultipleOrder;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.when;
@@ -30,12 +30,8 @@ public class OrderComponentTest {
     @MockBean
     private OrderRepository orderRepository;
 
-
-
-
     @Test
     void createMultipleOrders(){
-
         Address a1 = new Address("21 rue de la paix","38000","Grenoble");
         Address a2 = new Address("21 rue de la joie","38000","Grenoble");
         Address a3 = new Address("ça commence à bien faire","38000","Paris");
@@ -76,20 +72,12 @@ public class OrderComponentTest {
                 .customer(c1)
                 .build();
 
-
-        LinkedHashSet<OrderEntity> orderEntities = new LinkedHashSet<>();;
-        orderEntities.add(o1);
-        orderEntities.add(o2);
-        orderEntities.add(o3);
-        orderEntities.add(o4);
-
         when(orderRepository.findById(o1.getReference())).thenReturn(Optional.of(o1));
         when(orderRepository.findById(o2.getReference())).thenReturn(Optional.of(o2));
         when(orderRepository.findById(o3.getReference())).thenReturn(Optional.of(o3));
         when(orderRepository.findById(o3.getReference())).thenReturn(Optional.of(o4));
-        when(orderRepository.findOrderEntitiesByStateOrderByCreationDateAsc(OrderState.OPENED)).thenReturn(orderEntities);
+        when(orderRepository.findOrderEntitiesByStateOrderByCreationDateAsc(OrderState.OPENED)).thenReturn(Set.of(o1,o2,o3,o4));
         Set<MultipleOrder> multipleOrderSet = orderComponent.createMultipleOrders();
-
         assertThat(multipleOrderSet.size()).isEqualTo(2);
     }
 }

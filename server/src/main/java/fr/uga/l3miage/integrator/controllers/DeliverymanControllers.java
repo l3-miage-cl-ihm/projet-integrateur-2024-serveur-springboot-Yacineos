@@ -2,7 +2,6 @@ package fr.uga.l3miage.integrator.controllers;
 
 import fr.uga.l3miage.integrator.endpoints.DeliverymanEndpoints;
 import fr.uga.l3miage.integrator.enums.DeliveryState;
-import fr.uga.l3miage.integrator.exceptions.technical.DeliveryNotFoundException;
 import fr.uga.l3miage.integrator.responses.TourDMResponseDTO;
 import fr.uga.l3miage.integrator.services.DeliveryService;
 import fr.uga.l3miage.integrator.services.TourService;

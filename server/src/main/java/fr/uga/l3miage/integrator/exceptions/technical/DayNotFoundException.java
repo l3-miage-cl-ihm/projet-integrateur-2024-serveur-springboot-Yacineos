@@ -6,8 +6,6 @@ import java.time.LocalDate;
 
 @Getter
 public class DayNotFoundException extends  Exception {
-
-
     public DayNotFoundException(String message) {
         super(message);
 
