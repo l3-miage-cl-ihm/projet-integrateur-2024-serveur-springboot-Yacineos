@@ -76,7 +76,7 @@ public class DayPlannerMapperTest {
         EmployeeEntity planner = EmployeeEntity.builder().email("claudiatessier@gmail.com").job(Job.PLANNER).photo("chris.png")
                 .lastName("TESSIERE").firstName("claudia").mobilePhone("0765437876").trigram("STR").warehouse(grenis).build();
 
-        DayCreationRequest dayCreationRequest = DayCreationRequest.builder().date(LocalDate.now()).tours(List.of(tourCreationRequest)).build();
+        DayCreationRequest dayCreationRequest = DayCreationRequest.builder().date(now).tours(List.of(tourCreationRequest)).build();
         TourEntity expectedResponse= TourEntity.builder().reference("t136G-A").state(TourState.PLANNED).distanceToCover(49).letter("A").deliveries(new LinkedList<>()).deliverymen(Set.of(deliveryman1,deliveryman2)).truck(truck).build();
         DeliveryEntity  expectedDeliveryResponse= DeliveryEntity.builder().state(DeliveryState.PLANNED).orders(Set.of(order1,order2)).reference("l136G-A1").build();
         //when
