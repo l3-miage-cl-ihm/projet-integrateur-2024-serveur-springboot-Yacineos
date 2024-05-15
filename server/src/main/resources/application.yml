@@ -21,7 +21,7 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: https://www.googleapis.com/service_accounts/v1/jwk/securetoken%40system.gserviceaccount.com
-          issuer-uri: https://securetoken.google.com/integrator-project-e177b
+          issuer-uri: https://securetoken.google.com/projet-integrateur-miage-g08
 l3:
   miage:
     webservice:
