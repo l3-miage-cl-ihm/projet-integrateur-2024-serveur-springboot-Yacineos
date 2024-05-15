@@ -64,9 +64,13 @@ public class DeliverymanControllerTest {
     @SpyBean
     private TourComponent tourComponent;
 
+    private String token = TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456");
+
     @BeforeEach
     public void setup() {
         testRestTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        EmployeeEntity anais = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.DELIVERYMAN).lastName("okj").firstName("jd").mobilePhone("098").build();
+        employeeRepository.save(anais);
     }
     @AfterEach
     void clear(){
@@ -83,10 +87,9 @@ public class DeliverymanControllerTest {
 
     @Test
     void getTourOK() throws TourNotFoundException, DayNotFoundException {
-        EmployeeEntity anais = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.DELIVERYMAN).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(anais);
+
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " + this.token);
 
         //given
         final Map<String, Object> urlParams = new HashMap<>();
@@ -151,10 +154,9 @@ public class DeliverymanControllerTest {
 
     @Test
     void getTourNotFoundBecauseOfNotFoundDay() throws TourNotFoundException, DayNotFoundException {
-        EmployeeEntity anais = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.DELIVERYMAN).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(anais);
+
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " + this.token);
 
         //given
         final Map<String, Object> urlParams = new HashMap<>();
@@ -176,10 +178,9 @@ public class DeliverymanControllerTest {
 
     @Test
     void getTourNotFoundBecauseOfNotFoundDeliveryman() throws TourNotFoundException, DayNotFoundException {
-        EmployeeEntity anais = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.DELIVERYMAN).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(anais);
+
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("email", "hola@gmail.com");
@@ -205,10 +206,9 @@ public class DeliverymanControllerTest {
     @Test
     void updateDeliveryStateOK(){
         //given
-        EmployeeEntity anais = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.DELIVERYMAN).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(anais);
+
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("deliveryId", "l130G-A1");
@@ -239,8 +239,7 @@ public class DeliverymanControllerTest {
     @Test
     void updateDeliveryStateAndTourOK() throws TourNotFoundException {
         //given
-        EmployeeEntity anais = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.DELIVERYMAN).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(anais);
+
         final HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
 
@@ -275,10 +274,9 @@ public class DeliverymanControllerTest {
     @Test
     void updateDeliveryStateNotOK_BecauseOfNotFoundDelivery(){
         //given
-        EmployeeEntity anais = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.DELIVERYMAN).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(anais);
+
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("deliveryId", "l130G-A1");
@@ -298,10 +296,8 @@ public class DeliverymanControllerTest {
     @Test
     void updateDeliveryStateNotOK_BecauseOfWrongState(){
         //given
-        EmployeeEntity anais = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.DELIVERYMAN).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(anais);
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("deliveryId", "l130G-A1");
@@ -333,10 +329,8 @@ public class DeliverymanControllerTest {
     @Test
     void updateTourInCourseOK() throws TourNotFoundException {
         //given
-        EmployeeEntity anais = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.DELIVERYMAN).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(anais);
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("deliveryId", "l130G-A2");

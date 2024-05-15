@@ -65,9 +65,13 @@ public class PlannerControllerTest {
     @SpyBean
     private DayComponent dayComponent;
 
+    private String token = TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456") ;
+
     @BeforeEach
     public void setup() {
         testRestTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        EmployeeEntity omar = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.PLANNER).lastName("okj").firstName("jd").mobilePhone("098").build();
+        employeeRepository.save(omar);
     }
     @AfterEach
     void clear(){
@@ -86,10 +90,9 @@ public class PlannerControllerTest {
     @Test
     void planDayOK(){
        //given
-        EmployeeEntity omar = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.PLANNER).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(omar);
+
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
 
@@ -212,11 +215,9 @@ public class PlannerControllerTest {
 
     @Test  //simulating day plannification without any tour
     void planDay_NotOK_BecauseOfMissedInputs(){
-            //given
-        EmployeeEntity omar = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.PLANNER).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(omar);
+        //given
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
 
@@ -241,10 +242,8 @@ public class PlannerControllerTest {
     void planDat_NotOK_BecauseOfWrongInputs1() {
 
         //given
-        EmployeeEntity omar = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.PLANNER).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(omar);
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
 
@@ -354,10 +353,9 @@ public class PlannerControllerTest {
     void planDat_NotOK_BecauseOfWrongInputs2() {
 
         //given
-        EmployeeEntity omar = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.PLANNER).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(omar);
+
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
 
@@ -477,10 +475,9 @@ public class PlannerControllerTest {
 
     @Test
     void getDayOK() throws DayNotFoundException {
-        EmployeeEntity omar = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.PLANNER).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(omar);
+
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("date", LocalDate.of(2024,4,29).toString());
@@ -595,10 +592,9 @@ public class PlannerControllerTest {
     }
     @Test
     void getDayNotFound() throws DayNotFoundException {
-        EmployeeEntity omar = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.PLANNER).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(omar);
+
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("date", "2024-04-29");
@@ -615,10 +611,8 @@ public class PlannerControllerTest {
     @Test
     void getSetUpBundle() {
 
-        EmployeeEntity omar = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.PLANNER).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(omar);
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("warehouseId", "Grenis");
@@ -708,10 +702,8 @@ public class PlannerControllerTest {
     @Test
     void editDayOK(){
         //given
-        EmployeeEntity omar = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.PLANNER).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(omar);
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " +this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("dayId","J131G");
@@ -871,10 +863,8 @@ public class PlannerControllerTest {
     @Test  //simulating day plannification without any tour
     void editDay_NotOK_BecauseOfMissedInputs(){
         //given
-        EmployeeEntity omar = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.PLANNER).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(omar);
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("dayId","J131G");
@@ -1010,10 +1000,8 @@ public class PlannerControllerTest {
     void editDay_NotOK_BecauseOfWrongInputs1() {
 
         //given
-        EmployeeEntity omar = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.PLANNER).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(omar);
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("dayId","J131G");
@@ -1154,11 +1142,8 @@ public class PlannerControllerTest {
     @Test  //simulating not found day
     void editDay_NotOK_BecauseOfNotFoundDay() {
 
-        //given
-        EmployeeEntity omar = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.PLANNER).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(omar);
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("dayId","J131G");
@@ -1267,10 +1252,8 @@ public class PlannerControllerTest {
     @Test
     void updateDayStateOK1(){
         //given
-        EmployeeEntity omar = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.PLANNER).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(omar);
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " +this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("dayId","J131G");
@@ -1295,10 +1278,8 @@ public class PlannerControllerTest {
     @Test
     void updateDayStateOK2() {
         //given
-        EmployeeEntity omar = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.PLANNER).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(omar);
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("dayId", "J131G");
@@ -1328,10 +1309,8 @@ public class PlannerControllerTest {
     @Test
     void updateDayStateNotOK_BecauseOf_TourState() {
         //given
-        EmployeeEntity omar = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.PLANNER).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(omar);
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("dayId", "J131G");
@@ -1361,10 +1340,8 @@ public class PlannerControllerTest {
     @Test
     void updateDayStateNotOK_BecauseOf_NotFoundDay() {
         //given
-        EmployeeEntity omar = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.PLANNER).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(omar);
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("dayId", "J131G");
@@ -1381,10 +1358,8 @@ public class PlannerControllerTest {
     @Test
     void updateDayStateNotOK_BecauseOfWrongState() {
         //given
-        EmployeeEntity omar = EmployeeEntity.builder().email("anaisanna@gmail.com").trigram("aaa").photo(".png").job(Job.PLANNER).lastName("okj").firstName("jd").mobilePhone("098").build();
-        employeeRepository.save(omar);
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + TokenRetriever.getAccessToken("anaisanna@gmail.com", "123456"));
+        headers.add("Authorization", "Bearer " + this.token);
 
         final Map<String, Object> urlParams = new HashMap<>();
         urlParams.put("dayId", "J131G");
