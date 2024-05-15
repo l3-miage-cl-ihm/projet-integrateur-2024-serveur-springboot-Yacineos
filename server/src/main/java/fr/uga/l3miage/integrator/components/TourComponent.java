@@ -37,10 +37,23 @@ public class TourComponent {
     public void saveTour(TourEntity tour ){
         tourRepository.save(tour);
     }
+
+
+    // planner able to create 676 tours un a single day at max
+    // the format of the reference will change from t132G-A,...,t132G-Y, t132G-Z, to t132G-AA, t132G-AB,....t132G-ZZ
     public String generateTourReference(LocalDate date, int tourIndex) {
         String dayNumber = String.format("%03d", date.getDayOfYear());
-        char letter = (char) ('A' + tourIndex);
-        return "t" + dayNumber + "G-" + letter;
+
+        if(tourIndex<26) {
+            char letter = (char) ('A' + tourIndex);
+            return "t" + dayNumber + "G-" + letter;
+        }else{
+            int div = tourIndex/26;
+            int mod = tourIndex%26;
+            char firstLetter = (char) ('A' + div - 1);
+            char secondLetter = (char) ('A'+ mod);
+            return "t" + dayNumber + "G-" + firstLetter + secondLetter;
+        }
     }
 
     public TourEntity findTourById(String tourId) throws TourNotFoundException {
