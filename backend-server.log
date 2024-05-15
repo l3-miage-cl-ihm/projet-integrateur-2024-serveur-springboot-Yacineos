@@ -7,83 +7,83 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::        (v2.3.0.RELEASE)
 
-2024-04-29 13:43:45.965  INFO 45620 --- [           main] u.l.i.IntegratorProjectSpringApplication : Starting IntegratorProjectSpringApplication v1.0-SNAPSHOT on l3m-projet-2024-oukkaly-904 with PID 45620 (/home/ecloud/projet_integrateur/projet-integrateur-2024-serveur-springboot-Yacineos/server/target/integrator-project.jar started by ecloud in /home/ecloud/projet_integrateur/projet-integrateur-2024-serveur-springboot-Yacineos)
-2024-04-29 13:43:45.967  INFO 45620 --- [           main] u.l.i.IntegratorProjectSpringApplication : No active profile set, falling back to default profiles: default
-2024-04-29 13:43:47.506  INFO 45620 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFERRED mode.
-2024-04-29 13:43:47.593  INFO 45620 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 62ms. Found 4 JPA repository interfaces.
-2024-04-29 13:43:48.200  INFO 45620 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
-2024-04-29 13:43:48.211  INFO 45620 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2024-04-29 13:43:48.211  INFO 45620 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.35]
-2024-04-29 13:43:48.270  INFO 45620 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2024-04-29 13:43:48.270  INFO 45620 --- [           main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 2214 ms
-2024-04-29 13:43:48.531  INFO 45620 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2024-04-29 13:43:48.609  INFO 45620 --- [         task-1] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2024-04-29 13:43:48.758  INFO 45620 --- [         task-1] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.15.Final
-2024-04-29 13:43:48.841  WARN 45620 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2024-04-29 13:43:49.024  INFO 45620 --- [         task-1] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
-2024-04-29 13:43:49.131  INFO 45620 --- [         task-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2024-04-29 13:43:49.459  INFO 45620 --- [         task-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2024-04-29 13:43:49.525  INFO 45620 --- [         task-1] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL10Dialect
-2024-04-29 13:43:49.938  WARN 45620 --- [         task-1] org.hibernate.mapping.RootClass          : HHH000038: Composite-id class does not override equals(): fr.uga.l3miage.integrator.models.LineKey
-2024-04-29 13:43:49.939  WARN 45620 --- [         task-1] org.hibernate.mapping.RootClass          : HHH000039: Composite-id class does not override hashCode(): fr.uga.l3miage.integrator.models.LineKey
-2024-04-29 13:43:50.885  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.886  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "day_entity" does not exist, skipping
-2024-04-29 13:43:50.886  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.886  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "day_entity" does not exist, skipping
-2024-04-29 13:43:50.886  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.886  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "delivery_entity" does not exist, skipping
-2024-04-29 13:43:50.887  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.887  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "employee_entity" does not exist, skipping
-2024-04-29 13:43:50.887  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.887  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "line_entity" does not exist, skipping
-2024-04-29 13:43:50.888  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.888  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "line_entity" does not exist, skipping
-2024-04-29 13:43:50.888  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.888  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "order_entity" does not exist, skipping
-2024-04-29 13:43:50.888  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.888  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "order_entity" does not exist, skipping
-2024-04-29 13:43:50.889  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.889  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "tour_entity" does not exist, skipping
-2024-04-29 13:43:50.889  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.889  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "tour_entity" does not exist, skipping
-2024-04-29 13:43:50.890  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.890  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "tour_entity_delivery_men" does not exist, skipping
-2024-04-29 13:43:50.890  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.890  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "tour_entity_delivery_men" does not exist, skipping
-2024-04-29 13:43:50.891  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.891  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "truck_entity" does not exist, skipping
-2024-04-29 13:43:50.891  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.891  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "customer_entity" does not exist, skipping
-2024-04-29 13:43:50.892  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.892  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "day_entity" does not exist, skipping
-2024-04-29 13:43:50.892  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.892  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "delivery_entity" does not exist, skipping
-2024-04-29 13:43:50.892  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.893  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "employee_entity" does not exist, skipping
-2024-04-29 13:43:50.893  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.893  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "healthcheck_entity" does not exist, skipping
-2024-04-29 13:43:50.893  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.893  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "line_entity" does not exist, skipping
-2024-04-29 13:43:50.894  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.894  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "order_entity" does not exist, skipping
-2024-04-29 13:43:50.894  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.894  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "product_entity" does not exist, skipping
-2024-04-29 13:43:50.894  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.894  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "tour_entity" does not exist, skipping
-2024-04-29 13:43:50.895  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.895  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "tour_entity_delivery_men" does not exist, skipping
-2024-04-29 13:43:50.895  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.895  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "truck_entity" does not exist, skipping
-2024-04-29 13:43:50.895  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-04-29 13:43:50.896  WARN 45620 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "warehouse_entity" does not exist, skipping
-2024-04-29 13:43:51.047  INFO 45620 --- [         task-1] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2024-04-29 13:43:51.062  INFO 45620 --- [         task-1] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2024-04-29 13:43:52.669  WARN 45620 --- [           main] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates or check your Thymeleaf configuration)
-2024-04-29 13:43:52.865  INFO 45620 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
-2024-04-29 13:43:53.000  INFO 45620 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
-2024-04-29 13:43:53.001  INFO 45620 --- [           main] DeferredRepositoryInitializationListener : Triggering deferred initialization of Spring Data repositories…
-2024-04-29 13:43:53.139  INFO 45620 --- [           main] DeferredRepositoryInitializationListener : Spring Data repositories initialized!
-2024-04-29 13:43:53.155  INFO 45620 --- [           main] u.l.i.IntegratorProjectSpringApplication : Started IntegratorProjectSpringApplication in 7.692 seconds (JVM running for 8.346)
-2024-04-29 13:44:02.871  INFO 45620 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2024-04-29 13:44:02.871  INFO 45620 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2024-04-29 13:44:02.879  INFO 45620 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 8 ms
+2024-05-15 16:19:32.996  INFO 525522 --- [           main] u.l.i.IntegratorProjectSpringApplication : Starting IntegratorProjectSpringApplication v1.0-SNAPSHOT on l3m-projet-2024-oukkaly-904 with PID 525522 (/home/ecloud/projet_integrateur/projet-integrateur-2024-serveur-springboot-Yacineos/server/target/integrator-project.jar started by ecloud in /home/ecloud/projet_integrateur/projet-integrateur-2024-serveur-springboot-Yacineos)
+2024-05-15 16:19:32.998  INFO 525522 --- [           main] u.l.i.IntegratorProjectSpringApplication : The following profiles are active: dev
+2024-05-15 16:19:34.071  INFO 525522 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFERRED mode.
+2024-05-15 16:19:34.172  INFO 525522 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 94ms. Found 10 JPA repository interfaces.
+2024-05-15 16:19:34.882  INFO 525522 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2024-05-15 16:19:34.892  INFO 525522 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-05-15 16:19:34.892  INFO 525522 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.35]
+2024-05-15 16:19:34.945  INFO 525522 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-05-15 16:19:34.945  INFO 525522 --- [           main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 1908 ms
+2024-05-15 16:19:35.252  INFO 525522 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2024-05-15 16:19:35.309  INFO 525522 --- [         task-1] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-05-15 16:19:35.390  INFO 525522 --- [         task-1] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.15.Final
+2024-05-15 16:19:35.527  INFO 525522 --- [         task-1] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
+2024-05-15 16:19:35.653  WARN 525522 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-05-15 16:19:35.689  INFO 525522 --- [         task-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-05-15 16:19:35.874  INFO 525522 --- [         task-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-05-15 16:19:35.906  INFO 525522 --- [         task-1] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL10Dialect
+2024-05-15 16:19:36.220  WARN 525522 --- [         task-1] org.hibernate.mapping.RootClass          : HHH000038: Composite-id class does not override equals(): fr.uga.l3miage.integrator.models.LineKey
+2024-05-15 16:19:36.221  WARN 525522 --- [         task-1] org.hibernate.mapping.RootClass          : HHH000039: Composite-id class does not override hashCode(): fr.uga.l3miage.integrator.models.LineKey
+2024-05-15 16:19:36.817  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.817  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "day_entity" does not exist, skipping
+2024-05-15 16:19:36.818  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.818  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "day_entity" does not exist, skipping
+2024-05-15 16:19:36.818  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.818  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "delivery_entity" does not exist, skipping
+2024-05-15 16:19:36.819  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.819  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "employee_entity" does not exist, skipping
+2024-05-15 16:19:36.819  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.819  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "line_entity" does not exist, skipping
+2024-05-15 16:19:36.819  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.819  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "line_entity" does not exist, skipping
+2024-05-15 16:19:36.819  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.820  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "order_entity" does not exist, skipping
+2024-05-15 16:19:36.820  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.820  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "order_entity" does not exist, skipping
+2024-05-15 16:19:36.820  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.820  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "tour_entity" does not exist, skipping
+2024-05-15 16:19:36.821  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.821  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "tour_entity" does not exist, skipping
+2024-05-15 16:19:36.821  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.821  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "tour_entity_deliverymen" does not exist, skipping
+2024-05-15 16:19:36.822  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.822  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "tour_entity_deliverymen" does not exist, skipping
+2024-05-15 16:19:36.822  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.822  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : relation "truck_entity" does not exist, skipping
+2024-05-15 16:19:36.823  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.823  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "customer_entity" does not exist, skipping
+2024-05-15 16:19:36.823  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.823  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "day_entity" does not exist, skipping
+2024-05-15 16:19:36.823  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.823  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "delivery_entity" does not exist, skipping
+2024-05-15 16:19:36.824  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.824  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "employee_entity" does not exist, skipping
+2024-05-15 16:19:36.824  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.824  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "healthcheck_entity" does not exist, skipping
+2024-05-15 16:19:36.824  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.824  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "line_entity" does not exist, skipping
+2024-05-15 16:19:36.825  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.825  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "order_entity" does not exist, skipping
+2024-05-15 16:19:36.825  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.825  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "product_entity" does not exist, skipping
+2024-05-15 16:19:36.825  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.825  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "tour_entity" does not exist, skipping
+2024-05-15 16:19:36.826  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.826  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "tour_entity_deliverymen" does not exist, skipping
+2024-05-15 16:19:36.826  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.826  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "truck_entity" does not exist, skipping
+2024-05-15 16:19:36.826  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2024-05-15 16:19:36.826  WARN 525522 --- [         task-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : table "warehouse_entity" does not exist, skipping
+2024-05-15 16:19:36.942  INFO 525522 --- [         task-1] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-05-15 16:19:36.951  INFO 525522 --- [         task-1] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-05-15 16:19:38.399  WARN 525522 --- [           main] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates or check your Thymeleaf configuration)
+2024-05-15 16:19:38.706  INFO 525522 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2024-05-15 16:19:38.766  INFO 525522 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2024-05-15 16:19:38.778  INFO 525522 --- [           main] DeferredRepositoryInitializationListener : Triggering deferred initialization of Spring Data repositories…
+2024-05-15 16:19:38.991  INFO 525522 --- [           main] DeferredRepositoryInitializationListener : Spring Data repositories initialized!
+2024-05-15 16:19:39.019  INFO 525522 --- [           main] u.l.i.IntegratorProjectSpringApplication : Started IntegratorProjectSpringApplication in 6.422 seconds (JVM running for 6.845)
+2024-05-15 16:20:24.652  INFO 525522 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-05-15 16:20:24.657  INFO 525522 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-05-15 16:20:24.702  INFO 525522 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 44 ms
